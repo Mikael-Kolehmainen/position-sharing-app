@@ -1,4 +1,4 @@
-<!-- Kolla om gruppkoden är unik då man lagar en ny grupp -->
+<!-- Lagar en grupp och kollar att gruppkoden är unik sedan för användare till gruppkartan med gruppkoden. -->
 <?php
     createGroup();
 

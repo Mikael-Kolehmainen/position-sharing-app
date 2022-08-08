@@ -8,7 +8,7 @@
     font-family: $main-font;
 }
 h1 {
-    font-size: 32px;
+    font-size: 34px;
 }
 html, body {
     height: 100%;
@@ -25,6 +25,28 @@ section {
         left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
+    }
+}
+form {
+    input {
+        display: block;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 22px;
+        border-radius: 5px;
+        border: 1px solid $primary-color;
+        padding: 10px;
+    }
+    input[type=submit] {
+        color: white;
+        background-color: $primary-color;
+        border: none;
+
+        &:hover {
+            cursor: pointer;
+            background-color: $secondary-color;
+        }
     }
 }
 
@@ -72,5 +94,15 @@ body {
     }
     &:hover {
         background-color: $secondary-color;
+    }
+    &.round {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-left: 15px;
+
+        i {
+            font-size: 26px;
+        }
     }
 }

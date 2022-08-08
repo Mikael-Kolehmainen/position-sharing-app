@@ -8,11 +8,14 @@
     margin-right: 10px;
     margin-left: 10px; }
 
-.create-page section article {
-  width: 95%;
-  background-color: #5BC0EB;
-  text-align: center;
-  border-radius: 20px; }
+.search-page section article {
+  width: 97%;
+  background-color: #FDE74C;
+  border-radius: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px; }
+  .search-page section article h1 {
+    text-align: center; }
 
 * {
   scroll-behavior: smooth;
@@ -21,7 +24,7 @@
   font-family: montserrat; }
 
 h1 {
-  font-size: 32px; }
+  font-size: 34px; }
 
 html, body {
   height: 100%;
@@ -37,6 +40,24 @@ section {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%; }
+
+form input {
+  display: block;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 22px;
+  border-radius: 5px;
+  border: 1px solid #5BC0EB;
+  padding: 10px; }
+
+form input[type=submit] {
+  color: white;
+  background-color: #5BC0EB;
+  border: none; }
+  form input[type=submit]:hover {
+    cursor: pointer;
+    background-color: #C3423F; }
 
 body {
   position: relative; }
@@ -71,3 +92,10 @@ body {
       font-size: 44px; }
   .btn:hover {
     background-color: #C3423F; }
+  .btn.round {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-left: 15px; }
+    .btn.round i {
+      font-size: 26px; }

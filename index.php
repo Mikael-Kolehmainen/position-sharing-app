@@ -13,7 +13,7 @@
                 <a href='./group-system/create.php' class='btn' title='Create'>
                     <i class='fa-solid fa-plus'></i>
                 </a>
-                <a href='#' class='btn' title='Search'>
+                <a href='./group-system/search-form.php' class='btn' title='Search'>
                     <i class='fa-solid fa-magnifying-glass'></i>
                 </a>
             </article>
