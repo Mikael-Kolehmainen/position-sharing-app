@@ -17,6 +17,12 @@
   .search-page section article h1 {
     text-align: center; }
 
+.active-page section article {
+  height: 100%; }
+  .active-page section article #map {
+    height: 100%;
+    width: 100%; }
+
 * {
   scroll-behavior: smooth;
   margin: 0;
