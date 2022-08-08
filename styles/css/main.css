@@ -9,8 +9,10 @@
     margin-left: 10px; }
 
 .create-page section article {
-  width: 98%;
-  background-color: #5BC0EB; }
+  width: 95%;
+  background-color: #5BC0EB;
+  text-align: center;
+  border-radius: 20px; }
 
 * {
   scroll-behavior: smooth;
@@ -19,7 +21,7 @@
   font-family: montserrat; }
 
 h1 {
-  font-size: 46px; }
+  font-size: 32px; }
 
 html, body {
   height: 100%;

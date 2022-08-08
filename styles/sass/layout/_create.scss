@@ -1,8 +1,10 @@
 .create-page {
     section {
         article {
-            width: 98%;
+            width: 95%;
             background-color: $primary-color;
+            text-align: center;
+            border-radius: 20px;
         }
     }
 }

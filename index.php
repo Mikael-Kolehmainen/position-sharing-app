@@ -10,7 +10,7 @@
         <div class='bg-image'></div>
         <section>
             <article>
-                <a href='./create-group/create-form.php' class='btn' title='Create'>
+                <a href='./group-system/create.php' class='btn' title='Create'>
                     <i class='fa-solid fa-plus'></i>
                 </a>
                 <a href='#' class='btn' title='Search'>
