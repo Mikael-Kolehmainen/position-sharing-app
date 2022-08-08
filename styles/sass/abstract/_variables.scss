@@ -1,4 +1,12 @@
 
+// FONT FAMILY
+
+@font-face {
+    font-family: montserrat;
+    src: url(../../font/Montserrat-Regular.ttf);
+}
+$main-font: montserrat;
+
 // MAIN COLORS
 
 $primary-color: #5BC0EB;
