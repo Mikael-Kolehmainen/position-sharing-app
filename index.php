@@ -1,10 +1,11 @@
 <!-- BUG: in geolocation.js, don't focus on user location when getting user location every 3 seconds. -->
 
 <!-- TO-DO -->
-<!-- Save amount of members in group by adding 1 to the database on creation and when someone joins the group,
+<!-- COMPLETE: Save amount of members in group by adding 1 to the database on creation and when someone joins the group,
     remove 1 from the database when the user leaves the page. -->
 <!-- Use this data of amount of members when saving the location to database, give an unique id to each location to 
-    determine which one to replace -->
+    determine which one to replace, save the unique id to a session and when the user leaves the page remove the position,
+    send data to a php file in detection.js -->
 
 <!-- Gjort idag -->
 <!-- leaflet karta som visar din position -->

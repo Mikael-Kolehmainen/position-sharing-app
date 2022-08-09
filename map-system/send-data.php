@@ -1,12 +1,50 @@
 <?php
     if (isset($_GET['pos'])) {
+        session_start();
+        if (isset($_SESSION['uniqueID'])) {
+            require './../required-files/connection.php';
+            $sql = "SELECT id, uniqueID FROM positions";
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result) >= 0) {
+                for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+                    $row = mysqli_fetch_assoc($result);
+                    if ($_SESSION['uniqueID'] == $row['uniqueID']) {
+                        $positionID = $row['id'];
+                        $newPosition = $_GET['pos'];
+                        $sql2 = "UPDATE positions SET position = '$newPosition' WHERE id = '$positionID'";
+                        mysqli_query($conn, $sql2);
+                    }
+                }
+            }
+        } else {
+            $position = $_GET['pos'];
+            $uniqueID = getUniqueID();
+            $_SESSION['uniqueID'] = $uniqueID;
+            $groupCode = $_GET['groupcode'];
+
+            require './../required-files/connection.php';
+
+            $sql = "INSERT INTO positions (position, uniqueID, groups_groupcode) VALUES ('$position', '$uniqueID', '$groupCode')";
+
+            mysqli_query($conn, $sql);
+        }
+    }
+    // Kollar om unika id:et är duplikat
+    function getUniqueID() {
         require './../required-files/connection.php';
+        require './../required-files/random-string.php';
+        $uniqueID = getRandomString(10);
+        $sql = "SELECT uniqueID FROM positions";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) >= 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+                if ($uniqueID == $row['uniqueID']) {
+                    $uniqueID = getUniqueID();
+                }
+            }
+        }
+        mysqli_close($conn);
 
-        $position = $_GET['pos'];
-        $groupCode = $_GET['groupcode'];
-
-        $sql = "INSERT INTO positions (position, groups_groupcode) VALUES ('$position', '$groupCode')";
-
-        mysqli_query($conn, $sql);
+        return $uniqueID;
     }
 ?>
