@@ -4,7 +4,7 @@
         require './../required-files/connection.php';
         $sql = "SELECT id, groupcode, members FROM groups";
         $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) >= 0) {
+        if (mysqli_num_rows($result) > 0) {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
                 if ($_GET['groupcode'] == $row['groupcode']) {
@@ -26,5 +26,11 @@
             ";
         }
         mysqli_close($conn);
+        session_start();
+        require './../required-files/connection.php';
+        $uniqueID = $_SESSION['uniqueID'];
+        $sql = "DELETE FROM positions WHERE uniqueID = '$uniqueID'";
+        unset($_SESSION['uniqueID']);
+        mysqli_query($conn, $sql);
     }
 ?>

@@ -1,11 +1,11 @@
 <?php
+    session_start();
     if (isset($_GET['pos'])) {
-        session_start();
         if (isset($_SESSION['uniqueID'])) {
             require './../required-files/connection.php';
             $sql = "SELECT id, uniqueID FROM positions";
             $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) >= 0) {
+            if (mysqli_num_rows($result) > 0) {
                 for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                     $row = mysqli_fetch_assoc($result);
                     if ($_SESSION['uniqueID'] == $row['uniqueID']) {
@@ -36,7 +36,7 @@
         $uniqueID = getRandomString(10);
         $sql = "SELECT uniqueID FROM positions";
         $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) >= 0) {
+        if (mysqli_num_rows($result) > 0) {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 if ($uniqueID == $row['uniqueID']) {
                     $uniqueID = getUniqueID();
