@@ -29,7 +29,7 @@
         $sql = "INSERT INTO groups (groupcode) VALUES ('$groupCode')";
 
         if (mysqli_query($conn, $sql)) {
-            header("LOCATION: ./active.php?groupcode=$groupCode");
+            header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } else {
             echo "
                 <script>

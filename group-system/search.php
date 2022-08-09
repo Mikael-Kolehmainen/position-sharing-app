@@ -13,7 +13,7 @@
             }
         }
         if (isset($groupCode)) {
-            header("LOCATION: ./active.php?groupcode=$groupCode");
+            header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } else {
             echo "
                 <script>

@@ -1,3 +1,5 @@
+<!-- BUG: in geolocation.js, don't focus on user location when getting user location every 3 seconds. -->
+
 <!DOCTYPE html>
 <html>
     <head>

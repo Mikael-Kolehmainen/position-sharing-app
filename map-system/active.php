@@ -38,7 +38,7 @@
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../leaflet/leaflet.js'></script>
-        <script src='./../js/geolocation.js' async></script>
+        <script src='./geolocation.js' async></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
