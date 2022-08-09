@@ -10,15 +10,30 @@
 
 .search-page section article {
   width: 97%;
-  background-color: #FDE74C;
+  background-color: #000C66;
   border-radius: 20px;
   padding-top: 20px;
   padding-bottom: 20px; }
   .search-page section article h1 {
     text-align: center; }
 
+@media (min-width: 1000px) {
+  .search-page section article {
+    width: 600px; } }
+
 .active-page section article {
   height: 100%; }
+  .active-page section article .top {
+    background-color: #000C66;
+    padding: 12px;
+    text-align: center; }
+    .active-page section article .top p {
+      font-size: 24px;
+      display: inline-block;
+      padding: 2px; }
+      .active-page section article .top p:last-of-type {
+        font-weight: bold;
+        background-color: #5BC0EB; }
   .active-page section article #map {
     height: 100%;
     width: 100%; }

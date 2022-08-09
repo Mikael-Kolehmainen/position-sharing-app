@@ -64,6 +64,10 @@
 
         <section>
             <article>
+                <div class='top'>
+                    <p>Group code:</p>
+                    <p><?php echo $_GET['groupcode']; ?></p>
+                </div>
                 <div id='map'></div>
             </article>
         </section>
