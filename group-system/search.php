@@ -12,6 +12,7 @@
                 }
             }
         }
+        mysqli_close($conn);
         if (isset($groupCode)) {
             header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } else {

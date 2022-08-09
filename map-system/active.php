@@ -2,7 +2,7 @@
     // Man kan inte komma på sidan utan en gruppkod
     if (isset($_GET['groupcode'])) {
         require './../required-files/connection.php';
-        $sql = "SELECT groupcode FROM groups";
+        $sql = "SELECT id, groupcode, members FROM groups";
         $result = mysqli_query($conn, $sql);
         $foundGroupCode = false;
         if (mysqli_num_rows($result) >= 0) {
@@ -10,9 +10,12 @@
                 $row = mysqli_fetch_assoc($result);
                 if ($_GET['groupcode'] == $row['groupcode']) {
                     $foundGroupCode = true;
+                    $amountOfMembers = $row['members'];
+                    $groupID = $row['id'];
                 }
             }
         }
+        mysqli_close($conn);
         if ($foundGroupCode == false) {
             echo "
                 <script>
@@ -20,6 +23,20 @@
                     window.location.href = './../index.php';
                 </script>
             ";
+        } else {
+            // Lägg till en aktiv medlem då användaren anländer på sidan
+            require './../required-files/connection.php';
+            $amountOfMembers = $amountOfMembers + 1;
+            $sql = "UPDATE groups SET members = $amountOfMembers WHERE id = $groupID";
+            if (!mysqli_query($conn, $sql)) {
+                echo "
+                    <script>
+                        alert('Something went wrong with updating the amount of active members, try again.');
+                        window.location.href = './../index.php';
+                    </script>
+                ";
+            }
+            mysqli_close($conn);
         }
     } else {
         echo "
@@ -28,7 +45,7 @@
                 window.location.href = './../index.php';
             </script>
         ";
-    }
+    }    
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,6 +56,7 @@
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' async></script>
+        <script src='./detection.js' asyncs></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>

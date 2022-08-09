@@ -1,6 +1,3 @@
-<!-- TO-DO -->
-<!-- Save groups_groupcode to database -->
-<!--  -->
 <?php
     if (isset($_GET['pos'])) {
         require './../required-files/connection.php';
