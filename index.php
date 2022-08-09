@@ -1,7 +1,7 @@
 <!-- BUG: in geolocation.js, don't focus on user location when getting user location every 3 seconds. -->
 
 <!-- TO-DO -->
-    <!-- Show all positions from the database on the map that are in that group --> <!-- 1 -->
+    <!-- Show all positions from the database on the map that are in that group (json_encode, kolla bookmark) --> <!-- 1 -->
     <!-- Fix bugs --> <!-- 2 -->
 <!DOCTYPE html>
 <html>
