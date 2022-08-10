@@ -38,6 +38,18 @@
     height: 100%;
     width: 100%; }
 
+.user-marker {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: red; }
+
+.other-user-marker {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #5BC0EB; }
+
 * {
   scroll-behavior: smooth;
   margin: 0;

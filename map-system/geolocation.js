@@ -1,4 +1,4 @@
-var map = L.map('map');
+var map = L.map('map', {zoomControl: false});
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
@@ -6,6 +6,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var current_position;
+var counter = 0;
+
+var userIcon = L.divIcon ({
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+    className: 'user-marker'
+});
+var otherUsersIcon = L.divIcon ({
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+    className: 'other-user-marker'
+})
 
 function onLocationFound(e) {
 
@@ -17,7 +29,7 @@ function onLocationFound(e) {
         });
     }
 
-    current_position = L.marker(e.latlng).addTo(map);
+    current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
     // Få gruppkoden från sökfältet
     const groupCode = new URLSearchParams(window.location.search).get('groupcode');
     // Skicka positionsdata & gruppkoden till PHP
@@ -36,7 +48,11 @@ function onLocationFound(e) {
                 for (var i = 0; i < positionsArr.length; i++) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
-                    L.marker(L.latLng(latlngArr[0], latlngArr[1])).addTo(map);
+                    marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon}).addTo(map);
+                    // Tar bort användarens egna markör som redan är på kartan
+                    if (marker.getLatLng().equals(current_position.getLatLng())) {
+                        map.removeLayer(marker);
+                    }
                 }
             };
         }
@@ -60,7 +76,12 @@ map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
 function locate() {
-    map.locate({setView: true, enableHighAccuracy: true});
+    if (counter == 0) {
+        map.locate({setView: true, enableHighAccuracy: true});
+        counter = 1;
+    } else if (counter == 1) {
+        map.locate({setView: false, enableHighAccuracy: true});
+    }
 }
 
 setInterval(locate, 3000);
