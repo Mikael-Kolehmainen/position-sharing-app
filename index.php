@@ -1,7 +1,3 @@
-<!-- BUG: in geolocation.js, don't focus on user location when getting user location every 3 seconds. -->
-
-<!-- TO-DO -->
-    <!-- Edit markers --> <!-- 3 -->
 <!DOCTYPE html>
 <html>
     <head>
