@@ -10,25 +10,46 @@ var current_position;
 function onLocationFound(e) {
 
     if (current_position) {
-        map.removeLayer(current_position);
+        map.eachLayer(function (layer) {
+            if (layer.options.attribution == null) {
+                map.removeLayer(layer);
+            }
+        });
     }
 
     current_position = L.marker(e.latlng).addTo(map);
     // Få gruppkoden från sökfältet
     const groupCode = new URLSearchParams(window.location.search).get('groupcode');
     // Skicka positionsdata & gruppkoden till PHP
-    let xmlhttp = new XMLHttpRequest();
-    let sent = false;
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log("successfully sent data to php.");
-            sent = true;
+    var index = ['send-data', 'get-data']
+    var xmlhttp = new XMLHttpRequest();
+    (function loop(i, length) {
+        if (i>= length) {
+            return;
         }
-    };
-    if (sent == false) {
-        xmlhttp.open("GET", "send-data.php?pos=" + e.latlng + "&groupcode=" + groupCode, true);
+        var url = index[i] + ".php?pos=" + e.latlng + "&groupcode=" + groupCode;
+
+        if (i == 1) {
+            xmlhttp.onload = function() {
+                var positionsArr = this.responseText;
+                positionsArr = JSON.parse(positionsArr);
+                for (var i = 0; i < positionsArr.length; i++) {
+                    positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
+                    latlngArr = positionsArr[i].split(",");
+                    L.marker(L.latLng(latlngArr[0], latlngArr[1])).addTo(map);
+                }
+            };
+        }
+
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onreadystatechange = function() {
+            if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
+                console.log("success: " + i);
+                loop(i + 1, length);
+            }
+        }
         xmlhttp.send();
-    }
+    })(0, index.length);
 }
 
 function onLocationError(e) {
@@ -39,11 +60,7 @@ map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
 function locate() {
-    if (current_position) {
-        map.locate({setView: true, enableHighAccuracy: true});
-    } else {
-        map.locate({setView: false, enableHighAccuracy: true});
-    }
+    map.locate({setView: true, enableHighAccuracy: true});
 }
 
 setInterval(locate, 3000);

@@ -55,6 +55,7 @@
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../leaflet/leaflet.js'></script>
+        <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
         <script src='./geolocation.js' async></script>
         <script src='./detection.js' asyncs></script>
         <title>Active group</title>
