@@ -60,7 +60,6 @@ function onLocationFound(e) {
         xmlhttp.open("GET", url, true);
         xmlhttp.onreadystatechange = function() {
             if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
-                console.log("success: " + i);
                 loop(i + 1, length);
             }
         }
