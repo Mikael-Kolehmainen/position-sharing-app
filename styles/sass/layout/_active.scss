@@ -42,6 +42,7 @@
                 }
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
+                    padding-top: 40px;
 
                     .messages {
                         max-height: 240px;
@@ -111,6 +112,18 @@
                             background-size: 40%;
                             margin: 0;
                             left: 88%;
+                        }
+                    }
+                    .btn {
+                        width: 30px;
+                        height: 30px;
+                        position: absolute;
+                        left: 90%;
+                        top: 6%;
+                        transform: translate(-50%, -50%);
+
+                        i {
+                            font-size: 26px;
                         }
                     }
                 }

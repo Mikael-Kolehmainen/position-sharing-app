@@ -57,6 +57,7 @@
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' async></script>
         <script src='./detection.js' asyncs></script>
+        <script src='./../js/open.js' async></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -69,10 +70,13 @@
                 </div>
                 <div id='map'></div>
                 <div class='bottom'>
-                    <a class='btn round' style='display: none;'>
+                    <a class='btn round' style='display: block;' onclick='openMenu(this, document.getElementById("chat"))'>
                         <i class='fa-solid fa-message'></i>
                     </a>
-                    <div class='chat' style='display: block;'>
+                    <div class='chat' style='display: none;' id='chat'>
+                        <a class='btn round'>
+                            <i class='fa-solid fa-xmark'></i>
+                        </a>
                         <div class='messages'>
                             <!-- PLACEHOLDER -->
                             <div class='message'>
