@@ -21,7 +21,7 @@
 
         insertGroup($groupCode);
 
-        mysqli_close($conn, $sql);
+        mysqli_close($conn);
     }
 
     function insertGroup($groupCode) {
@@ -38,6 +38,6 @@
                 </script>
             ";
         }
-        mysqli_close($conn, $sql);
+        mysqli_close($conn);
     }
 ?>

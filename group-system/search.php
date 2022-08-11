@@ -14,6 +14,7 @@
         }
         mysqli_close($conn);
         if (isset($groupCode)) {
+            saveAvatar($_POST['initials'], $_POST['color']);
             header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } else {
             echo "
@@ -23,5 +24,18 @@
                 </script>
             ";
         }
+    } else if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['initials'])) {
+        saveAvatar($_POST['initials'], $_POST['color']);
+        header("LOCATION: ./create.php");
+    }
+
+    function saveAvatar($initials, $color) {
+        session_start();
+        if ($color == "") {
+            $color = "#FF0000";
+        }
+        $initials = strtoupper($initials);
+        $_SESSION['initials'] = $initials;
+        $_SESSION['color'] = $color;
     }
 ?>

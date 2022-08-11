@@ -4,8 +4,6 @@
         <!-- update chat every 3 seconds so use js to show the data and ajax to get the data from the backend -->
 
 <!-- Initials on markers and user chosen color of markers --> <!-- 2 -->
-    <!-- user initials and color save them to session in active.php after 
-    posting from user-details.php -->
     <!-- then upload sessions to positions db and also if the user refreshes the page-->
     <!-- have the same inputs in search-form.php as in user-details.php -->
 

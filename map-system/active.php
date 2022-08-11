@@ -2,7 +2,7 @@
     // Man kan inte komma på sidan utan en gruppkod
     if (isset($_GET['groupcode'])) {
         require './../required-files/connection.php';
-        $sql = "SELECT id, groupcode, members FROM groups";
+        $sql = "SELECT id, groupcode FROM groups";
         $result = mysqli_query($conn, $sql);
         $foundGroupCode = false;
         if (mysqli_num_rows($result) > 0) {
@@ -10,7 +10,6 @@
                 $row = mysqli_fetch_assoc($result);
                 if ($_GET['groupcode'] == $row['groupcode']) {
                     $foundGroupCode = true;
-                    $amountOfMembers = $row['members'];
                     $groupID = $row['id'];
                 }
             }
@@ -23,20 +22,6 @@
                     window.location.href = './../index.php';
                 </script>
             ";
-        } else {
-            // Lägg till en aktiv medlem då användaren anländer på sidan
-            require './../required-files/connection.php';
-            $amountOfMembers = $amountOfMembers + 1;
-            $sql = "UPDATE groups SET members = $amountOfMembers WHERE id = $groupID";
-            if (!mysqli_query($conn, $sql)) {
-                echo "
-                    <script>
-                        alert('Something went wrong with updating the amount of active members, try again.');
-                        window.location.href = './../index.php';
-                    </script>
-                ";
-            }
-            mysqli_close($conn);
         }
     } else {
         echo "

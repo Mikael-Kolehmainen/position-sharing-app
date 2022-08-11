@@ -20,11 +20,13 @@
             $position = $_GET['pos'];
             $uniqueID = getUniqueID();
             $_SESSION['uniqueID'] = $uniqueID;
+            $initials = $_SESSION['initials'];
+            $color = $_SESSION['color'];
             $groupCode = $_GET['groupcode'];
 
             require './../required-files/connection.php';
 
-            $sql = "INSERT INTO positions (position, uniqueID, groups_groupcode) VALUES ('$position', '$uniqueID', '$groupCode')";
+            $sql = "INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')";
 
             mysqli_query($conn, $sql);
         }

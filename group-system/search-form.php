@@ -15,7 +15,10 @@
                 </a>
                 <h1>Join group</h1>
                 <form action='search.php' method='POST'>
-                    <input type='text' name='groupcode' placeholder='Group code (10 char)' minlength='10' maxlength='10' required>
+                    <input type='text' name='groupcode' placeholder='Group code (10 char)' minlength='10' maxlength='10' class='center' required>
+                    <input type='text' name='initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required>
+                    <input type='text' name='color' placeholder='Color (HEX eg. #5BC0EB)' minlength='7' maxlength='7' class='center'>
+                    <p style='text-align: center'>Default color: #FF0000</p>
                     <input type='submit' value='JOIN'>
                 </form>
             </article>
