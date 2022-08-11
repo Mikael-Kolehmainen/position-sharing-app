@@ -26,7 +26,10 @@
   .active-page section article .top {
     background-color: #000C66;
     padding: 12px;
-    text-align: center; }
+    text-align: center;
+    position: fixed;
+    z-index: 99;
+    width: 100%; }
     .active-page section article .top p {
       font-size: 24px;
       display: inline-block;
@@ -34,21 +37,92 @@
       .active-page section article .top p:last-of-type {
         font-weight: bold;
         background-color: #5BC0EB; }
+  .active-page section article .bottom {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    height: fit-content;
+    bottom: 0;
+    left: 0; }
+    .active-page section article .bottom .btn {
+      margin-bottom: 10px;
+      width: 75px;
+      height: 75px;
+      cursor: pointer; }
+      .active-page section article .bottom .btn i {
+        font-size: 30px; }
+    .active-page section article .bottom .chat {
+      background-color: rgba(0, 12, 102, 0.6); }
+      .active-page section article .bottom .chat .messages {
+        max-height: 240px;
+        overflow-y: scroll; }
+        .active-page section article .bottom .chat .messages .message {
+          position: relative;
+          padding: 5px;
+          max-width: 500px;
+          margin: auto; }
+          .active-page section article .bottom .chat .messages .message .profile, .active-page section article .bottom .chat .messages .message p {
+            display: inline-block; }
+          .active-page section article .bottom .chat .messages .message .profile {
+            position: relative;
+            background-color: #5BC0EB;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px; }
+            .active-page section article .bottom .chat .messages .message .profile p {
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              width: fit-content;
+              font-weight: bold;
+              color: white;
+              background-color: transparent; }
+          .active-page section article .bottom .chat .messages .message .text {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: black;
+            margin-left: 10px;
+            width: 75%;
+            padding: 10px;
+            border-radius: 5px; }
+      .active-page section article .bottom .chat .textbox {
+        position: relative;
+        height: 60px; }
+        .active-page section article .bottom .chat .textbox input {
+          display: inline-block;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%); }
+        .active-page section article .bottom .chat .textbox input[type=text] {
+          width: 69%;
+          margin: 0;
+          font-size: 16px;
+          height: 25px;
+          left: 39%; }
+        .active-page section article .bottom .chat .textbox #send-btn {
+          background: #5BC0EB url("./../../media/send.svg") no-repeat center;
+          width: 80px;
+          background-size: 40%;
+          margin: 0;
+          left: 88%; }
   .active-page section article #map {
     height: 100%;
-    width: 100%; }
-
-.user-marker {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: red; }
-
-.other-user-marker {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #5BC0EB; }
+    width: 100%;
+    z-index: -99; }
+    .active-page section article #map .user-marker {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: red; }
+    .active-page section article #map .other-user-marker {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #5BC0EB; }
 
 * {
   scroll-behavior: smooth;
@@ -61,7 +135,8 @@ h1 {
 
 html, body {
   height: 100%;
-  color: white; }
+  color: white;
+  overflow: hidden; }
 
 section {
   width: 100%;

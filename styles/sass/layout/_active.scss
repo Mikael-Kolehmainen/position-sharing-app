@@ -7,6 +7,9 @@
                 background-color: $background-color;
                 padding: 12px;
                 text-align: center;
+                position: fixed;
+                z-index: 99;
+                width: 100%;
 
                 p {
                     font-size: 24px;
@@ -19,22 +22,117 @@
                     }
                 }
             }
+            .bottom {
+                position: fixed;
+                z-index: 99;
+                width: 100%;
+                height: fit-content;
+                bottom: 0;
+                left: 0;
+                
+                .btn {
+                    margin-bottom: 10px;
+                    width: 75px;
+                    height: 75px;
+                    cursor: pointer;
+
+                    i {
+                        font-size: 30px;
+                    }
+                }
+                .chat {
+                    background-color: rgba($color: $background-color, $alpha: 0.6);
+
+                    .messages {
+                        max-height: 240px;
+                        overflow-y: scroll;
+                        
+                        .message {
+                            position: relative;
+                            padding: 5px;
+                            max-width: 500px;
+                            margin: auto;
+                            
+                            .profile, p {
+                                display: inline-block;
+                            }
+                            .profile {
+                                position: relative;
+                                background-color: $primary-color;
+                                border-radius: 50%;
+                                width: 50px;
+                                height: 50px;
+
+                                p {
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 50%;
+                                    transform: translate(-50%, -50%);
+                                    width: fit-content;
+                                    font-weight: bold;
+                                    color: white;
+                                    background-color: transparent;
+                                }
+                            }
+                            .text {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                background-color: white; 
+                                color: black;
+                                margin-left: 10px;
+                                width: 75%;
+                                padding: 10px;
+                                border-radius: 5px;
+                            }
+                        }
+                    }
+                    .textbox {
+                        position: relative;
+                        height: 60px;
+
+                        input {
+                            display: inline-block;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                        input[type=text] {
+                            width: 69%;
+                            margin: 0;
+                            font-size: 16px;
+                            height: 25px;
+                            left: 39%;
+                        }
+                        #send-btn {
+                            background: $primary-color url('./../../media/send.svg') no-repeat center;
+                            width: 80px;
+                            background-size: 40%;
+                            margin: 0;
+                            left: 88%;
+                        }
+                    }
+                }
+            }
             #map {
                 height: 100%;
                 width: 100%;
+                z-index: -99;
+
+                .user-marker {
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+                    background: red;
+                }
+                .other-user-marker {
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+                    background: $primary-color;
+                }
             }
         }
     }
-}
-.user-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: red;
-}
-.other-user-marker {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: $primary-color;
 }

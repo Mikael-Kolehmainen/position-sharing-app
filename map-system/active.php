@@ -60,7 +60,6 @@
         <title>Active group</title>
     </head>
     <body class='active-page'>
-        <?php require './../required-files/header.php'; ?>
 
         <section>
             <article>
@@ -69,9 +68,52 @@
                     <p><?php echo $_GET['groupcode']; ?></p>
                 </div>
                 <div id='map'></div>
+                <div class='bottom'>
+                    <a class='btn round' style='display: none;'>
+                        <i class='fa-solid fa-message'></i>
+                    </a>
+                    <div class='chat' style='display: block;'>
+                        <div class='messages'>
+                            <!-- PLACEHOLDER -->
+                            <div class='message'>
+                                <div class='profile'>
+                                    <p>MK</p>
+                                </div>
+                                <p class='text'>Hello, this is a placeholder message.</p>
+                            </div>
+                            <div class='message'>
+                                <div class='profile'>
+                                    <p>MK</p>
+                                </div>
+                                <p class='text'>Hello, this is a placeholder message.</p>
+                            </div>
+                            <div class='message'>
+                                <div class='profile'>
+                                    <p>MK</p>
+                                </div>
+                                <p class='text'>Hello, this is a placeholder message.</p>
+                            </div>
+                            <div class='message'>
+                                <div class='profile'>
+                                    <p>MK</p>
+                                </div>
+                                <p class='text'>Hello, this is a placeholder message.</p>
+                            </div>
+                            <div class='message'>
+                                <div class='profile'>
+                                    <p>MK</p>
+                                </div>
+                                <p class='text'>Hello, this is a placeholder message.</p>
+                            </div>
+                        </div>
+                        <form action='' method='POST' class='textbox'>
+                            <input type='text' name='message' placeholder='Please be kind'>
+                            <input type='submit' value='' id='send-btn'>
+                        </form>
+                    </div>
+                </div>
             </article>
         </section>
 
-        <?php require './../required-files/footer.php'; ?>
     </body>
 </html>

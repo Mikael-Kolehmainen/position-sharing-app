@@ -1,3 +1,9 @@
+<!-- TO-DO -->
+<!-- CHAT -->
+    <!-- css --> <!-- 1 -->
+    <!-- backend --> <!-- 3 -->
+
+<!-- Initials on markers and user chosen color of markers --> <!-- 2 -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +12,6 @@
         <title>Home</title>
     </head>
     <body class='index-page'>
-        <?php require './required-files/header.php'; ?>
         <div class='bg-image'></div>
         <section>
             <article>
@@ -18,7 +23,5 @@
                 </a>
             </article>
         </section>
-        
-        <?php require './required-files/footer.php'; ?>
     </body>
 </html>
