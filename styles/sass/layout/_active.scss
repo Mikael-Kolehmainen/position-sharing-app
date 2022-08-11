@@ -91,6 +91,8 @@
                     .textbox {
                         position: relative;
                         height: 60px;
+                        max-width: 500px;
+                        margin: auto;
 
                         input {
                             display: inline-block;
@@ -107,7 +109,7 @@
                             left: 39%;
                         }
                         #send-btn {
-                            background: $primary-color url('./../../media/send.svg') no-repeat center;
+                            background: $primary-color url('./../../media/send.png') no-repeat center;
                             width: 80px;
                             background-size: 40%;
                             margin: 0;
@@ -121,6 +123,7 @@
                         left: 90%;
                         top: 6%;
                         transform: translate(-50%, -50%);
+                        background-color: $secondary-color;
 
                         i {
                             font-size: 26px;

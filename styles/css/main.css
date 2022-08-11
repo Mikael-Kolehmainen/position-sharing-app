@@ -8,19 +8,6 @@
     margin-right: 10px;
     margin-left: 10px; }
 
-.search-page section article {
-  width: 97%;
-  background-color: #000C66;
-  border-radius: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px; }
-  .search-page section article h1 {
-    text-align: center; }
-
-@media (min-width: 1000px) {
-  .search-page section article {
-    width: 600px; } }
-
 .active-page section article {
   height: 100%; }
   .active-page section article .top {
@@ -91,7 +78,9 @@
             border-radius: 5px; }
       .active-page section article .bottom .chat .textbox {
         position: relative;
-        height: 60px; }
+        height: 60px;
+        max-width: 500px;
+        margin: auto; }
         .active-page section article .bottom .chat .textbox input {
           display: inline-block;
           position: absolute;
@@ -105,7 +94,7 @@
           height: 25px;
           left: 39%; }
         .active-page section article .bottom .chat .textbox #send-btn {
-          background: #5BC0EB url("./../../media/send.svg") no-repeat center;
+          background: #5BC0EB url("./../../media/send.png") no-repeat center;
           width: 80px;
           background-size: 40%;
           margin: 0;
@@ -116,7 +105,8 @@
         position: absolute;
         left: 90%;
         top: 6%;
-        transform: translate(-50%, -50%); }
+        transform: translate(-50%, -50%);
+        background-color: #C3423F; }
         .active-page section article .bottom .chat .btn i {
           font-size: 26px; }
   .active-page section article #map {
@@ -217,3 +207,15 @@ body {
     margin-left: 15px; }
     .btn.round i {
       font-size: 26px; }
+
+section .box {
+  width: 97%;
+  max-width: 600px;
+  background-color: #000C66;
+  border-radius: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px; }
+  section .box h1 {
+    text-align: center; }
+  section .box input.center {
+    text-align: center; }

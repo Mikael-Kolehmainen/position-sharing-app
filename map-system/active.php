@@ -70,11 +70,11 @@
                 </div>
                 <div id='map'></div>
                 <div class='bottom'>
-                    <a class='btn round' style='display: block;' onclick='openMenu(this, document.getElementById("chat"))'>
+                    <a class='btn round' id='message-btn' style='display: block;' onclick='openMenu(this, document.getElementById("chat"))'>
                         <i class='fa-solid fa-message'></i>
                     </a>
                     <div class='chat' style='display: none;' id='chat'>
-                        <a class='btn round'>
+                        <a class='btn round' onclick='openMenu(document.getElementById("chat"), document.getElementById("message-btn"))'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
                         <div class='messages'>

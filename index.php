@@ -1,9 +1,15 @@
 <!-- TO-DO -->
 <!-- CHAT -->
-    <!-- css --> <!-- 1 -->
     <!-- backend --> <!-- 3 -->
+        <!-- update chat every 3 seconds so use js to show the data and ajax to get the data from the backend -->
 
 <!-- Initials on markers and user chosen color of markers --> <!-- 2 -->
+    <!-- user initials and color save them to session in active.php after 
+    posting from user-details.php -->
+    <!-- then upload sessions to positions db and also if the user refreshes the page-->
+    <!-- have the same inputs in search-form.php as in user-details.php -->
+
+    <!-- implement default color: #FF0000 -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +21,7 @@
         <div class='bg-image'></div>
         <section>
             <article>
-                <a href='./group-system/create.php' class='btn' title='Create'>
+                <a href='./group-system/user-details.php' class='btn' title='Create'>
                     <i class='fa-solid fa-plus'></i>
                 </a>
                 <a href='./group-system/search-form.php' class='btn' title='Search'>

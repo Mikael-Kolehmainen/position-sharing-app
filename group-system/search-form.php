@@ -9,7 +9,7 @@
     <body class='search-page'>
         <div class='bg-image'></div>
         <section>
-            <article>
+            <article class='box'>
                 <a href='./../index.php' class='btn round'>
                     <i class='fa-solid fa-chevron-left'></i>
                 </a>
