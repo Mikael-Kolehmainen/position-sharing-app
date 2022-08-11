@@ -4,10 +4,14 @@
         <!-- update chat every 3 seconds so use js to show the data and ajax to get the data from the backend -->
 
 <!-- Initials on markers and user chosen color of markers --> <!-- 2 -->
-    <!-- then upload sessions to positions db and also if the user refreshes the page-->
-    <!-- have the same inputs in search-form.php as in user-details.php -->
+    <!-- edit css in geolocation.js --> 
+        <!-- for other users markers -->
+        <!-- Add to stylesheetcontent variable the css, give the classname 'other-user-marker-[index]' 
+        then give it the className in L.divIcon and check bookmark 4. Append and remove CSS stylesheets dynamically
+        -->
 
-    <!-- implement default color: #FF0000 -->
+    <!-- om man kommer på active.php utan att laga en avatar så skall man bli skickad till 
+    search-form.php där man kan laga en avatar, kolla om man har session -->
 <!DOCTYPE html>
 <html>
     <head>

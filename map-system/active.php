@@ -35,6 +35,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href='./../styles/css/markers.css' rel='stylesheet' type='text/css'>
         <?php require './../required-files/head.php'; ?>
         <link rel='icon' type='image/svg' href='./../media/'>
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>

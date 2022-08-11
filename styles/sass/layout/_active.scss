@@ -136,17 +136,22 @@
                 width: 100%;
                 z-index: -99;
 
-                .user-marker {
+                .user-marker, .other-user-marker {
+                    position: relative;
                     width: 25px;
                     height: 25px;
                     border-radius: 50%;
-                    background: red;
+
+                    &::before {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-weight: bold;
+                    }
                 }
                 .other-user-marker {
-                    width: 25px;
-                    height: 25px;
-                    border-radius: 50%;
-                    background: $primary-color;
+                    background-color: $primary-color;
                 }
             }
         }
