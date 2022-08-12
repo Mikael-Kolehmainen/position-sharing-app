@@ -48,12 +48,14 @@
           position: relative;
           padding: 5px;
           max-width: 500px;
-          margin: auto; }
+          height: fit-content;
+          margin: auto;
+          display: flex;
+          flex-wrap: nowrap; }
           .active-page section article .bottom .chat .messages .message .profile, .active-page section article .bottom .chat .messages .message p {
             display: inline-block; }
           .active-page section article .bottom .chat .messages .message .profile {
             position: relative;
-            background-color: #5BC0EB;
             border-radius: 50%;
             width: 50px;
             height: 50px; }
@@ -67,12 +69,9 @@
               color: white;
               background-color: transparent; }
           .active-page section article .bottom .chat .messages .message .text {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
             background-color: white;
             color: black;
-            margin-left: 10px;
+            margin-left: 15px;
             width: 75%;
             padding: 10px;
             border-radius: 5px; }

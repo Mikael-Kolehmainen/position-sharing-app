@@ -52,14 +52,16 @@
                             position: relative;
                             padding: 5px;
                             max-width: 500px;
+                            height: fit-content;
                             margin: auto;
+                            display: flex;
+                            flex-wrap: nowrap;
                             
                             .profile, p {
                                 display: inline-block;
                             }
                             .profile {
                                 position: relative;
-                                background-color: $primary-color;
                                 border-radius: 50%;
                                 width: 50px;
                                 height: 50px;
@@ -76,12 +78,9 @@
                                 }
                             }
                             .text {
-                                position: absolute;
-                                top: 50%;
-                                transform: translateY(-50%);
                                 background-color: white; 
                                 color: black;
-                                margin-left: 10px;
+                                margin-left: 15px;
                                 width: 75%;
                                 padding: 10px;
                                 border-radius: 5px;

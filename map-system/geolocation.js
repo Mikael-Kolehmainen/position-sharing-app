@@ -44,7 +44,7 @@ function onLocationFound(e) {
         if (i == 1) {
             xmlhttp.onload = function() {
                 // MARKÖRER
-                removeStyles();
+                removeStyles('markers');
                 var data = JSON.parse(this.responseText);
                 var positionsArr = data.positionsdata.positions;
                 var initialsArr = data.positionsdata.initials;
@@ -67,10 +67,10 @@ function onLocationFound(e) {
                          // GE FÄRG & INITIALER ÅT DE ANDRA MARKÖRERNA
                         classNameOtherUsers = 'other-user-marker-' + i;
                         styleSheetContent = '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
-                        createStyle(styleSheetContent);
+                        createStyle(styleSheetContent, 'markers');
                         // INITIALER
                         styleSheetContent = '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
-                        createStyle(styleSheetContent);
+                        createStyle(styleSheetContent, 'markers');
 
                         marker._icon.classList.add(classNameOtherUsers);
                     }
@@ -80,40 +80,44 @@ function onLocationFound(e) {
                 var initialsArr = data.messagesdata.initials;
                 colorsArr = data.messagesdata.colors;
 
-                if (messagesArr.length > localStorage.getItem('amountOfMessages')) {
-                     // Create structure of message
-                    /*
-                        <div class='message'>
-                            <div class='profile'>
-                                <p>MK</p>
-                            </div>
-                            <p class='text'>Hello, this is a placeholder message.</p>
+                removeChilds(document.getElementById('messages'));
+
+                // Create structure of message
+                /*
+                    <div class='message'>
+                        <div class='profile'>
+                            <p>MK</p>
                         </div>
-                    */
-                    for (var i = 0; i < messagesArr.length; i++) {
-                        const message = document.createElement("div");
-                        message.classList.add('message');
-                        const profile = document.createElement("div");
-                        profile.classList.add('profile');
-                        message.appendChild(profile);
-                        const initialsText = document.createElement("p");
-                        profile.appendChild(initialsText);
-                        const messageText = document.createElement("p");
-                        messageText.classList.add('text');
-                        message.appendChild(messageText);
+                        <p class='text'>Hello, this is a placeholder message.</p>
+                    </div>
+                */
+                for (var i = 0; i < messagesArr.length; i++) {
+                    const message = document.createElement("div");
+                    message.classList.add('message');
+                    const profile = document.createElement("div");
+                    profile.classList.add('profile');
+                    message.appendChild(profile);
+                    const initialsText = document.createElement("p");
+                    profile.appendChild(initialsText);
+                    const messageText = document.createElement("p");
+                    messageText.classList.add('text');
+                    message.appendChild(messageText);
 
-                        let node;
+                    let node;
 
-                        node = document.createTextNode(initialsArr[i]);
-                        initialsText.appendChild(node);
-                        node = document.createTextNode(messagesArr[i]);
-                        messageText.appendChild(node);
+                    node = document.createTextNode(initialsArr[i]);
+                    initialsText.appendChild(node);
+                    node = document.createTextNode(messagesArr[i]);
+                    messageText.appendChild(node);
 
-                        const messages = document.getElementById("messages");
-                        messages.appendChild(message);
-                    }
+                    const messages = document.getElementById("messages");
+                    messages.appendChild(message);
+
+                    classNameOtherUsers = 'other-profile-icon-' + i;
+                    profile.classList.add(classNameOtherUsers);
+                    styleSheetContent = '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
+                    createStyle(styleSheetContent, 'profile-icons');
                 }
-                localStorage.setItem('amountOfMessages', messagesArr.length);
             };
         }
 
@@ -143,12 +147,13 @@ function locate() {
     }
 }
 
+locate();
 setInterval(locate, 3000);
 
-function createStyle(content) {
+function createStyle(content, className) {
     var head = document.head;
     var style = document.createElement('style');
-    style.classList.add('js-style');
+    style.classList.add(className);
 
     if (style.stylesheet) {
         style.stylesheet = content;
@@ -157,10 +162,15 @@ function createStyle(content) {
     }
     head.appendChild(style);
 }
-function removeStyles() {
-    var styles = document.getElementsByClassName('js-style');
+function removeStyles(className) {
+    var styles = document.getElementsByClassName(className);
 
     for (var i = 0; i < styles.length; i++) {
         styles[i].remove();
     }
 }
+const removeChilds = (parent) => {
+    while (parent.lastChild) {
+        parent.removeChild(parent.lastChild);
+    }
+};
