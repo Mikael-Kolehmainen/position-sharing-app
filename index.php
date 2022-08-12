@@ -1,9 +1,5 @@
 <!-- TO-DO -->
 
-<!-- Gjort idag -->
-    <!-- custom markers -->
-    <!-- chatsystem -->
-
 <!DOCTYPE html>
 <html>
     <head>
