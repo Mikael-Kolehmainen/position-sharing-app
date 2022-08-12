@@ -13,6 +13,11 @@ var userIcon = L.divIcon ({
     iconAnchor: [12.5, 12.5],
     className: 'user-marker'
 });
+var otherUsersIcon = L.divIcon ({
+    iconSize: [25, 25],
+    iconAnchor: [12.5, 12.5],
+    className: 'other-user-marker'
+});
 
 function onLocationFound(e) {
 
@@ -42,27 +47,31 @@ function onLocationFound(e) {
                 var positionsArr = data.positions;
                 var initialsArr = data.initials;
                 var colorsArr = data.colors;
-                var otherUsersIcon;
+                var classNameOtherUsers;
+                var styleSheetContent;
                 for (var i = 0; i < positionsArr.length; i++) {
-                    otherUsersIcon = L.divIcon ({
-                        iconSize: [25, 25],
-                        iconAnchor: [12.5, 12.5],
-                        className: 'other-user-marker'
-                    });
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
                     marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon}).addTo(map);
-                    // Tar bort användarens egna markör som redan är på kartan & sätter färg och initialer på användarens egna markör
+                    var initial = '\"' + initialsArr[i] + '\"';
                     if (marker.getLatLng().equals(current_position.getLatLng())) {
+                        // TAR BORT ANVÄNDARENS EGNA MARKÖR SOM ÄR REDAN PÅ KARTAN
                         map.removeLayer(marker);
                         // GE FÄRG & INITIALERNA ÅT ANVÄNDARENS MARKÖR
                         const stylesheet = document.styleSheets[0];
-                        var initial = '\"' + initialsArr[i] + '\"';
                         stylesheet.cssRules[1].style.setProperty('content', initial);
                         stylesheet.cssRules[0].style.setProperty('background-color', colorsArr[i]);
-                    }
-                    // GE FÄRG & INITIALER ÅT DE ANDRA MARKÖRERNA
+                    } else {
+                         // GE FÄRG & INITIALER ÅT DE ANDRA MARKÖRERNA
+                        classNameOtherUsers = 'other-user-marker-' + i;
+                        styleSheetContent = '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
+                        createStyle(styleSheetContent);
+                        // INITIALER
+                        styleSheetContent = '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
+                        createStyle(styleSheetContent);
 
+                        marker._icon.classList.add(classNameOtherUsers);
+                    }
                 }
             };
         }
@@ -94,3 +103,15 @@ function locate() {
 }
 
 setInterval(locate, 3000);
+
+function createStyle(content) {
+    var head = document.head;
+    var style = document.createElement('style');
+
+    if (style.stylesheet) {
+        style.stylesheet = content;
+    } else {
+        style.appendChild(document.createTextNode(content));
+    }
+    head.appendChild(style);
+}

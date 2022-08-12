@@ -124,8 +124,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-weight: bold; }
-    .active-page section article #map .other-user-marker {
-      background-color: #5BC0EB; }
 
 * {
   scroll-behavior: smooth;
