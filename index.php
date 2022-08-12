@@ -1,13 +1,9 @@
 <!-- TO-DO -->
-<!-- CHAT -->
-    <!-- backend -->
-
-        <!-- show messages from the database -->
-            <!-- Show marker/avatar of user in messages -->
 
 <!-- Gjort idag -->
     <!-- custom markers -->
-    
+    <!-- chatsystem -->
+
 <!DOCTYPE html>
 <html>
     <head>
