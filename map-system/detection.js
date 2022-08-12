@@ -3,6 +3,7 @@ window.addEventListener('beforeunload', function(e) {
     let sent = false;
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+            localStorage.clear();
             sent = true;
         }
     };

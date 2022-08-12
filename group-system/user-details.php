@@ -4,7 +4,7 @@
         <?php require './../required-files/head.php'; ?>
         <link rel='icon' type='image/svg' href='./../media/'>
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
-        <title>Avatar details</title>
+        <title>Marker details</title>
     </head>
     <body class='user-page'>
         <div class='bg-image'></div>
@@ -13,7 +13,7 @@
                 <a href='./../index.php' class='btn round'>
                     <i class='fa-solid fa-chevron-left'></i>
                 </a>
-                <h1>Create your avatar</h1>
+                <h1>Create your marker</h1>
                 <form action='search.php' method='POST'>
                     <input type='text' name='initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required>
                     <input type='text' name='color' placeholder='Color (HEX eg. #5BC0EB)' minlength='7' maxlength='7' class='center'>

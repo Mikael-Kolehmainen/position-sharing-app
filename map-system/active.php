@@ -1,6 +1,7 @@
 <?php
+    session_start();
     // Man kan inte komma på sidan utan en gruppkod
-    if (isset($_GET['groupcode'])) {
+    if (isset($_GET['groupcode']) && isset($_SESSION['initials'])) {
         require './../required-files/connection.php';
         $sql = "SELECT id, groupcode FROM groups";
         $result = mysqli_query($conn, $sql);
@@ -23,11 +24,18 @@
                 </script>
             ";
         }
+    } else if (isset($_GET['groupcode'])) {
+        echo "
+            <script>
+                alert('Please create a marker before joining a group.');
+                window.location.href = './../group-system/search-form.php';
+            </script>
+        ";
     } else {
         echo "
             <script>
                 alert('Couldn\'t find a group with the given code, try again.');
-                window.location.href = './../index.php';
+                window.location.href = './../group-system/search-form.php';
             </script>
         ";
     }    
@@ -63,41 +71,11 @@
                         <a class='btn round' onclick='openMenu(document.getElementById("chat"), document.getElementById("message-btn"))'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <div class='messages'>
-                            <!-- PLACEHOLDER -->
-                            <div class='message'>
-                                <div class='profile'>
-                                    <p>MK</p>
-                                </div>
-                                <p class='text'>Hello, this is a placeholder message.</p>
-                            </div>
-                            <div class='message'>
-                                <div class='profile'>
-                                    <p>MK</p>
-                                </div>
-                                <p class='text'>Hello, this is a placeholder message.</p>
-                            </div>
-                            <div class='message'>
-                                <div class='profile'>
-                                    <p>MK</p>
-                                </div>
-                                <p class='text'>Hello, this is a placeholder message.</p>
-                            </div>
-                            <div class='message'>
-                                <div class='profile'>
-                                    <p>MK</p>
-                                </div>
-                                <p class='text'>Hello, this is a placeholder message.</p>
-                            </div>
-                            <div class='message'>
-                                <div class='profile'>
-                                    <p>MK</p>
-                                </div>
-                                <p class='text'>Hello, this is a placeholder message.</p>
-                            </div>
+                        <div class='messages' id='messages'>
+                            
                         </div>
-                        <form action='' method='POST' class='textbox'>
-                            <input type='text' name='message' placeholder='Please be kind'>
+                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET['groupcode'] ?>' class='textbox'>
+                            <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>

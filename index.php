@@ -1,17 +1,13 @@
 <!-- TO-DO -->
 <!-- CHAT -->
-    <!-- backend --> <!-- 3 -->
-        <!-- update chat every 3 seconds so use js to show the data and ajax to get the data from the backend -->
+    <!-- backend -->
 
-<!-- Initials on markers and user chosen color of markers --> <!-- 2 -->
-    <!-- edit css in geolocation.js --> 
-        <!-- for other users markers -->
-        <!-- Add to stylesheetcontent variable the css, give the classname 'other-user-marker-[index]' 
-        then give it the className in L.divIcon and check bookmark 4. Append and remove CSS stylesheets dynamically
-        -->
+        <!-- show messages from the database -->
+            <!-- Show marker/avatar of user in messages -->
 
-    <!-- om man kommer på active.php utan att laga en avatar så skall man bli skickad till 
-    search-form.php där man kan laga en avatar, kolla om man har session -->
+<!-- Gjort idag -->
+    <!-- custom markers -->
+    
 <!DOCTYPE html>
 <html>
     <head>
