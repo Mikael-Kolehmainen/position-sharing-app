@@ -27,17 +27,29 @@
                 z-index: 99;
                 width: 100%;
                 height: fit-content;
+                min-height: 90px;
                 bottom: 0;
                 left: 0;
+                text-align: left;
                 
                 .btn {
-                    margin-bottom: 10px;
+                    margin: 0;
                     width: 75px;
                     height: 75px;
                     cursor: pointer;
+                    position: absolute;
+                    top: 40%;
+                    left: 12.5%;
+                    transform: translate(-50%, -50%);
 
                     i {
                         font-size: 30px;
+                    }
+                    &:nth-of-type(1) {
+                        left: 15%;
+                    }
+                    &:nth-of-type(2) {
+                        left: 85%;
                     }
                 }
                 .chat {
@@ -130,6 +142,10 @@
                             background-color: $secondary-color;
                             margin: 0;
                             margin-right: 10px;
+                            position: relative;
+                            left: 0;
+                            top: 0;
+                            transform: none;
     
                             i {
                                 font-size: 26px;

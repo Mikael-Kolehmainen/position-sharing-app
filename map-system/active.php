@@ -55,7 +55,6 @@
         <title>Active group</title>
     </head>
     <body class='active-page'>
-
         <section>
             <article>
                 <div class='top'>
@@ -64,12 +63,12 @@
                 </div>
                 <div id='map'></div>
                 <div class='bottom'>
-                    <a class='btn round' id='message-btn' style='display: block;' onclick='openMenu(this, document.getElementById("chat"))'>
+                    <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn"])'>
                         <i class='fa-solid fa-message'></i>
                     </a>
                     <div class='chat' style='display: none;' id='chat'>
                         <div class='btn-container'>
-                            <a class='btn round' onclick='openMenu(document.getElementById("chat"), document.getElementById("message-btn"))'>
+                            <a class='btn round' onclick='openMenu("chat", "message-btn", "inline-block", ["goal-btn"])'>
                                 <i class='fa-solid fa-xmark'></i>
                             </a>
                         </div>
@@ -81,9 +80,19 @@
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>
+                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
+                        <i class='fa-solid fa-location-dot'></i>
+                    </a>
+                    <div class='options' style='display: none;' id='goal-options'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);'>
+                            <i class='fa-solid fa-xmark'></i>
+                        </a>
+                        <a class='btn' onclick=''>
+                            <i class='fa-solid fa-check'></i>
+                        </a>
+                    </div>
                 </div>
             </article>
         </section>
-
     </body>
 </html>
