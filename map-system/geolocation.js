@@ -72,8 +72,8 @@ function onLocationFound(e) {
 
                         marker._icon.classList.add(classNameOtherUsers);
                     }
-                    createStyle(styleSheetContent, 'js-style');
                 }
+                createStyle(styleSheetContent, 'js-style');
                 // MEDDELANDEN
                 var messagesArr = data.messagesdata.messages;
                 var initialsArr = data.messagesdata.initials;
