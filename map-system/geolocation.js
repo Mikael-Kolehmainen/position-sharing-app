@@ -44,13 +44,13 @@ function onLocationFound(e) {
         if (i == 1) {
             xmlhttp.onload = function() {
                 // MARKÖRER
-                removeStyles('markers');
+                removeStyles('js-style');
                 var data = JSON.parse(this.responseText);
                 var positionsArr = data.positionsdata.positions;
                 var initialsArr = data.positionsdata.initials;
                 var colorsArr = data.positionsdata.colors;
                 var classNameOtherUsers;
-                var styleSheetContent;
+                var styleSheetContent =  "";
                 for (var i = 0; i < positionsArr.length; i++) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
@@ -66,14 +66,13 @@ function onLocationFound(e) {
                     } else {
                          // GE FÄRG & INITIALER ÅT DE ANDRA MARKÖRERNA
                         classNameOtherUsers = 'other-user-marker-' + i;
-                        styleSheetContent = '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
-                        createStyle(styleSheetContent, 'markers');
+                        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
                         // INITIALER
-                        styleSheetContent = '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
-                        createStyle(styleSheetContent, 'markers');
+                        styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
 
                         marker._icon.classList.add(classNameOtherUsers);
                     }
+                    createStyle(styleSheetContent, 'js-style');
                 }
                 // MEDDELANDEN
                 var messagesArr = data.messagesdata.messages;
@@ -91,6 +90,7 @@ function onLocationFound(e) {
                         <p class='text'>Hello, this is a placeholder message.</p>
                     </div>
                 */
+                styleSheetContent = "";
                 for (var i = 0; i < messagesArr.length; i++) {
                     const message = document.createElement("div");
                     message.classList.add('message');
@@ -115,9 +115,9 @@ function onLocationFound(e) {
 
                     classNameOtherUsers = 'other-profile-icon-' + i;
                     profile.classList.add(classNameOtherUsers);
-                    styleSheetContent = '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
-                    createStyle(styleSheetContent, 'profile-icons');
+                    styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
                 }
+                createStyle(styleSheetContent, 'js-style');
             };
         }
 
@@ -174,3 +174,10 @@ const removeChilds = (parent) => {
         parent.removeChild(parent.lastChild);
     }
 };
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
