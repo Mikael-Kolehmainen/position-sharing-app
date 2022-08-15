@@ -1,3 +1,7 @@
+<!-- Gjort idag -->
+    <!-- utseende på scrollbar -->
+    <!-- bug fix: programmet lagade nya style tags varje 3s så gjorde så att föregående style tags tar borts på samma gång -->
+
 <!DOCTYPE html>
 <html>
     <head>
