@@ -43,6 +43,8 @@
       padding-top: 40px; }
       .active-page section article .bottom .chat .messages {
         max-height: 240px;
+        max-width: 510px;
+        margin: auto;
         overflow-y: scroll; }
         .active-page section article .bottom .chat .messages .message {
           position: relative;
@@ -123,6 +125,22 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-weight: bold; }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px; }
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; }
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #5BC0EB; }
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #C3423F; }
 
 * {
   scroll-behavior: smooth;

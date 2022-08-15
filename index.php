@@ -1,5 +1,3 @@
-<!-- TO-DO -->
-
 <!DOCTYPE html>
 <html>
     <head>
