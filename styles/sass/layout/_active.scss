@@ -42,7 +42,7 @@
                 }
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
-                    padding-top: 40px;
+                    padding-top: 10px;
 
                     .messages {
                         max-height: 240px;
@@ -117,17 +117,23 @@
                             left: 88%;
                         }
                     }
-                    .btn {
-                        width: 30px;
-                        height: 30px;
-                        position: absolute;
-                        left: 90%;
-                        top: 6%;
-                        transform: translate(-50%, -50%);
-                        background-color: $secondary-color;
-
-                        i {
-                            font-size: 26px;
+                    .btn-container {
+                        width: 100%;
+                        max-width: 510px;
+                        margin: auto;
+                        margin-bottom: 10px;
+                        text-align: right;
+                        
+                        .btn {
+                            width: 30px;
+                            height: 30px;
+                            background-color: $secondary-color;
+                            margin: 0;
+                            margin-right: 10px;
+    
+                            i {
+                                font-size: 26px;
+                            }
                         }
                     }
                 }

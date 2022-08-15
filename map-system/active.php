@@ -68,9 +68,11 @@
                         <i class='fa-solid fa-message'></i>
                     </a>
                     <div class='chat' style='display: none;' id='chat'>
-                        <a class='btn round' onclick='openMenu(document.getElementById("chat"), document.getElementById("message-btn"))'>
-                            <i class='fa-solid fa-xmark'></i>
-                        </a>
+                        <div class='btn-container'>
+                            <a class='btn round' onclick='openMenu(document.getElementById("chat"), document.getElementById("message-btn"))'>
+                                <i class='fa-solid fa-xmark'></i>
+                            </a>
+                        </div>
                         <div class='messages' id='messages'>
                             
                         </div>

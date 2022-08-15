@@ -40,7 +40,7 @@
         font-size: 30px; }
     .active-page section article .bottom .chat {
       background-color: rgba(0, 12, 102, 0.6);
-      padding-top: 40px; }
+      padding-top: 10px; }
       .active-page section article .bottom .chat .messages {
         max-height: 240px;
         max-width: 510px;
@@ -100,16 +100,20 @@
           background-size: 40%;
           margin: 0;
           left: 88%; }
-      .active-page section article .bottom .chat .btn {
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        left: 90%;
-        top: 6%;
-        transform: translate(-50%, -50%);
-        background-color: #C3423F; }
-        .active-page section article .bottom .chat .btn i {
-          font-size: 26px; }
+      .active-page section article .bottom .chat .btn-container {
+        width: 100%;
+        max-width: 510px;
+        margin: auto;
+        margin-bottom: 10px;
+        text-align: right; }
+        .active-page section article .bottom .chat .btn-container .btn {
+          width: 30px;
+          height: 30px;
+          background-color: #C3423F;
+          margin: 0;
+          margin-right: 10px; }
+          .active-page section article .bottom .chat .btn-container .btn i {
+            font-size: 26px; }
   .active-page section article #map {
     height: 100%;
     width: 100%;
