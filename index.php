@@ -1,7 +1,3 @@
-<!-- Gjort idag -->
-    <!-- utseende på scrollbar -->
-    <!-- bug fix: programmet lagade nya style tags varje 3s så gjorde så att föregående style tags tar borts på samma gång -->
-
 <!-- TO-DO -->
     <!-- Goal algorithm -->
         <!-- The user can choose to put a goal down (line on the map) -->
