@@ -8,6 +8,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var current_position;
 var counter = 0;
 var data;
+var styleSheetContent =  "";
 
 var userIcon = L.divIcon ({
     iconSize: [25, 25],
@@ -20,6 +21,9 @@ var otherUsersIcon = L.divIcon ({
     className: 'other-user-marker'
 });
 
+let goal_marker_arr = [];
+let goal_marker_pos = [];
+
 function onLocationFound(e) {
 
     if (current_position) {
@@ -28,6 +32,35 @@ function onLocationFound(e) {
                 map.removeLayer(layer);
             }
         });
+    }
+
+    // SHOW GOAL MARKERS ON MAP IF THEY'RE DEFINED
+    if (goal_marker_arr != undefined && goal_marker_arr.length != 0
+        && goal_marker_pos != undefined && goal_marker_pos != 0) {
+        
+        let polyline = new L.Polyline(goal_marker_pos).addTo(map);
+        const initialsArr = data.positionsdata.initials;
+        const colorsArr = data.positionsdata.colors;
+        
+        for (var i = 0; i < goal_marker_arr.length; i++) {
+            // MAKE A FUNCTION OF THIS AND CALL IT
+            goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
+            classNameGoalMarkers = 'user-goal-marker-' + i;
+            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
+            // INITIALS
+            initial = '\"' + initialsArr[i] + '\"';
+            styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
+            goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+
+            // ASSIGN TO POLYLINE
+            goal_marker_arr[i].parentLine = polyline;
+
+            // ASSIGN EVENTHANDLERS TO MARKERS
+            goal_marker_arr[i]
+                .on('dragstart', dragStartHandler)
+                .on('drag', dragHandler)
+                .on('dragend', dragEndHandler);
+        }
     }
 
     current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
@@ -51,7 +84,6 @@ function onLocationFound(e) {
                 var initialsArr = data.positionsdata.initials;
                 var colorsArr = data.positionsdata.colors;
                 var classNameOtherUsers;
-                var styleSheetContent =  "";
                 for (var i = 0; i < positionsArr.length; i++) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
@@ -149,7 +181,7 @@ function locate() {
 }
 
 locate();
-// setInterval(locate, 3000);
+setInterval(locate, 3000);
 
 // FUNCTIONS
 
@@ -181,22 +213,18 @@ const removeChilds = (parent) => {
 // ONCLICK FUNCTIONS
 
 function showDraggableGoal() {
-    // SHOW THE GOAL MARKERS IN SAME COLORS BUT LOWER OPACITY AND CONNECT A LINE BETWEEN ALL MARKERS
-
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
-    let marker_arr = [];
-    let marker_pos = [];
-
     let classNameGoalMarkers;
-    let styleSheetContent = "";
     let initial;
     let polylineCords = [];
+    let latlngValue = 0.002;
     // CREATE THE POSITIONS
     for (var i = 0; i < initialsArr.length; i++) {
-        marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + 0.0001, current_position.getLatLng().lng + 0.0001);
-        polylineCords.push(marker_pos[i]);
+        goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
+        polylineCords.push(goal_marker_pos[i]);
+        latlngValue = latlngValue + 0.002;
     }
     
     // POLYLINE BETWEEN ALL GOAL MARKERS
@@ -204,21 +232,21 @@ function showDraggableGoal() {
 
     // CREATE MARKERS
     for (var i = 0; i < initialsArr.length; i++) {
-        marker_arr[i] = new L.Marker(marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
+        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
 
         classNameGoalMarkers = 'user-goal-marker-' + i;
-        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; opacity: 0.5;}';
+        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
         // INITIALS
         initial = '\"' + initialsArr[i] + '\"';
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
 
-        marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+        goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
 
         // ASSIGN TO POLYLINE
-        marker_arr[i].parentLine = polyline;
+        goal_marker_arr[i].parentLine = polyline;
 
         // ASSIGN EVENTHANDLERS TO MARKERS
-        marker_arr[i]
+        goal_marker_arr[i]
             .on('dragstart', dragStartHandler)
             .on('drag', dragHandler)
             .on('dragend', dragEndHandler);
@@ -230,15 +258,14 @@ function showDraggableGoal() {
 
 function dragStartHandler(e) {
     var polyline = e.target.parentLine;
-    if(polyline){
+    if (polyline){
         var latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
         latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
-    console.log("start");
-    for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
-        if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
-            this.polylineLatlng = i;            // If equals store key in marker instance
+        for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
+            if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
+                this.polylineLatlng = i;            // If equals store key in marker instance
+            }
         }
-    }
     }
 }
 
@@ -246,17 +273,24 @@ function dragStartHandler(e) {
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
     var polyline = e.target.parentLine;
-    if(polyline){
-    var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
+    if (polyline){
+        var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
         latlngMarker = this.getLatLng();            // Get the marker's current latlng
-        console.log("drag");
         latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
         polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
+        
+        // We get the index of the marker by looking at the classname 'other-user-marker[index]'
+        let markerClassNames = this._icon.className;
+        let markerClasses = markerClassNames.split(" ");
+        for (var i = 0; i < goal_marker_pos.length; i++) {
+            if (markerClasses.includes("user-goal-marker-"+i)) {
+                goal_marker_pos[i] = this.getLatLng();
+            }
+        }
     }
 }
 
 // Just to be clean and tidy remove the stored key on dragend:
 function dragEndHandler(e) {
     delete this.polylineLatlng;
-    console.log("end");
 }

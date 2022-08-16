@@ -1,3 +1,6 @@
+<!-- Gjort idag -->
+    <!-- Användaren kan tillägga ett positionsmål på kartan för alla användare i gruppen (visuella delen) -->
+
 <!-- TO-DO -->
     <!-- Goal algorithm -->
         <!-- The user can choose to put a goal down (line on the map) -->
