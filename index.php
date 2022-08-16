@@ -8,7 +8,8 @@
         <!-- Tell others to slow down if a user gets behind -->
 
         <!-- disclaimer on top that there's an active goal --> <!-- 1 -->
-            <!-- if discalimer is clicked remove active goal -->
+            <!-- show disclaimer when goals is sent to database -->
+            <!-- if disclaimer is clicked remove active goal from database and hide disclaimer -->
             <!-- css -->
             <!-- backend -->
         <!-- show the user the fastest way to the goal on the map -->
