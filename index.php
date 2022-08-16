@@ -10,6 +10,7 @@
                 <!-- onclick add a draggable marker on the screen which the user can move -->
                 <!-- then the user has to confirm the location of marker by pressing a button -->
                 <!-- then it gets saved with ajax to the database -->
+                <!-- if the user rejects the location of marker then remove it from the map -->
             <!-- php --> <!-- 3 -->
         <!-- disclaimer on top that there's an active goal -->
             <!-- css -->

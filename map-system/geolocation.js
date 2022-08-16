@@ -191,20 +191,72 @@ function showDraggableGoal() {
 
     let classNameGoalMarkers;
     let styleSheetContent = "";
+    let initial;
+    let polylineCords = [];
     // CREATE THE POSITIONS
     for (var i = 0; i < initialsArr.length; i++) {
         marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + 0.0001, current_position.getLatLng().lng + 0.0001);
+        polylineCords.push(marker_pos[i]);
     }
+    
+    // POLYLINE BETWEEN ALL GOAL MARKERS
+    let polyline = new L.Polyline(polylineCords).addTo(map);
 
+    // CREATE MARKERS
     for (var i = 0; i < initialsArr.length; i++) {
         marker_arr[i] = new L.Marker(marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
 
         classNameGoalMarkers = 'user-goal-marker-' + i;
-        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; }';
+        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; opacity: 0.5;}';
         // INITIALS
-        styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initialsArr[i] + '; }';
+        initial = '\"' + initialsArr[i] + '\"';
+        styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
 
         marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+
+        // ASSIGN TO POLYLINE
+        marker_arr[i].parentLine = polyline;
+
+        // ASSIGN EVENTHANDLERS TO MARKERS
+        marker_arr[i]
+            .on('dragstart', dragStartHandler)
+            .on('drag', dragHandler)
+            .on('dragend', dragEndHandler);
     }
     createStyle(styleSheetContent, 'js-style');
+}
+
+// HANDLER EVENTS FOR MARKERS
+
+function dragStartHandler(e) {
+    var polyline = e.target.parentLine;
+    if(polyline){
+        var latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
+        latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
+    console.log("start");
+    for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
+        if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
+            this.polylineLatlng = i;            // If equals store key in marker instance
+        }
+    }
+    }
+}
+
+// Now you know the key of the polyline's latlng you can change it
+// when dragging the marker on the dragevent:
+function dragHandler(e) {
+    var polyline = e.target.parentLine;
+    if(polyline){
+    var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
+        latlngMarker = this.getLatLng();            // Get the marker's current latlng
+        console.log("drag");
+        latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
+        polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
+    }
+}
+
+// Just to be clean and tidy remove the stored key on dragend:
+function dragEndHandler(e) {
+    delete this.polylineLatlng;
+    console.log("end");
 }
