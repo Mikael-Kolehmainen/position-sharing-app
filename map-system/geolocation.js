@@ -23,6 +23,7 @@ var otherUsersIcon = L.divIcon ({
 
 let goal_marker_arr = [];
 let goal_marker_pos = [];
+let goalIsBeingCreated = false;
 
 function onLocationFound(e) {
 
@@ -32,35 +33,6 @@ function onLocationFound(e) {
                 map.removeLayer(layer);
             }
         });
-    }
-
-    // SHOW GOAL MARKERS ON MAP IF THEY'RE DEFINED
-    if (goal_marker_arr != undefined && goal_marker_arr.length != 0
-        && goal_marker_pos != undefined && goal_marker_pos != 0) {
-        
-        let polyline = new L.Polyline(goal_marker_pos).addTo(map);
-        const initialsArr = data.positionsdata.initials;
-        const colorsArr = data.positionsdata.colors;
-        
-        for (var i = 0; i < goal_marker_arr.length; i++) {
-            // MAKE A FUNCTION OF THIS AND CALL IT
-            goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
-            classNameGoalMarkers = 'user-goal-marker-' + i;
-            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
-            // INITIALS
-            initial = '\"' + initialsArr[i] + '\"';
-            styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
-            goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
-
-            // ASSIGN TO POLYLINE
-            goal_marker_arr[i].parentLine = polyline;
-
-            // ASSIGN EVENTHANDLERS TO MARKERS
-            goal_marker_arr[i]
-                .on('dragstart', dragStartHandler)
-                .on('drag', dragHandler)
-                .on('dragend', dragEndHandler);
-        }
     }
 
     current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
@@ -162,6 +134,13 @@ function onLocationFound(e) {
         }
         xmlhttp.send();
     })(0, index.length);
+    // SHOW GOAL MARKERS ON MAP IF THEY'RE DEFINED
+    if (goal_marker_arr != undefined && goal_marker_arr.length != 0
+        && goal_marker_pos != undefined && goal_marker_pos != 0
+        && goalIsBeingCreated) {
+        
+        createGoalLine(goal_marker_pos);
+    }
 }
 
 function onLocationError(e) {
@@ -210,14 +189,13 @@ const removeChilds = (parent) => {
     }
 };
 
-// ONCLICK FUNCTIONS
+// GOAL FUNCTIONS
 
+// ONCLICK FUNCTION
 function showDraggableGoal() {
+    goalIsBeingCreated = true;
     const initialsArr = data.positionsdata.initials;
-    const colorsArr = data.positionsdata.colors;
-
-    let classNameGoalMarkers;
-    let initial;
+    
     let polylineCords = [];
     let latlngValue = 0.002;
     // CREATE THE POSITIONS
@@ -226,32 +204,39 @@ function showDraggableGoal() {
         polylineCords.push(goal_marker_pos[i]);
         latlngValue = latlngValue + 0.002;
     }
-    
-    // POLYLINE BETWEEN ALL GOAL MARKERS
-    let polyline = new L.Polyline(polylineCords).addTo(map);
+    styleSheetContent = createGoalLine(polylineCords, true);
+    createStyle(styleSheetContent, 'js-style');
+}
+// CREATE FUNCTION
+function createGoalLine(polyLineCords, returnStyleSheet = false) {
+    let polyline = new L.polyline(polyLineCords).addTo(map);
+    let classNameGoalMarkers, initial;
+    const initialsArr = data.positionsdata.initials;
+    const colorsArr = data.positionsdata.colors;
 
-    // CREATE MARKERS
     for (var i = 0; i < initialsArr.length; i++) {
         goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
-
         classNameGoalMarkers = 'user-goal-marker-' + i;
         styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
         // INITIALS
         initial = '\"' + initialsArr[i] + '\"';
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
-
         goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
-
         // ASSIGN TO POLYLINE
         goal_marker_arr[i].parentLine = polyline;
-
         // ASSIGN EVENTHANDLERS TO MARKERS
         goal_marker_arr[i]
-            .on('dragstart', dragStartHandler)
-            .on('drag', dragHandler)
-            .on('dragend', dragEndHandler);
+                .on('dragstart', dragStartHandler)
+                .on('drag', dragHandler)
+                .on('dragend', dragEndHandler);
     }
-    createStyle(styleSheetContent, 'js-style');
+    if (returnStyleSheet) {
+        return styleSheetContent;
+    }
+}
+// REMOVE FUNCTION
+function removeDraggableGoal() {
+    goalIsBeingCreated = false;
 }
 
 // HANDLER EVENTS FOR MARKERS

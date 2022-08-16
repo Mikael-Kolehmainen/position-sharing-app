@@ -84,7 +84,7 @@
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);removeDraggableGoal();'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
                         <a class='btn' onclick=''>
