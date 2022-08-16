@@ -123,6 +123,19 @@ function onLocationFound(e) {
                     styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
                 }
                 createStyle(styleSheetContent, 'js-style');
+                
+                // GOALS
+                const goalsArr = data.goalspositions.positions;
+                if (goalsArr[0] != "empty") {
+                    let polyLineCords = [];
+                    for (var i = 0; i < goalsArr.length; i++) {
+                        goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
+                        latlngArr = goalsArr[i].split(",");
+                        goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                        polyLineCords.push(goal_marker_pos[i]);
+                    }
+                    createGoalLine(polyLineCords);
+                }
             };
         }
 

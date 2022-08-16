@@ -11,7 +11,9 @@
         <!-- a button which allows the user to put a line on the map that other users can see --> <!-- 1 -->
             <!-- css --> <!-- 1 -->
             <!-- js --> <!-- 2 -->
-                <!-- show the active goal to other users -->
+                <!-- remove the draggable goal after user has confirmed -->
+                    <!-- and return to normal view -->
+                    <!-- show disclaimer that goal is active -->
             <!-- php --> <!-- 3 -->
         <!-- disclaimer on top that there's an active goal -->
             <!-- if discalimer is clicked remove active goal -->
