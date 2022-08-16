@@ -253,6 +253,7 @@ function removeDraggableGoal() {
 }
 // SEND DATA FUNCTION
 function sendGoalData() {
+    goalIsBeingCreated = false;
     var xmlhttp = new XMLHttpRequest();
     const groupCode = new URLSearchParams(window.location.search).get('groupcode');
     let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;

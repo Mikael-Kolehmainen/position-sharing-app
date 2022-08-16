@@ -48,10 +48,10 @@
         <link rel='icon' type='image/svg' href='./../media/'>
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
+        <script src='./../js/open.js' async></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' async></script>
         <script src='./detection.js' asyncs></script>
-        <script src='./../js/open.js' async></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -87,7 +87,7 @@
                         <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);removeDraggableGoal();'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <a class='btn' onclick='sendGoalData();'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn"]);sendGoalData();'>
                             <i class='fa-solid fa-check'></i>
                         </a>
                     </div>
