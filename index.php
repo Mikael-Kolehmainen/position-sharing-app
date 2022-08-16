@@ -1,5 +1,6 @@
 <!-- Gjort idag -->
     <!-- Användaren kan tillägga ett positionsmål på kartan för alla användare i gruppen (visuella delen) -->
+    <!-- Användaren kan förkasta valet av positionsmålet -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
@@ -9,16 +10,15 @@
 
         <!-- a button which allows the user to put a line on the map that other users can see --> <!-- 1 -->
             <!-- css --> <!-- 1 -->
-            <!-- js --> <!-- 2 --> <!-- Remember: draggable: 'true' -->
-                <!-- onclick add a draggable marker on the screen which the user can move -->
-                <!-- then the user has to confirm the location of marker by pressing a button -->
-                <!-- then it gets saved with ajax to the database -->
-                <!-- if the user rejects the location of marker then remove it from the map -->
+            <!-- js --> <!-- 2 -->
+                <!-- show the active goal to other users -->
             <!-- php --> <!-- 3 -->
         <!-- disclaimer on top that there's an active goal -->
+            <!-- if discalimer is clicked remove active goal -->
             <!-- css -->
             <!-- backend -->
         <!-- show the user the fastest way to the goal on the map -->
+    <!-- Delete group function -->
 
 <!DOCTYPE html>
 <html>

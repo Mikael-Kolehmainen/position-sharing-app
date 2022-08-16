@@ -238,6 +238,20 @@ function createGoalLine(polyLineCords, returnStyleSheet = false) {
 function removeDraggableGoal() {
     goalIsBeingCreated = false;
 }
+// SEND DATA FUNCTION
+function sendGoalData() {
+    var xmlhttp = new XMLHttpRequest();
+    const groupCode = new URLSearchParams(window.location.search).get('groupcode');
+    let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.onreadystatechange = function() {
+        if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
+            console.log("Successfully sent data.");
+        }
+    }
+    xmlhttp.send();
+}
 
 // HANDLER EVENTS FOR MARKERS
 

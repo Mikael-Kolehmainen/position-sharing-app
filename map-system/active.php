@@ -87,7 +87,7 @@
                         <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);removeDraggableGoal();'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <a class='btn' onclick=''>
+                        <a class='btn' onclick='sendGoalData();'>
                             <i class='fa-solid fa-check'></i>
                         </a>
                     </div>

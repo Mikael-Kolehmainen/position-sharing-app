@@ -30,8 +30,17 @@
 
             mysqli_query($conn, $sql);
         }
+    } else if (isset($_GET['goalpos'])) {
+        $positions = $_GET['goalpos'];
+        $groupCode = $_GET['groupcode'];
+
+        require './../required-files/connection.php';
+
+        $sql = "INSERT INTO goals (positions, groups_groupcode) VALUES ('$positions', '$groupCode')";
+
+        mysqli_query($conn, $sql);
     }
-    // Kollar om unika id:et är duplikat
+    // Checks if the unique id is actually unique
     function getUniqueID() {
         require './../required-files/connection.php';
         require './../required-files/random-string.php';
