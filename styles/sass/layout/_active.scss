@@ -22,6 +22,27 @@
                     }
                 }
             }
+            .disclaimer {
+                position: absolute;
+                top: 12.5%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: fit-content;
+                height: 20px;
+                background-color: $primary-color;
+                z-index: 99;
+                padding: 10px;
+                border-radius: 20px;
+
+                p {
+                    font-weight: bold;
+                    white-space: nowrap;
+                }
+                &:hover {
+                    background-color: $secondary-color;
+                    cursor: pointer;
+                }
+            }
             .bottom {
                 position: fixed;
                 z-index: 99;

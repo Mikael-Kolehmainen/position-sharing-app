@@ -61,6 +61,9 @@
                     <p>Group code:</p>
                     <p><?php echo $_GET['groupcode']; ?></p>
                 </div>
+                <div class='disclaimer' onclick=''>
+                    <p>There's an active goal</p>
+                </div>
                 <div id='map'></div>
                 <div class='bottom'>
                     <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn"])'>

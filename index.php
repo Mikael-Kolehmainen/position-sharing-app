@@ -7,12 +7,7 @@
             <!-- no other users can do it when there's an active goal -->
         <!-- Tell others to slow down if a user gets behind -->
 
-        <!-- a button which allows the user to put a line on the map that other users can see --> <!-- 1 -->
-            <!-- css --> <!-- 1 -->
-            <!-- js --> <!-- 2 -->
-                <!-- show disclaimer that goal is active -->
-            <!-- php --> <!-- 3 -->
-        <!-- disclaimer on top that there's an active goal -->
+        <!-- disclaimer on top that there's an active goal --> <!-- 1 -->
             <!-- if discalimer is clicked remove active goal -->
             <!-- css -->
             <!-- backend -->

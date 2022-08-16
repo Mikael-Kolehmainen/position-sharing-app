@@ -24,6 +24,23 @@
       .active-page section article .top p:last-of-type {
         font-weight: bold;
         background-color: #5BC0EB; }
+  .active-page section article .disclaimer {
+    position: absolute;
+    top: 12.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    height: 20px;
+    background-color: #5BC0EB;
+    z-index: 99;
+    padding: 10px;
+    border-radius: 20px; }
+    .active-page section article .disclaimer p {
+      font-weight: bold;
+      white-space: nowrap; }
+    .active-page section article .disclaimer:hover {
+      background-color: #C3423F;
+      cursor: pointer; }
   .active-page section article .bottom {
     position: fixed;
     z-index: 99;
