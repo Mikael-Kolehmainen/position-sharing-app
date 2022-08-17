@@ -28,6 +28,8 @@ let goal_marker_arr = [];
 let goal_marker_pos = [];
 let goalIsBeingCreated = false;
 
+let user_markers = [];
+
 function onLocationFound(e) {
 
     if (current_position) {
@@ -53,6 +55,7 @@ function onLocationFound(e) {
             xmlhttp.onload = function() {
                 // MARKERS
                 removeStyles('js-style');
+                user_markers = [];
                 data = JSON.parse(this.responseText);
                 var positionsArr = data.positionsdata.positions;
                 var initialsArr = data.positionsdata.initials;
@@ -62,6 +65,7 @@ function onLocationFound(e) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
                     marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon}).addTo(map);
+                    user_markers.push(marker);
                     var initial = '\"' + initialsArr[i] + '\"';
                     if (marker.getLatLng().equals(current_position.getLatLng())) {
                         // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
@@ -139,11 +143,30 @@ function onLocationFound(e) {
                     createGoalLine(polyLineCords, false, false);
 
                     // SHOW ACTIVE GOAL DISCLAIMER
-                    let disclaimer = document.getElementById("active-goal-disclaimer");
-                    disclaimer.style.display = "block";
+                    let disclaimer = document.getElementById('active-goal-disclaimer');
+                    disclaimer.style.display = 'block';
                     // HIDE CREATE GOAL BTN
                     let goalBtn = document.getElementById('goal-btn');
                     goalBtn.style.display = 'none';
+
+                    // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
+                    if (localStorage.getItem("user-markers")) {
+                        let latlngs = [];
+                        user_markers = JSON.parse(localStorage.getItem('user-markers'));
+                        for (var i = 0; i < user_markers.length; i++) {
+                            latlngs.push(user_markers[i].getLatLng());
+                            latlngs.push(goal_marker_arr[i].getLatLng());
+
+                            let polylineRoute = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
+                            console.log(latlngs[0].distanceTo(latlngs[1]));
+
+                            latlngs = [];
+                        }
+                    } else {
+                        // SAVE ORIGINAL POSITIONS OF USERS
+                        localStorage.setItem("user-markers", JSON.stringify(user_markers));
+                    }
                 }
             };
         }
@@ -295,6 +318,8 @@ function removeActiveGoal() {
     // SHOW CREATE GOAL BTN
     let goalBtn = document.getElementById('goal-btn');
     goalBtn.style.display = 'block';
+
+    localStorage.clear();
 }
 
 // HANDLER EVENTS FOR MARKERS
