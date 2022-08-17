@@ -136,11 +136,14 @@ function onLocationFound(e) {
                         goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
                         polyLineCords.push(goal_marker_pos[i]);
                     }
-                    createGoalLine(polyLineCords);
+                    createGoalLine(polyLineCords, false, false);
 
                     // SHOW ACTIVE GOAL DISCLAIMER
                     let disclaimer = document.getElementById("active-goal-disclaimer");
                     disclaimer.style.display = "block";
+                    // HIDE CREATE GOAL BTN
+                    let goalBtn = document.getElementById('goal-btn');
+                    goalBtn.style.display = 'none';
                 }
             };
         }
@@ -158,7 +161,7 @@ function onLocationFound(e) {
         && goal_marker_pos != undefined && goal_marker_pos != 0
         && goalIsBeingCreated) {
         
-        createGoalLine(goal_marker_pos);
+        createGoalLine(goal_marker_pos, false);
     }
 }
 
@@ -210,7 +213,7 @@ const removeChilds = (parent) => {
 
 // GOAL FUNCTIONS
 
-// ONCLICK FUNCTION
+// CREATE GOAL BTN ONCLICK FUNCTION
 function showDraggableGoal() {
     goalIsBeingCreated = true;
     const initialsArr = data.positionsdata.initials;
@@ -227,14 +230,14 @@ function showDraggableGoal() {
     createStyle(styleSheetContent, 'js-style');
 }
 // CREATE FUNCTION
-function createGoalLine(polyLineCords, returnStyleSheet = false) {
+function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = true) {
     let polyline = new L.polyline(polyLineCords).addTo(map);
     let classNameGoalMarkers, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
     for (var i = 0; i < initialsArr.length; i++) {
-        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: true, icon: otherUsersIcon}).addTo(map);
+        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon}).addTo(map);
         classNameGoalMarkers = 'user-goal-marker-' + i;
         styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
         // INITIALS
@@ -270,6 +273,9 @@ function sendGoalData() {
         }
     }
     xmlhttp.send();
+    // HIDE CREATE GOAL BTN
+    let goalBtn = document.getElementById('goal-btn');
+    goalBtn.style.display = 'none';
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
@@ -286,6 +292,9 @@ function removeActiveGoal() {
     // HIDE ACTIVE GOAL DISCLAIMER
     let disclaimer = document.getElementById("active-goal-disclaimer");
     disclaimer.style.display = "none";
+    // SHOW CREATE GOAL BTN
+    let goalBtn = document.getElementById('goal-btn');
+    goalBtn.style.display = 'block';
 }
 
 // HANDLER EVENTS FOR MARKERS
