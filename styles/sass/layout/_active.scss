@@ -194,6 +194,21 @@
                         font-weight: bold;
                     }
                 }
+                .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+                    color: white;
+                    background-color: $primary-color;
+
+                    .leaflet-popup-content {
+                        margin: 5px;
+
+                        h3 {
+                            text-align: center;
+                        }
+                    }
+                }
+                .leaflet-popup-close-button {
+                    display: none;
+                }
             }
         }
     }

@@ -16,12 +16,14 @@ const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 var userIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
-    className: 'user-marker'
+    className: 'user-marker',
+    popupAnchor: [0, -20]
 });
 var otherUsersIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
-    className: 'other-user-marker'
+    className: 'other-user-marker',
+    popupAnchor: [0, -20]
 });
 
 let goal_marker_arr = [];
@@ -29,6 +31,7 @@ let goal_marker_pos = [];
 let goalIsBeingCreated = false;
 
 let user_markers = [];
+let userPopupContent = [];
 
 function onLocationFound(e) {
 
@@ -150,22 +153,34 @@ function onLocationFound(e) {
                     goalBtn.style.display = 'none';
 
                     // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
-                    if (localStorage.getItem("user-markers")) {
+                    if (localStorage.getItem('user-markers')) {
                         let latlngs = [];
-                        user_markers = JSON.parse(localStorage.getItem('user-markers'));
-                        for (var i = 0; i < user_markers.length; i++) {
-                            latlngs.push(user_markers[i].getLatLng());
+                        let original_user_markers = JSON.parse(localStorage.getItem('user-markers'));
+                        userPopupContent = [];
+                        for (var i = 0; i < original_user_markers.length; i++) {
+                            latlngs.push(original_user_markers[i]);
                             latlngs.push(goal_marker_arr[i].getLatLng());
 
                             let polylineRoute = L.polyline(latlngs, {color: 'red'}).addTo(map);
+                            
+                            // GET PERCENTAGE OF DISTANCE MOVED
+                            let userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
+                            let goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                            
+                            let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100) + "%";
 
-                            console.log(latlngs[0].distanceTo(latlngs[1]));
+                            // ADD PERCENTAGE TO POPUP CONTENT
+                            userPopupContent.push(percentage);
 
                             latlngs = [];
                         }
                     } else {
                         // SAVE ORIGINAL POSITIONS OF USERS
-                        localStorage.setItem("user-markers", JSON.stringify(user_markers));
+                        let user_positions = [];
+                        for (var i = 0; i < user_markers.length; i++) {
+                            user_positions.push(user_markers[i].getLatLng());
+                        }
+                        localStorage.setItem('user-markers', JSON.stringify(user_positions));
                     }
                 }
             };
@@ -274,6 +289,15 @@ function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = t
                 .on('dragstart', dragStartHandler)
                 .on('drag', dragHandler)
                 .on('dragend', dragEndHandler);
+
+        // BIND PERCENTAGE POPUP TO USER MARKERS
+        if (userPopupContent.length > 0) {
+            if (user_markers[i]._mapToAdd != null) {
+                user_markers[i].bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+            } else {
+                current_position.bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+            }
+        }
     }
     if (returnStyleSheet) {
         return styleSheetContent;

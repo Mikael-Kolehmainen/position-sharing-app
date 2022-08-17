@@ -160,6 +160,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-weight: bold; }
+    .active-page section article #map .leaflet-popup-content-wrapper, .active-page section article #map .leaflet-popup-tip {
+      color: white;
+      background-color: #5BC0EB; }
+      .active-page section article #map .leaflet-popup-content-wrapper .leaflet-popup-content, .active-page section article #map .leaflet-popup-tip .leaflet-popup-content {
+        margin: 5px; }
+        .active-page section article #map .leaflet-popup-content-wrapper .leaflet-popup-content h3, .active-page section article #map .leaflet-popup-tip .leaflet-popup-content h3 {
+          text-align: center; }
+    .active-page section article #map .leaflet-popup-close-button {
+      display: none; }
 
 /* width */
 ::-webkit-scrollbar {
