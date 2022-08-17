@@ -7,12 +7,9 @@
             <!-- no other users can do it when there's an active goal -->
         <!-- Tell others to slow down if a user gets behind -->
 
-        <!-- disclaimer on top that there's an active goal --> <!-- 1 -->
-            <!-- show disclaimer when goals is sent to database -->
-            <!-- if disclaimer is clicked remove active goal from database and hide disclaimer -->
-            <!-- css -->
-            <!-- backend -->
+        <!-- disable the creation of a goal when there's an active goal -->
         <!-- show the user the fastest way to the goal on the map -->
+        
     <!-- Delete group function -->
 
 <!DOCTYPE html>

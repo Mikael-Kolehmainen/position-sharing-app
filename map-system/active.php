@@ -61,7 +61,7 @@
                     <p>Group code:</p>
                     <p><?php echo $_GET['groupcode']; ?></p>
                 </div>
-                <div class='disclaimer' onclick=''>
+                <div class='disclaimer' id='active-goal-disclaimer' style='display: none;' onclick='removeActiveGoal();'>
                     <p>There's an active goal</p>
                 </div>
                 <div id='map'></div>

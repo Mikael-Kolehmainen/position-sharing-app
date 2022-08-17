@@ -10,6 +10,9 @@ var counter = 0;
 var data;
 var styleSheetContent =  "";
 
+// GET THE GROUPCODE FROM SEARCH FIELD
+const groupCode = new URLSearchParams(window.location.search).get('groupcode');
+
 var userIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
@@ -36,8 +39,7 @@ function onLocationFound(e) {
     }
 
     current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
-    // GET THE GROUPCODE FROM SEARCH FIELD
-    const groupCode = new URLSearchParams(window.location.search).get('groupcode');
+    
     // SEND POSITION DATA & GROUPCODE TO PHP
     var index = ['send-data', 'get-data'];
     var xmlhttp = new XMLHttpRequest();
@@ -135,6 +137,10 @@ function onLocationFound(e) {
                         polyLineCords.push(goal_marker_pos[i]);
                     }
                     createGoalLine(polyLineCords);
+
+                    // SHOW ACTIVE GOAL DISCLAIMER
+                    let disclaimer = document.getElementById("active-goal-disclaimer");
+                    disclaimer.style.display = "block";
                 }
             };
         }
@@ -255,7 +261,6 @@ function removeDraggableGoal() {
 function sendGoalData() {
     goalIsBeingCreated = false;
     var xmlhttp = new XMLHttpRequest();
-    const groupCode = new URLSearchParams(window.location.search).get('groupcode');
     let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;
 
     xmlhttp.open("GET", url, true);
@@ -265,6 +270,22 @@ function sendGoalData() {
         }
     }
     xmlhttp.send();
+}
+// REMOVE GOAL ONCLICK
+function removeActiveGoal() {
+    var xmlhttp = new XMLHttpRequest();
+    let url = 'remove-data.php?groupcode=' + groupCode;
+    
+    xmlhttp.open("GET", url, true);
+    xmlhttp.onreadystatechange = function() {
+        if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
+            console.log("Successfully removed data.");
+        }
+    }
+    xmlhttp.send();
+    // HIDE ACTIVE GOAL DISCLAIMER
+    let disclaimer = document.getElementById("active-goal-disclaimer");
+    disclaimer.style.display = "none";
 }
 
 // HANDLER EVENTS FOR MARKERS
