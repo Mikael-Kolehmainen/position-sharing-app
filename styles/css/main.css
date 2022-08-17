@@ -34,7 +34,8 @@
     background-color: #5BC0EB;
     z-index: 99;
     padding: 10px;
-    border-radius: 20px; }
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
     .active-page section article .disclaimer p {
       font-weight: bold;
       white-space: nowrap; }
@@ -250,7 +251,8 @@ body {
   background-color: #5BC0EB;
   border-radius: 10px;
   height: 100px;
-  width: 100px; }
+  width: 100px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
   .btn i {
     font-size: 36px;
     position: absolute;

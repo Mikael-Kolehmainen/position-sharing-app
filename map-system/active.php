@@ -50,6 +50,8 @@
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../js/open.js' async></script>
         <script src='./../leaflet/leaflet.js'></script>
+        <script src='./../leaflet/leaflet.shpfile.js'></script>
+        <script src='./../leaflet/shp.js'></script>
         <script src='./geolocation.js' async></script>
         <script src='./detection.js' asyncs></script>
         <title>Active group</title>

@@ -12,6 +12,12 @@
         
     <!-- Delete group function -->
 
+    <!-- Files added: -->
+        <!-- leaflet.shpfile.js -->
+        <!-- shp.js -->
+        <!-- congress.zip -->
+        <!-- water-polygons-split-3857.zip -->
+
 <!DOCTYPE html>
 <html>
     <head>
