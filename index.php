@@ -1,5 +1,6 @@
 <!-- Gjort idag -->
     <!-- Berättar åt andra att de skall sakta ner om en användare blir efter -->
+    <!-- En knapp som tar bort gruppen -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->

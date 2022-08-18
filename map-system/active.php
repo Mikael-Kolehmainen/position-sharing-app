@@ -66,34 +66,46 @@
                 </div>
                 <div id='map'></div>
                 <div class='bottom'>
-                    <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn"])'>
+                    <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn", "delete-btn"])'>
                         <i class='fa-solid fa-message'></i>
                     </a>
                     <div class='chat' style='display: none;' id='chat'>
                         <div class='btn-container'>
-                            <a class='btn round' onclick='openMenu("chat", "message-btn", "inline-block", ["goal-btn"])'>
+                            <a class='btn round' onclick='openMenu("chat", "message-btn", "inline-block", ["goal-btn", "delete-btn"])'>
                                 <i class='fa-solid fa-xmark'></i>
                             </a>
                         </div>
                         <div class='messages' id='messages'>
                             
                         </div>
-                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET['groupcode'] ?>' class='textbox'>
+                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET['groupcode']; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>
-                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
+                    <a class='btn small' onclick='openMenu("delete-btn", "delete-popup", "block");' id='delete-btn'>
+                        <p>Delete group</p>
+                    </a>
+                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn", "delete-btn"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn"]);removeDraggableGoal();'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn"]);removeDraggableGoal();'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn"]);sendGoalData();'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn"]);sendGoalData();'>
                             <i class='fa-solid fa-check'></i>
                         </a>
                     </div>
+                </div>
+                <div class='popup' id='delete-popup' style='display: none;'>
+                    <p>Are you sure you want to delete this group?</p>
+                    <a class='btn' onclick='openMenu("delete-popup", "delete-btn", "inline-block");'>
+                        <p>No</p>
+                    </a>
+                    <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET['groupcode']; ?>'>
+                        <p>Yes</p>
+                    </a>
                 </div>
             </article>
         </section>

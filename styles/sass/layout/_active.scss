@@ -73,6 +73,16 @@
                     &:nth-of-type(2) {
                         left: 85%;
                     }
+                    &:nth-of-type(3) {
+                        left: 85%;
+                    }
+                    &.small {
+                        width: fit-content;
+                        height: fit-content;
+                        background-color: $secondary-color;
+                        top: 60%;
+                        left: 50%;
+                    }
                 }
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
