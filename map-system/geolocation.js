@@ -4,7 +4,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '© OpenStreetMap'
 }).addTo(map);
-var shpfile = new L.Shapefile('./../congress.zip'); shpfile.addTo(map);
 
 var current_position;
 var counter = 0;
@@ -158,6 +157,7 @@ function onLocationFound(e) {
                         let latlngs = [];
                         let original_user_markers = JSON.parse(localStorage.getItem('user-markers'));
                         userPopupContent = [];
+                        let percentages = [];
                         for (var i = 0; i < original_user_markers.length; i++) {
                             latlngs.push(original_user_markers[i]);
                             latlngs.push(goal_marker_arr[i].getLatLng());
@@ -168,12 +168,19 @@ function onLocationFound(e) {
                             let userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
                             let goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
                             
-                            let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100) + "%";
+                            let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100);
+                            percentages.push(percentage);
 
                             // ADD PERCENTAGE TO POPUP CONTENT
-                            userPopupContent.push(percentage);
+                            userPopupContent.push(percentage + "%");
 
                             latlngs = [];
+                        }
+                        let smallestPercentage = Math.min(...percentages);
+                        for (var i = 0; i < percentages.length; i++) {
+                            if (smallestPercentage + 10 < percentages[i]) {
+                                userPopupContent[i] += "\n(Slow down)";
+                            }
                         }
                     } else {
                         // SAVE ORIGINAL POSITIONS OF USERS
@@ -221,7 +228,7 @@ function locate() {
 }
 
 locate();
-setInterval(locate, 3000);
+ setInterval(locate, 3000);
 
 // FUNCTIONS
 
@@ -345,6 +352,7 @@ function removeActiveGoal() {
     goalBtn.style.display = 'block';
 
     localStorage.clear();
+    userPopupContent = [];
 }
 
 // HANDLER EVENTS FOR MARKERS

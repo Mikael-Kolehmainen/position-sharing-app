@@ -1,22 +1,10 @@
 <!-- Gjort idag -->
-    <!-- Positionsmålet kan tas bort -->
-    <!-- Ritar en linje från användaren till positionsmålet -->
-    <!-- Visar hur många procent av målet användaren har färdas -->
+    <!-- Berättar åt andra att de skall sakta ner om en användare blir efter -->
 
 <!-- TO-DO -->
-    <!-- Goal algorithm -->>
-        <!-- Tell others to slow down if a user gets behind -->
-
-
-        <!-- show the user the fastest way to the goal on the map -->
+    <!-- Goal algorithm -->
+        <!-- Detect water -->
         
-    <!-- Delete group function -->
-
-    <!-- Files added: -->
-        <!-- leaflet.shpfile.js -->
-        <!-- shp.js -->
-        <!-- congress.zip -->
-        <!-- water-polygons-split-3857.zip -->
 
 <!DOCTYPE html>
 <html>
