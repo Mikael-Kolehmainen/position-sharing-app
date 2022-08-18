@@ -6,7 +6,6 @@
     <!-- Goal algorithm -->
         <!-- Detect water -->
         
-
 <!DOCTYPE html>
 <html>
     <head>

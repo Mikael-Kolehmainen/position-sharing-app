@@ -48,6 +48,8 @@
         <link rel='icon' type='image/svg' href='./../media/'>
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
+        <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+        <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
         <script src='./../js/open.js' async></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' async></script>

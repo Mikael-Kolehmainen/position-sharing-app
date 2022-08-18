@@ -43,6 +43,8 @@ function onLocationFound(e) {
         });
     }
 
+    // L.geoJSON(vaasa).addTo(map);
+
     current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
     
     // SEND POSITION DATA & GROUPCODE TO PHP
@@ -163,6 +165,11 @@ function onLocationFound(e) {
                             latlngs.push(goal_marker_arr[i].getLatLng());
 
                             let polylineRoute = L.polyline(latlngs, {color: 'red'}).addTo(map);
+                            // laga en for loop som kollar igenom alla features i featureCollection
+                            if (turf.lineIntersect(polylineRoute.toGeoJSON(), vaasa['features'][0])) {
+                                console.log("test");
+                                L.geoJSON(turf.lineIntersect(polylineRoute.toGeoJSON(), vaasa['features'][0])).addTo(map);
+                            }
                             
                             // GET PERCENTAGE OF DISTANCE MOVED
                             let userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
@@ -228,7 +235,7 @@ function locate() {
 }
 
 locate();
- setInterval(locate, 3000);
+setInterval(locate, 3000);
 
 // FUNCTIONS
 
