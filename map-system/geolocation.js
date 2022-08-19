@@ -73,7 +73,7 @@ function onLocationFound(e) {
                     let initial = '\"' + initialsArr[i] + '\"';
                     if (marker.getLatLng().equals(current_position.getLatLng())) {
                         // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
-                        map.removeLayer(marker);
+                        goalLayerGroup.removeLayer(marker);
                         // GIVES COLOR & INITIALS TO USERS MARKER
                         const stylesheet = document.styleSheets[0];
                         stylesheet.cssRules[1].style.setProperty('content', initial);
@@ -174,10 +174,12 @@ function onLocationFound(e) {
                             if (!goalRouteIsDrawn) {
                                 let polylineRoute = L.polyline(latlngs, {color: 'red'});
                                 goalLayerGroup.addLayer(polylineRoute);
+                                console.log("test");
                                 // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
                                 // create a circle at intersect point and start new ghost line where previous ghostline and circle
                                 // intersect
-                                let ghostLine = L.polyline(latlngs, {color: 'black', opacity: 1}).addTo(map);
+                                let ghostLine = L.polyline(latlngs, {color: 'black', opacity: 1});
+                                goalLayerGroup.addLayer(ghostLine);
                                 let intersectPoints = 1;
                                 for (let j = 0; j < vaasa['features'].length; j++) {
                                     if (intersectPoints == 1 || intersectPoints.features.length <= 0) {
@@ -193,6 +195,7 @@ function onLocationFound(e) {
                                     console.log(ghostLine.toGeoJSON()); */
                                     L.geoJSON(intersectPoints.features).addTo(map);
                                 }
+                                goalLayerGroup.addTo(map);
                             }
                             
                             // GET PERCENTAGE OF DISTANCE MOVED
@@ -229,7 +232,6 @@ function onLocationFound(e) {
         xmlhttp.send();
     })(0, index.length);
     refreshedLayerGroup.addTo(map);
-    goalLayerGroup.addTo(map);
 }
 
 function onLocationError(e) {
@@ -299,7 +301,7 @@ function showDraggableGoal() {
 }
 // CREATE FUNCTION
 function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = true) {
-    // REMOVE PREVIOUS GOALLINE
+    // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
 /*    let polyline = new L.polyline(polyLineCords);
@@ -383,6 +385,7 @@ function removeActiveGoal() {
     userPopupContent = [];
     goalRouteIsDrawn = false;
     map.removeLayer(goalLayerGroup);
+    goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
 }
 
 // HANDLER EVENTS FOR MARKERS
