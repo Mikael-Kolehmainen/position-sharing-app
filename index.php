@@ -1,10 +1,19 @@
 <!-- Gjort idag -->
-    <!-- Berättar åt andra att de skall sakta ner om en användare blir efter -->
-    <!-- En knapp som tar bort gruppen -->
+    <!-- Där rutten och sjön skär varandra detekteras -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- Detect water -->
+        <!-- Write a ghost line before the actual route line, if the ghost line gets
+        water infront of it then stop the ghost line there and write a new ghost line starting from that position
+        and go around the lake. check if ghost line is at a distance from the lake at all times until you get to a 
+        position that is closest to the goal and draw a ghost line again. -->
+
+    <!-- Issues: -->
+        <!-- reading the Geojson file is slow -->
+        <!-- Possible fixes: -->
+            <!-- get a smaller geojson file of a smaller area -->
+
+    <!-- Test different scenarios and that everything works -->
         
 <!DOCTYPE html>
 <html>

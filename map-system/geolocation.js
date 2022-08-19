@@ -1,60 +1,58 @@
-var map = L.map('map', {zoomControl: false});
+let map = L.map('map', {zoomControl: false});
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-var current_position;
-var counter = 0;
-var data;
-var styleSheetContent =  "";
+// LAYER GROUPS
+let refreshedLayerGroup = L.layerGroup();
+let goalLayerGroup = L.layerGroup();
 
 // GET THE GROUPCODE FROM SEARCH FIELD
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
-var userIcon = L.divIcon ({
+let userIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
     className: 'user-marker',
     popupAnchor: [0, -20]
 });
-var otherUsersIcon = L.divIcon ({
+let otherUsersIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
     className: 'other-user-marker',
     popupAnchor: [0, -20]
 });
 
+let current_position;
+let counter = 0;
+let data;
+let styleSheetContent =  "";
+
 let goal_marker_arr = [];
 let goal_marker_pos = [];
 let goalIsBeingCreated = false;
+let goalRouteIsDrawn = false;
 
 let user_markers = [];
 let userPopupContent = [];
 
 function onLocationFound(e) {
+    // REMOVE THE PREVIOUS LAYER OF OBJECTS THAT WILL BE REFRESHED
+    map.removeLayer(refreshedLayerGroup);
 
-    if (current_position) {
-        map.eachLayer(function (layer) {
-            if (layer.options.attribution == null) {
-                map.removeLayer(layer);
-            }
-        });
-    }
-
-    // L.geoJSON(vaasa).addTo(map);
-
-    current_position = L.marker(e.latlng, {icon: userIcon}).addTo(map);
+    current_position = L.marker(e.latlng, {icon: userIcon});
+    refreshedLayerGroup.addLayer(current_position);
     
     // SEND POSITION DATA & GROUPCODE TO PHP
-    var index = ['send-data', 'get-data'];
-    var xmlhttp = new XMLHttpRequest();
+    let index = ['send-data', 'get-data'];
+    let xmlhttp = new XMLHttpRequest();
     (function loop(i, length) {
         if (i >= length) {
             return;
         }
-        var url = index[i] + ".php?pos=" + e.latlng + "&groupcode=" + groupCode;
+        let url = index[i] + ".php?pos=" + e.latlng + "&groupcode=" + groupCode;
         
         if (i == 1) {
             xmlhttp.onload = function() {
@@ -62,16 +60,17 @@ function onLocationFound(e) {
                 removeStyles('js-style');
                 user_markers = [];
                 data = JSON.parse(this.responseText);
-                var positionsArr = data.positionsdata.positions;
-                var initialsArr = data.positionsdata.initials;
-                var colorsArr = data.positionsdata.colors;
-                var classNameOtherUsers;
-                for (var i = 0; i < positionsArr.length; i++) {
+                let positionsArr = data.positionsdata.positions;
+                let initialsArr = data.positionsdata.initials;
+                let colorsArr = data.positionsdata.colors;
+                let classNameOtherUsers;
+                for (let i = 0; i < positionsArr.length; i++) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
                     latlngArr = positionsArr[i].split(",");
-                    marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon}).addTo(map);
+                    marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon});
+                    refreshedLayerGroup.addLayer(marker);
                     user_markers.push(marker);
-                    var initial = '\"' + initialsArr[i] + '\"';
+                    let initial = '\"' + initialsArr[i] + '\"';
                     if (marker.getLatLng().equals(current_position.getLatLng())) {
                         // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
                         map.removeLayer(marker);
@@ -91,8 +90,8 @@ function onLocationFound(e) {
                 }
                 createStyle(styleSheetContent, 'js-style');
                 // MESSAGES
-                var messagesArr = data.messagesdata.messages;
-                var initialsArr = data.messagesdata.initials;
+                let messagesArr = data.messagesdata.messages;
+                initialsArr = data.messagesdata.initials;
                 colorsArr = data.messagesdata.colors;
 
                 removeChilds(document.getElementById('messages'));
@@ -107,7 +106,7 @@ function onLocationFound(e) {
                     </div>
                 */
                 styleSheetContent = "";
-                for (var i = 0; i < messagesArr.length; i++) {
+                for (let i = 0; i < messagesArr.length; i++) {
                     const message = document.createElement("div");
                     message.classList.add('message');
                     const profile = document.createElement("div");
@@ -139,7 +138,7 @@ function onLocationFound(e) {
                 const goalsArr = data.goalspositions.positions;
                 if (goalsArr[0] != "empty") {
                     let polyLineCords = [];
-                    for (var i = 0; i < goalsArr.length; i++) {
+                    for (let i = 0; i < goalsArr.length; i++) {
                         goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
                         latlngArr = goalsArr[i].split(",");
                         goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
@@ -154,21 +153,46 @@ function onLocationFound(e) {
                     let goalBtn = document.getElementById('goal-btn');
                     goalBtn.style.display = 'none';
 
+                    // SAVE ORIGINAL POSITIONS OF USERS
+                    if (!localStorage.getItem('user-markers')) {
+                        let user_positions = [];
+                        for (let i = 0; i < user_markers.length; i++) {
+                            user_positions.push(user_markers[i].getLatLng());
+                        }
+                        localStorage.setItem('user-markers', JSON.stringify(user_positions));
+                    }
                     // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
                     if (localStorage.getItem('user-markers')) {
                         let latlngs = [];
                         let original_user_markers = JSON.parse(localStorage.getItem('user-markers'));
                         userPopupContent = [];
                         let percentages = [];
-                        for (var i = 0; i < original_user_markers.length; i++) {
+                        for (let i = 0; i < original_user_markers.length; i++) {
                             latlngs.push(original_user_markers[i]);
                             latlngs.push(goal_marker_arr[i].getLatLng());
-
-                            let polylineRoute = L.polyline(latlngs, {color: 'red'}).addTo(map);
-                            // laga en for loop som kollar igenom alla features i featureCollection
-                            if (turf.lineIntersect(polylineRoute.toGeoJSON(), vaasa['features'][0])) {
-                                console.log("test");
-                                L.geoJSON(turf.lineIntersect(polylineRoute.toGeoJSON(), vaasa['features'][0])).addTo(map);
+                            
+                            if (!goalRouteIsDrawn) {
+                                let polylineRoute = L.polyline(latlngs, {color: 'red'});
+                                goalLayerGroup.addLayer(polylineRoute);
+                                // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
+                                // create a circle at intersect point and start new ghost line where previous ghostline and circle
+                                // intersect
+                                let ghostLine = L.polyline(latlngs, {color: 'black', opacity: 1}).addTo(map);
+                                let intersectPoints = 1;
+                                for (let j = 0; j < vaasa['features'].length; j++) {
+                                    if (intersectPoints == 1 || intersectPoints.features.length <= 0) {
+                                        intersectPoints = turf.lineIntersect(turf.polygonToLine(vaasa['features'][i]), polylineRoute.toGeoJSON());
+                                    }
+                                } 
+                                if (intersectPoints.features.length > 0) {
+                                    // for some reason the latitude and longitude are switched in the geojson file.
+                                    let radiusCircle = L.circle([intersectPoints.features[0].geometry.coordinates[1], intersectPoints.features[0].geometry.coordinates[0]], {radius: 100}).addTo(map);
+                                    intersectPoints = turf.lineIntersect(radiusCircle.toGeoJSON(), ghostLine.toGeoJSON());
+                                    /*console.log(intersectPoints);
+                                    console.log(radiusCircle.toGeoJSON());
+                                    console.log(ghostLine.toGeoJSON()); */
+                                    L.geoJSON(intersectPoints.features).addTo(map);
+                                }
                             }
                             
                             // GET PERCENTAGE OF DISTANCE MOVED
@@ -183,19 +207,14 @@ function onLocationFound(e) {
 
                             latlngs = [];
                         }
+                        goalRouteIsDrawn = true;
+                        // TELL USER TO SLOW DOWN IF 10% FURTHER THAN OTHERS
                         let smallestPercentage = Math.min(...percentages);
-                        for (var i = 0; i < percentages.length; i++) {
+                        for (let i = 0; i < percentages.length; i++) {
                             if (smallestPercentage + 10 < percentages[i]) {
                                 userPopupContent[i] += "\n(Slow down)";
                             }
                         }
-                    } else {
-                        // SAVE ORIGINAL POSITIONS OF USERS
-                        let user_positions = [];
-                        for (var i = 0; i < user_markers.length; i++) {
-                            user_positions.push(user_markers[i].getLatLng());
-                        }
-                        localStorage.setItem('user-markers', JSON.stringify(user_positions));
                     }
                 }
             };
@@ -209,13 +228,8 @@ function onLocationFound(e) {
         }
         xmlhttp.send();
     })(0, index.length);
-    // SHOW GOAL MARKERS ON MAP IF THEY'RE DEFINED
-    if (goal_marker_arr != undefined && goal_marker_arr.length != 0
-        && goal_marker_pos != undefined && goal_marker_pos != 0
-        && goalIsBeingCreated) {
-        
-        createGoalLine(goal_marker_pos, false);
-    }
+    refreshedLayerGroup.addTo(map);
+    goalLayerGroup.addTo(map);
 }
 
 function onLocationError(e) {
@@ -240,8 +254,8 @@ setInterval(locate, 3000);
 // FUNCTIONS
 
 function createStyle(content, className) {
-    var head = document.head;
-    var style = document.createElement('style');
+    let head = document.head;
+    let style = document.createElement('style');
     style.classList.add(className);
 
     if (style.stylesheet) {
@@ -252,9 +266,9 @@ function createStyle(content, className) {
     head.appendChild(style);
 }
 function removeStyles(className) {
-    var styles = document.getElementsByClassName(className);
+    let styles = document.getElementsByClassName(className);
 
-    for (var i = 0; i < styles.length; i++) {
+    for (let i = 0; i < styles.length; i++) {
         styles[i].remove();
     }
 }
@@ -268,29 +282,36 @@ const removeChilds = (parent) => {
 
 // CREATE GOAL BTN ONCLICK FUNCTION
 function showDraggableGoal() {
+    removeStyles('js-style-goals');
     goalIsBeingCreated = true;
     const initialsArr = data.positionsdata.initials;
     
     let polylineCords = [];
     let latlngValue = 0.002;
     // CREATE THE POSITIONS
-    for (var i = 0; i < initialsArr.length; i++) {
+    for (let i = 0; i < initialsArr.length; i++) {
         goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
         polylineCords.push(goal_marker_pos[i]);
         latlngValue = latlngValue + 0.002;
     }
     styleSheetContent = createGoalLine(polylineCords, true);
-    createStyle(styleSheetContent, 'js-style');
+    createStyle(styleSheetContent, 'js-style-goals');
 }
 // CREATE FUNCTION
 function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = true) {
-    let polyline = new L.polyline(polyLineCords).addTo(map);
+    // REMOVE PREVIOUS GOALLINE
+    map.removeLayer(goalLayerGroup);
+
+/*    let polyline = new L.polyline(polyLineCords);
+    goalLayerGroup.addLayer(polyline); */
     let classNameGoalMarkers, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
-    for (var i = 0; i < initialsArr.length; i++) {
-        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon}).addTo(map);
+    for (let i = 0; i < initialsArr.length; i++) {
+        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
+        goalLayerGroup.addLayer(goal_marker_arr[i]);
+        map.addLayer(goalLayerGroup);
         classNameGoalMarkers = 'user-goal-marker-' + i;
         styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
         // INITIALS
@@ -298,10 +319,10 @@ function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = t
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
         goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
         // ASSIGN TO POLYLINE
-        goal_marker_arr[i].parentLine = polyline;
+    //    goal_marker_arr[i].parentLine = polyline;
         // ASSIGN EVENTHANDLERS TO MARKERS
         goal_marker_arr[i]
-                .on('dragstart', dragStartHandler)
+                //.on('dragstart', dragStartHandler)
                 .on('drag', dragHandler)
                 .on('dragend', dragEndHandler);
 
@@ -325,7 +346,7 @@ function removeDraggableGoal() {
 // SEND DATA FUNCTION
 function sendGoalData() {
     goalIsBeingCreated = false;
-    var xmlhttp = new XMLHttpRequest();
+    let xmlhttp = new XMLHttpRequest();
     let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;
 
     xmlhttp.open("GET", url, true);
@@ -341,7 +362,7 @@ function sendGoalData() {
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
-    var xmlhttp = new XMLHttpRequest();
+    let xmlhttp = new XMLHttpRequest();
     let url = 'remove-data.php?groupcode=' + groupCode;
     
     xmlhttp.open("GET", url, true);
@@ -357,45 +378,47 @@ function removeActiveGoal() {
     // SHOW CREATE GOAL BTN
     let goalBtn = document.getElementById('goal-btn');
     goalBtn.style.display = 'block';
-
+    // MISC
     localStorage.clear();
     userPopupContent = [];
+    goalRouteIsDrawn = false;
+    map.removeLayer(goalLayerGroup);
 }
 
 // HANDLER EVENTS FOR MARKERS
 
-function dragStartHandler(e) {
-    var polyline = e.target.parentLine;
+/*function dragStartHandler(e) {
+    let polyline = e.target.parentLine;
     if (polyline){
-        var latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
+        let latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
         latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
-        for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
+        for (let i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
             if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
                 this.polylineLatlng = i;            // If equals store key in marker instance
             }
         }
     }
-}
+} */
 
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
-    var polyline = e.target.parentLine;
+  /*  let polyline = e.target.parentLine;
     if (polyline){
-        var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
+        let latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
         latlngMarker = this.getLatLng();            // Get the marker's current latlng
         latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
         polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
-        
+        */
         // We get the index of the marker by looking at the classname 'other-user-marker[index]'
         let markerClassNames = this._icon.className;
         let markerClasses = markerClassNames.split(" ");
-        for (var i = 0; i < goal_marker_pos.length; i++) {
+        for (let i = 0; i < goal_marker_pos.length; i++) {
             if (markerClasses.includes("user-goal-marker-"+i)) {
                 goal_marker_pos[i] = this.getLatLng();
             }
         }
-    }
+   // }
 }
 
 // Just to be clean and tidy remove the stored key on dragend:
