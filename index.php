@@ -1,19 +1,20 @@
 <!-- Gjort idag -->
-    <!-- Där rutten och sjön skär varandra detekteras -->
+    <!--  -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- Write a ghost line before the actual route line, if the ghost line gets
-        water infront of it then stop the ghost line there and write a new ghost line starting from that position
-        and go around the lake. check if ghost line is at a distance from the lake at all times until you get to a 
-        position that is closest to the goal and draw a ghost line again. -->
+        <!-- Create while loop to run algorithm again if touches water again -->
+        <!-- change that the circle center point is in the center of the water entity -->
+        <!-- if user is in circle when it's created then make a smaller circle -->
 
     <!-- Issues: -->
         <!-- reading the Geojson file is slow -->
         <!-- Possible fixes: -->
             <!-- get a smaller geojson file of a smaller area -->
 
-    <!-- Test different scenarios and that everything works -->
+    <!-- Bugs -->
+        <!-- when goal is active and an user joins js throws some errors -->
+        <!-- when user joins group can't see own marker -->
         
 <!DOCTYPE html>
 <html>

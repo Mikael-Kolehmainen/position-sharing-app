@@ -32,7 +32,6 @@ let styleSheetContent =  "";
 
 let goal_marker_arr = [];
 let goal_marker_pos = [];
-let goalIsBeingCreated = false;
 let goalRouteIsDrawn = false;
 
 let user_markers = [];
@@ -137,14 +136,12 @@ function onLocationFound(e) {
                 // GOALS
                 const goalsArr = data.goalspositions.positions;
                 if (goalsArr[0] != "empty") {
-                    let polyLineCords = [];
                     for (let i = 0; i < goalsArr.length; i++) {
                         goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
                         latlngArr = goalsArr[i].split(",");
                         goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
-                        polyLineCords.push(goal_marker_pos[i]);
                     }
-                    createGoalLine(polyLineCords, false, false);
+                    createGoalLine(false, false);
 
                     // SHOW ACTIVE GOAL DISCLAIMER
                     let disclaimer = document.getElementById('active-goal-disclaimer');
@@ -174,26 +171,51 @@ function onLocationFound(e) {
                             if (!goalRouteIsDrawn) {
                                 let polylineRoute = L.polyline(latlngs, {color: 'red'});
                                 goalLayerGroup.addLayer(polylineRoute);
-                                console.log("test");
                                 // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
                                 // create a circle at intersect point and start new ghost line where previous ghostline and circle
                                 // intersect
                                 let ghostLine = L.polyline(latlngs, {color: 'black', opacity: 1});
                                 goalLayerGroup.addLayer(ghostLine);
                                 let intersectPoints = 1;
+                                let circleCenter;
+                                let circleOptions = {steps: 100, units: 'meters', options: {}};
+                                let circleRadius = 80;
+                                let indexArray = [];
+                                // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                                 for (let j = 0; j < vaasa['features'].length; j++) {
                                     if (intersectPoints == 1 || intersectPoints.features.length <= 0) {
-                                        intersectPoints = turf.lineIntersect(turf.polygonToLine(vaasa['features'][i]), polylineRoute.toGeoJSON());
+                                        intersectPoints = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
                                     }
                                 } 
                                 if (intersectPoints.features.length > 0) {
-                                    // for some reason the latitude and longitude are switched in the geojson file.
-                                    let radiusCircle = L.circle([intersectPoints.features[0].geometry.coordinates[1], intersectPoints.features[0].geometry.coordinates[0]], {radius: 100}).addTo(map);
-                                    intersectPoints = turf.lineIntersect(radiusCircle.toGeoJSON(), ghostLine.toGeoJSON());
-                                    /*console.log(intersectPoints);
-                                    console.log(radiusCircle.toGeoJSON());
-                                    console.log(ghostLine.toGeoJSON()); */
-                                    L.geoJSON(intersectPoints.features).addTo(map);
+                                    circleCenter = [intersectPoints.features[0].geometry.coordinates[0], intersectPoints.features[0].geometry.coordinates[1]];
+                                    let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
+                                    let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
+                                    L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
+                                    const intersectPosition_1 = intersectPointsOfCircle.features[0].geometry.coordinates;
+                                    const intersectPosition_2 = intersectPointsOfCircle.features[1].geometry.coordinates;
+                                    // REMOVE A PART OF THE CIRCLE THAT'S LEFT OF THE GHOSTLINE
+                                    for (let j = 0; j < intersectCircle.geometry.coordinates[0].length; j++) {
+                                        if (intersectPosition_1[0] > intersectCircle.geometry.coordinates[0][j][0]
+                                            || intersectPosition_2[0] > intersectCircle.geometry.coordinates[0][j][0]) {
+                                            if (intersectPosition_1[1] > intersectPosition_2[1]) {
+                                                if (intersectPosition_1[1] < intersectCircle.geometry.coordinates[0][j][1]) {
+                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
+                                                    j--;
+                                                }
+                                            } else {
+                                                if (intersectPosition_2[1] < intersectCircle.geometry.coordinates[0][j][1]) {
+                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
+                                                    j--;
+                                                } else if (intersectPosition_1[0] > intersectCircle.geometry.coordinates[0][j][0]) {
+                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
+                                                    j--;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    let polystyle = {fillColor: 'none', color: 'black'};
+                                    L.geoJSON(intersectCircle, {style: polystyle}).addTo(goalLayerGroup);
                                 }
                                 goalLayerGroup.addTo(map);
                             }
@@ -285,27 +307,22 @@ const removeChilds = (parent) => {
 // CREATE GOAL BTN ONCLICK FUNCTION
 function showDraggableGoal() {
     removeStyles('js-style-goals');
-    goalIsBeingCreated = true;
     const initialsArr = data.positionsdata.initials;
     
-    let polylineCords = [];
     let latlngValue = 0.002;
     // CREATE THE POSITIONS
     for (let i = 0; i < initialsArr.length; i++) {
         goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
-        polylineCords.push(goal_marker_pos[i]);
         latlngValue = latlngValue + 0.002;
     }
-    styleSheetContent = createGoalLine(polylineCords, true);
+    styleSheetContent = createGoalLine(true);
     createStyle(styleSheetContent, 'js-style-goals');
 }
 // CREATE FUNCTION
-function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = true) {
+function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
-/*    let polyline = new L.polyline(polyLineCords);
-    goalLayerGroup.addLayer(polyline); */
     let classNameGoalMarkers, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
@@ -320,11 +337,8 @@ function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = t
         initial = '\"' + initialsArr[i] + '\"';
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
         goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
-        // ASSIGN TO POLYLINE
-    //    goal_marker_arr[i].parentLine = polyline;
         // ASSIGN EVENTHANDLERS TO MARKERS
         goal_marker_arr[i]
-                //.on('dragstart', dragStartHandler)
                 .on('drag', dragHandler)
                 .on('dragend', dragEndHandler);
 
@@ -343,11 +357,11 @@ function createGoalLine(polyLineCords, returnStyleSheet = false, isDraggable = t
 }
 // REMOVE FUNCTION
 function removeDraggableGoal() {
-    goalIsBeingCreated = false;
+    map.removeLayer(goalLayerGroup);
+    goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
 }
 // SEND DATA FUNCTION
 function sendGoalData() {
-    goalIsBeingCreated = false;
     let xmlhttp = new XMLHttpRequest();
     let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;
 
@@ -390,29 +404,9 @@ function removeActiveGoal() {
 
 // HANDLER EVENTS FOR MARKERS
 
-/*function dragStartHandler(e) {
-    let polyline = e.target.parentLine;
-    if (polyline){
-        let latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
-        latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
-        for (let i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
-            if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
-                this.polylineLatlng = i;            // If equals store key in marker instance
-            }
-        }
-    }
-} */
-
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
-  /*  let polyline = e.target.parentLine;
-    if (polyline){
-        let latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
-        latlngMarker = this.getLatLng();            // Get the marker's current latlng
-        latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
-        polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
-        */
         // We get the index of the marker by looking at the classname 'other-user-marker[index]'
         let markerClassNames = this._icon.className;
         let markerClasses = markerClassNames.split(" ");
