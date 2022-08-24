@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 16, 2022 at 11:58 AM
+-- Generation Time: Aug 24, 2022 at 08:55 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -38,7 +38,7 @@ CREATE TABLE `goals` (
 --
 
 INSERT INTO `goals` (`id`, `positions`, `groups_groupcode`) VALUES
-(2, 'LatLng(63.10451, 21.62023),LatLng(63.10651, 21.62223),LatLng(63.10851, 21.62423),LatLng(63.11051, 21.62623),LatLng(63.11251, 21.62823)', 'lDzWvR1wei');
+(101, 'LatLng(63.108233, 21.631308),LatLng(63.108815, 21.64753),LatLng(63.10932, 21.638775),LatLng(63.112614, 21.628326)', '7LJ9AqugCw');
 
 -- --------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `groupcode`) VALUES
-(9, 'lDzWvR1wei');
+(25, '7LJ9AqugCw');
 
 -- --------------------------------------------------------
 
@@ -71,22 +71,6 @@ CREATE TABLE `messages` (
   `color` varchar(7) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `messages`
---
-
-INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`) VALUES
-(27, 'Hello, this is a test', 'MK', '#5BC0EB', 'lDzWvR1wei'),
-(28, 'Hello, this is also a test', 'TE', '#FF0000', 'lDzWvR1wei'),
-(29, 'test back', 'MK', '#5BC0EB', 'lDzWvR1wei'),
-(30, 'try again', 'TE', '#FF0000', 'lDzWvR1wei'),
-(31, 'testing', 'TE', '#FF0000', 'lDzWvR1wei'),
-(32, 'this is a longer message for testing the textboxes', 'TE', '#FF0000', 'lDzWvR1wei'),
-(33, 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis,', 'MK', '#5BC0EB', 'lDzWvR1wei'),
-(34, 'hello', 'KO', '#AAACCB', 'lDzWvR1wei'),
-(35, 'test', 'LO', '#FF0000', 'lDzWvR1wei'),
-(36, 'test', 'MK', '#5BC0EB', 'lDzWvR1wei');
 
 -- --------------------------------------------------------
 
@@ -108,11 +92,10 @@ CREATE TABLE `positions` (
 --
 
 INSERT INTO `positions` (`id`, `position`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
-(270, 'LatLng(63.075, 21.66)', 'testtest11', 'TE', '#bbbbbb', 'lDzWvR1wei'),
-(375, 'LatLng(63.09, 21.65)', 'testtest22', 'CM', '#979f48', 'lDzWvR1wei'),
-(665, 'LatLng(63.08, 21.67)', 'testtest44', 'JO', '#aaaaaa', 'lDzWvR1wei'),
-(1046, 'LatLng(63.10251, 21.61823)', 'llrpH4b8ko', 'MK', '#5BC0EB', 'lDzWvR1wei'),
-(1054, 'LatLng(63.10251, 21.61823)', 'JTfGWKy5GC', 'MK', '#5BC0EB', 'lDzWvR1wei');
+(1388, 'LatLng(63.10251, 21.63)', 'testtest11', 'TE', '#ff0000', '7LJ9AqugCw'),
+(1389, 'LatLng(63.10251, 21.65)', 'testtest22', 'TT', '#000000', '7LJ9AqugCw'),
+(1390, 'LatLng(63.10251, 21.64)', 'testtest33', 'ET', '#0000ff', '7LJ9AqugCw'),
+(1803, 'LatLng(63.104614, 21.620326)', 'jXvLrzenAn', 'MK', '#5BC0EB', '7LJ9AqugCw');
 
 --
 -- Indexes for dumped tables
@@ -150,13 +133,13 @@ ALTER TABLE `positions`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -168,7 +151,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1055;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1805;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

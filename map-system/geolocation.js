@@ -52,7 +52,7 @@ function onLocationFound(e) {
             return;
         }
         let url = index[i] + ".php?pos=" + e.latlng + "&groupcode=" + groupCode;
-        
+
         if (i == 1) {
             xmlhttp.onload = function() {
                 // MARKERS
@@ -136,10 +136,18 @@ function onLocationFound(e) {
                 // GOALS
                 const goalsArr = data.goalspositions.positions;
                 if (goalsArr[0] != "empty") {
+                    // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
+                    while (goalsArr.length < positionsArr.length) {
+                        goalsArr.push("no goal");
+                    }
                     for (let i = 0; i < goalsArr.length; i++) {
-                        goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
-                        latlngArr = goalsArr[i].split(",");
-                        goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                        if (goalsArr[i] != "no goal") {
+                            goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
+                            latlngArr = goalsArr[i].split(",");
+                            goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                        } else {
+                            goal_marker_pos[i] = "no goal";
+                        }
                     }
                     createGoalLine(false, false);
 
@@ -164,7 +172,7 @@ function onLocationFound(e) {
                         let original_user_markers = JSON.parse(localStorage.getItem('user-markers'));
                         userPopupContent = [];
                         let percentages = [];
-                        for (let i = 0; i < original_user_markers.length; i++) {
+                        for (let i = 0; i < goal_marker_arr.length; i++) {
                             latlngs.push(original_user_markers[i]);
                             latlngs.push(goal_marker_arr[i].getLatLng());
                             
@@ -180,7 +188,6 @@ function onLocationFound(e) {
                                 let circleCenter;
                                 let circleOptions = {steps: 100, units: 'meters', options: {}};
                                 let circleRadius = 80;
-                                let indexArray = [];
                                 // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                                 for (let j = 0; j < vaasa['features'].length; j++) {
                                     if (intersectPoints == 1 || intersectPoints.features.length <= 0) {
@@ -327,27 +334,30 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
-    for (let i = 0; i < initialsArr.length; i++) {
-        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
-        goalLayerGroup.addLayer(goal_marker_arr[i]);
-        map.addLayer(goalLayerGroup);
-        classNameGoalMarkers = 'user-goal-marker-' + i;
-        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
-        // INITIALS
-        initial = '\"' + initialsArr[i] + '\"';
-        styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
-        goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
-        // ASSIGN EVENTHANDLERS TO MARKERS
-        goal_marker_arr[i]
-                .on('drag', dragHandler)
-                .on('dragend', dragEndHandler);
+    for (let i = 0; i < goal_marker_pos.length; i++) {
+        if (goal_marker_pos[i] != "no goal") {
+            console.log(goal_marker_pos[i]);
+            goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
+            goalLayerGroup.addLayer(goal_marker_arr[i]);
+            map.addLayer(goalLayerGroup);
+            classNameGoalMarkers = 'user-goal-marker-' + i;
+            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
+            // INITIALS
+            initial = '\"' + initialsArr[i] + '\"';
+            styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
+            goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+            // ASSIGN EVENTHANDLERS TO MARKERS
+            goal_marker_arr[i]
+                    .on('drag', dragHandler)
+                    .on('dragend', dragEndHandler);
 
-        // BIND PERCENTAGE POPUP TO USER MARKERS
-        if (userPopupContent.length > 0) {
-            if (user_markers[i]._mapToAdd != null) {
-                user_markers[i].bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
-            } else {
-                current_position.bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+            // BIND PERCENTAGE POPUP TO USER MARKERS
+            if (userPopupContent.length > 0) {
+                if (user_markers[i]._mapToAdd != null) {
+                    user_markers[i].bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+                } else {
+                    current_position.bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+                }
             }
         }
     }

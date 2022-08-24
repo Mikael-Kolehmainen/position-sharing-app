@@ -14,7 +14,6 @@
 
     <!-- Bugs -->
         <!-- when goal is active and an user joins js throws some errors -->
-        <!-- when user joins group can't see own marker -->
         
 <!DOCTYPE html>
 <html>
