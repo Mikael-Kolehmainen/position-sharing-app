@@ -1,5 +1,6 @@
 <!-- Gjort idag -->
-    <!--  -->
+    <!-- Fixade ett programfel där då en användare kommer med i en grupp då det finns ett aktivt mål
+        kom det programfel. -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
@@ -13,8 +14,8 @@
             <!-- get a smaller geojson file of a smaller area -->
 
     <!-- Bugs -->
-        <!-- when goal is active and an user joins js throws some errors -->
-        
+
+    
 <!DOCTYPE html>
 <html>
     <head>
