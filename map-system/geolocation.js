@@ -5,7 +5,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-L.geoJSON(vaasa).addTo(map);
+ L.geoJSON(vaasa).addTo(map);
 
 // LAYER GROUPS
 let refreshedLayerGroup = L.layerGroup();
@@ -180,65 +180,74 @@ function onLocationFound(e) {
                             
                             if (!goalRouteIsDrawn) {
                                 // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
-                                // create a circle at intersect point and start new ghost line where previous ghostline and circle
-                                // intersect
                                 let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
                                 goalLayerGroup.addLayer(ghostLine);
-                                let intersectPoints = 1;
+                                let intersectPoint;
+                                let polygonCenters = [];
                                 let circleCenter;
                                 let circleOptions = {steps: 100, units: 'meters', options: {}};
                                 let circleRadius = 80;
+                                let intersectPositions_1 = [];
+                                let intersectPositions_2 = [];
                                 // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                                 for (let j = 0; j < vaasa['features'].length; j++) {
-                                    if (intersectPoints == 1 || intersectPoints.features.length <= 0) {
-                                        intersectPoints = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
-                                        // save polygon to variable then put the circleCenter in the center of the polygon
+                                    intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
+                                    if (intersectPoint.features.length > 0) {
+                                        polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
                                     }
                                 } 
-                                if (intersectPoints.features.length > 0) {
-                                    // change this to center of polygon
-                                    circleCenter = [intersectPoints.features[0].geometry.coordinates[0], intersectPoints.features[0].geometry.coordinates[1]];
-                                    let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
-                                    let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
-                                    L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
-                                    let intersectPosition_1 = intersectPointsOfCircle.features[0].geometry.coordinates;
-                                    let intersectPosition_2 = intersectPointsOfCircle.features[1].geometry.coordinates;
-                                    // SWAP PLACES LATITUDE & LONGITUDE
-                                    let intersectPositionSwapped_1 = new L.LatLng(intersectPosition_1[1], intersectPosition_1[0]);
-                                    let intersectPositionSwapped_2 = new L.LatLng(intersectPosition_2[1], intersectPosition_2[0]);
-                                    // REMOVE A PART OF THE CIRCLE THAT'S LEFT OF THE GHOSTLINE
-                                    for (let j = 0; j < intersectCircle.geometry.coordinates[0].length; j++) {
-                                        if (intersectPosition_1[0] > intersectCircle.geometry.coordinates[0][j][0]
-                                            || intersectPosition_2[0] > intersectCircle.geometry.coordinates[0][j][0]) {
-                                            if (intersectPosition_1[1] > intersectPosition_2[1]) {
-                                                if (intersectPosition_1[1] < intersectCircle.geometry.coordinates[0][j][1]) {
-                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
-                                                    j--;
-                                                }                                              
+                                if (polygonCenters.length > 0) {
+                                    for (let j = 0; j < polygonCenters.length; j++) {
+                                        circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
+                                        let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
+                                        let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
+                                       // L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
+                                        // SWAP PLACES OF LATITUDE & LONGITUDE
+                                        let intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
+                                        let intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
+                                        intersectPositions_1.push(intersectPositionSwapped_1);
+                                        intersectPositions_2.push(intersectPositionSwapped_2);
+                                        // Calculate the degrees based on where the intersectpoints are
+                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 40.0, 185.0, circleOptions);
+                                        
+                                        let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
+                                        let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
+                                        L.geoJSON(intersectCircle, {style: ghoststyle}).addTo(goalLayerGroup);
+                                        L.geoJSON(arcRoute, {style: polystyle}).addTo(goalLayerGroup);
+                                    }
+                                    // DRAW ROUTELINES BETWEEN THE ARCHES
+                                    // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
+                                    const polyLineStyle = {color: 'red', opacity: 1};
+                                    for (let j = 0; j < intersectPositions_1.length; j++) {
+                                        if (j == 0) {
+                                            if (intersectPositions_1[j].distanceTo(original_user_markers[i]) < intersectPositions_2[j].distanceTo(original_user_markers[i])) {
+                                                ghostLine = L.polyline([intersectPositions_1[j], original_user_markers[i]], polyLineStyle);
                                             } else {
-                                                if (intersectPosition_2[1] < intersectCircle.geometry.coordinates[0][j][1]) {
-                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
-                                                    j--;
-                                                } else if (intersectPosition_1[0] > intersectCircle.geometry.coordinates[0][j][0]) {
-                                                    intersectCircle.geometry.coordinates[0].splice(j, 1);
-                                                    j--;
+                                                ghostLine = L.polyline([intersectPositions_2[j], original_user_markers[i]], polyLineStyle);
+                                            }
+                                        } else {
+                                            if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_1[j])) {
+                                                if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_1[j-1].distanceTo(intersectPositions_2[j])) {
+                                                    ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_1[j]], polyLineStyle);
+                                                } else {
+                                                    ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_2[j]], polyLineStyle);
+                                                }
+                                            } else {
+                                                if (intersectPositions_2[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_2[j])) {
+                                                    ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_1[j]], polyLineStyle);
+                                                } else {
+                                                    ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_2[j]], polyLineStyle);
                                                 }
                                             }
+                                            goalLayerGroup.addLayer(ghostLine);
                                         }
-                                    }
-                                    let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
-                                    L.geoJSON(intersectCircle, {style: polystyle}).addTo(goalLayerGroup);
-                                   
-                                    // check which interectPosition is closer before drawing the ghostline
-                                    if (intersectPositionSwapped_1.distanceTo(original_user_markers[i]) < intersectPositionSwapped_2.distanceTo(original_user_markers[i])) {
-                                        ghostLine = L.polyline([intersectPositionSwapped_1, original_user_markers[i]], {color: 'red', opacity: 1});
-                                        goalLayerGroup.addLayer(ghostLine);
-                                        ghostLine = L.polyline([intersectPositionSwapped_2, goal_marker_arr[i].getLatLng()], {color: 'red', opacity: 1});
-                                        goalLayerGroup.addLayer(ghostLine);
-                                    } else {
-                                        ghostLine = L.polyline([intersectPositionSwapped_2, original_user_markers[i]], {color: 'red', opacity: 1});
-                                        goalLayerGroup.addLayer(ghostLine);
-                                        ghostLine = L.polyline([intersectPositionSwapped_1, goal_marker_arr[i].getLatLng()], {color: 'red', opacity: 1});
+                                        if (j == intersectPositions_1.length - 1) {
+                                            if (intersectPositions_1[j].distanceTo(goal_marker_arr[i].getLatLng()) < intersectPositions_2[j].distanceTo(goal_marker_arr[i].getLatLng())) {
+                                                ghostLine = L.polyline([intersectPositions_1[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
+                                            } else {
+                                                ghostLine = L.polyline([intersectPositions_2[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
+                                            }
+                                        }
                                         goalLayerGroup.addLayer(ghostLine);
                                     }
                                 } else {

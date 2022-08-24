@@ -4,9 +4,10 @@
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- Create while loop to run algorithm again if touches water again -->
-        <!-- change that the circle center point is in the center of the water entity -->
+        <!-- then create a linearc between the two intersectpoints -->
+        <!-- change radius of circle depending on water entite size -->
         <!-- if user is in circle when it's created then make a smaller circle -->
+        <!-- what happens if a user puts a marker on water -->
 
     <!-- Issues: -->
         <!-- reading the Geojson file is slow -->
