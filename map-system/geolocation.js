@@ -201,15 +201,32 @@ function onLocationFound(e) {
                                         circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
                                         let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
                                         let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
-                                       // L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
+                                        // L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
                                         // SWAP PLACES OF LATITUDE & LONGITUDE
                                         let intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
                                         let intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
                                         intersectPositions_1.push(intersectPositionSwapped_1);
                                         intersectPositions_2.push(intersectPositionSwapped_2);
-                                        // Calculate the degrees based on where the intersectpoints are
-                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 40.0, 185.0, circleOptions);
-                                        
+                                        // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
+                                        let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2);
+                                        let arcLength = Math.asin(chordLength / (2*circleRadius))*2*circleRadius;
+                                        let centralAngle = arcLength / circleRadius;
+                                        // convert angle to degrees from radians
+                                        centralAngle = centralAngle * 180 / Math.PI;
+                                        // we check if the line is ascending or descending then we can get the slope of the ghostline
+                                        let slope;
+                                        if (intersectPositionSwapped_1.lng < intersectPositionSwapped_2.lng) {
+                                            slope = (intersectPositionSwapped_2.lng - intersectPositionSwapped_1.lng) / (intersectPositionSwapped_2.lat - intersectPositionSwapped_1.lat);
+                                        } else {
+                                            slope = (intersectPositionSwapped_1.lng - intersectPositionSwapped_2.lng) / (intersectPositionSwapped_1.lat - intersectPositionSwapped_2.lat);
+                                        }
+                                        // convert slope to radians
+                                        slope = Math.atan(slope);
+                                        // convert radians to degrees
+                                        slope = slope * 180 / Math.PI;
+                                        // had to take -1 so it touches the ghostline for some unknown reason
+                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, slope - 1, centralAngle + (slope - 1), circleOptions);
+
                                         let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
                                         let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
                                         L.geoJSON(intersectCircle, {style: ghoststyle}).addTo(goalLayerGroup);
