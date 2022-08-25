@@ -1,12 +1,11 @@
 <!-- Gjort idag -->
-    <!-- Fixade ett programfel där då en användare kommer med i en grupp då det finns ett aktivt mål
-        kom det programfel. -->
+    <!-- Programmet räknar ut hur lång bågen skall bli och vinkeln på den då den far runt en vatten entitet
+        från radien och längden på kordan.-->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- then create a linearc between the two intersectpoints -->
         <!-- change radius of circle depending on water entite size -->
-        <!-- if user is in circle when it's created then make a smaller circle -->
+        <!-- if user or goal is in circle when it's created then make a smaller circle -->
         <!-- what happens if a user puts a marker on water -->
 
     <!-- Issues: -->

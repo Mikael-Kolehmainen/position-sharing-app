@@ -184,6 +184,7 @@ function onLocationFound(e) {
                                 goalLayerGroup.addLayer(ghostLine);
                                 let intersectPoint;
                                 let polygonCenters = [];
+                                let polygonBounds = [];
                                 let circleCenter;
                                 let circleOptions = {steps: 100, units: 'meters', options: {}};
                                 let circleRadius = 80;
@@ -194,11 +195,13 @@ function onLocationFound(e) {
                                     intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
                                     if (intersectPoint.features.length > 0) {
                                         polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
+                                        polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
                                     }
                                 } 
                                 if (polygonCenters.length > 0) {
                                     for (let j = 0; j < polygonCenters.length; j++) {
                                         circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
+                                        circleRadius = polygonBounds[j]._northEast.distanceTo(polygonBounds[j]._southWest) / 2;
                                         let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
                                         let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
                                         // L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
@@ -209,23 +212,39 @@ function onLocationFound(e) {
                                         intersectPositions_2.push(intersectPositionSwapped_2);
                                         // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
                                         let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2);
-                                        let arcLength = Math.asin(chordLength / (2*circleRadius))*2*circleRadius;
+                                        let arcLength = Math.asin(chordLength / (2 * circleRadius)) * 2 * circleRadius;
                                         let centralAngle = arcLength / circleRadius;
                                         // convert angle to degrees from radians
                                         centralAngle = centralAngle * 180 / Math.PI;
-                                        // we check if the line is ascending or descending then we can get the slope of the ghostline
                                         let slope;
+                                        let arcRoute;
+                                        // we check if the line is ascending or descending then we can get the slope of the ghostline and
+                                        // determine if arc is drawn on the left or right side of the water entity
                                         if (intersectPositionSwapped_1.lng < intersectPositionSwapped_2.lng) {
                                             slope = (intersectPositionSwapped_2.lng - intersectPositionSwapped_1.lng) / (intersectPositionSwapped_2.lat - intersectPositionSwapped_1.lat);
+                                            // convert slope to radians
+                                            slope = Math.atan(slope);
+                                            // convert radians to degrees
+                                            slope = slope * 180 / Math.PI;
+                                            if (intersectPositionSwapped_1.distanceTo(polygonBounds[j]._northEast) < intersectPositionSwapped_2.distanceTo(polygonBounds[j]._southWest)) {
+                                                arcRoute = turf.lineArc(circleCenter, circleRadius, slope, centralAngle + slope, circleOptions);
+                                            } else {
+                                                arcRoute = turf.lineArc(circleCenter, circleRadius, 350-centralAngle, 350, circleOptions);
+                                            }
                                         } else {
                                             slope = (intersectPositionSwapped_1.lng - intersectPositionSwapped_2.lng) / (intersectPositionSwapped_1.lat - intersectPositionSwapped_2.lat);
+                                            // convert slope to radians
+                                            slope = Math.atan(slope);
+                                            // convert radians to degrees
+                                            slope = slope * 180 / Math.PI;
+                                            if (intersectPositionSwapped_2.distanceTo(polygonBounds[j]._northEast) < intersectPositionSwapped_1.distanceTo(polygonBounds[j]._southWest)) {
+                                                arcRoute = turf.lineArc(circleCenter, circleRadius, slope, centralAngle + slope, circleOptions);
+                                            } else {
+                                                arcRoute = turf.lineArc(circleCenter, circleRadius, 350-centralAngle, 350, circleOptions); 
+                                            }
                                         }
-                                        // convert slope to radians
-                                        slope = Math.atan(slope);
-                                        // convert radians to degrees
-                                        slope = slope * 180 / Math.PI;
-                                        // had to take -1 so it touches the ghostline for some unknown reason
-                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, slope - 1, centralAngle + (slope - 1), circleOptions);
+                                        console.log("centralAngle: " + centralAngle);
+                                        console.log("slope: " + slope);
 
                                         let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
                                         let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
@@ -242,6 +261,7 @@ function onLocationFound(e) {
                                             } else {
                                                 ghostLine = L.polyline([intersectPositions_2[j], original_user_markers[i]], polyLineStyle);
                                             }
+                                            goalLayerGroup.addLayer(ghostLine);
                                         } else {
                                             if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_1[j])) {
                                                 if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_1[j-1].distanceTo(intersectPositions_2[j])) {
@@ -264,8 +284,8 @@ function onLocationFound(e) {
                                             } else {
                                                 ghostLine = L.polyline([intersectPositions_2[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
                                             }
+                                            goalLayerGroup.addLayer(ghostLine);
                                         }
-                                        goalLayerGroup.addLayer(ghostLine);
                                     }
                                 } else {
                                     let polylineRoute = L.polyline(latlngs, {color: 'red'});
