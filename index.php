@@ -1,10 +1,8 @@
 <!-- Gjort idag -->
-    <!-- Programmet räknar ut hur lång bågen skall bli och vinkeln på den då den far runt en vatten entitet
-        från radien och längden på kordan.-->
+    
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- change radius of circle depending on water entite size -->
         <!-- if user or goal is in circle when it's created then make a smaller circle -->
         <!-- what happens if a user puts a marker on water -->
 
@@ -14,7 +12,7 @@
             <!-- get a smaller geojson file of a smaller area -->
 
     <!-- Bugs -->
-
+        <!-- can't drag marker if marker is behind bottom div -->
     
 <!DOCTYPE html>
 <html>
