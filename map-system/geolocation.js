@@ -204,8 +204,7 @@ function onLocationFound(e) {
                                         circleRadius = polygonBounds[j]._northEast.distanceTo(polygonBounds[j]._southWest) / 2;
                                         let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
                                         let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
-                                        // L.geoJSON(intersectPointsOfCircle).addTo(goalLayerGroup);
-                                        L.geoJSON(intersectCircle).addTo(goalLayerGroup);
+                                        
                                         // SWAP PLACES OF LATITUDE & LONGITUDE
                                         let intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
                                         let intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
@@ -218,30 +217,24 @@ function onLocationFound(e) {
                                         // convert angle to degrees from radians
                                         centralAngle = Math.round(centralAngle * 180 / Math.PI);
 
-                                        // Make a loop that turns the arc until it intersects with the upper intersectposition
-                                        // check before the loop if the arc should turn to left or right
-                                        // save which one is higher to a variable and increment value (which way the arc should turn);
                                         let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, centralAngle, circleOptions);
-                                        if (intersectPositionSwapped_1.lng > intersectPositionSwapped_2.lng) {
-                                            if (intersectPositionSwapped_1.lat > intersectPositionSwapped_2.lat) {
-                                                // intersectPositionSwapped_1 is higher and more to the right
-                                            } else {
-                                                // intersectPositionSwapped_1 is higher and more to the left
-                                            }
-                                        } else {
-                                            if (intersectPositionSwapped_2.lat > intersectPositionSwapped_1.lat) {
-                                                // intersectPositionSwapped_2 is higher and more to the right
-                                            } else {
-                                                // intersectPositionSwapped_2 is higher and more to the left
-                                            }
+                                        let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], 1, circleOptions);
+                                        let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], 1, circleOptions);
+                                        let turnIncrement = .1;
+                                        let arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
+                                        let arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                        let arcValue = 0;
+                                        // Turn the arc around until it intersects with the intersectpoints
+                                        while (!arcIntersect_1 && !arcIntersect_2) {
+                                            arcRoute = turf.lineArc(circleCenter, circleRadius, arcValue, centralAngle + arcValue, circleOptions);
+                                            arcValue = arcValue + turnIncrement;
+                                            arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
+                                            arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
                                         }
-
 
                                         let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
                                         let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
                                         L.geoJSON(intersectCircle, {style: ghoststyle}).addTo(goalLayerGroup);
-                                        console.log(arcRoute.geometry.coordinates[0]);
-                                        L.marker([arcRoute.geometry.coordinates[0][1], arcRoute.geometry.coordinates[0][0]]).addTo(goalLayerGroup);
                                         
                                         L.geoJSON(arcRoute, {style: polystyle}).addTo(goalLayerGroup);
                                     }
