@@ -50,7 +50,8 @@
     min-height: 90px;
     bottom: 0;
     left: 0;
-    text-align: left; }
+    text-align: left;
+    pointer-events: none; }
     .active-page section article .bottom .btn {
       margin: 0;
       width: 75px;
@@ -59,7 +60,8 @@
       position: absolute;
       top: 40%;
       left: 12.5%;
-      transform: translate(-50%, -50%); }
+      transform: translate(-50%, -50%);
+      pointer-events: auto; }
       .active-page section article .bottom .btn i {
         font-size: 30px; }
       .active-page section article .bottom .btn:nth-of-type(1) {

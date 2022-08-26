@@ -195,7 +195,10 @@ function onLocationFound(e) {
                                 // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                                 for (let j = 0; j < vaasa['features'].length; j++) {
                                     intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
-                                    if (intersectPoint.features.length > 0) {
+                                    // Check if user or goal is in water
+                                    if (intersectPoint.features.length > 0
+                                        && !turf.booleanPointInPolygon([original_user_markers[i].lng, original_user_markers[i].lat], vaasa['features'][j])
+                                        && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][j])) {
                                         polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
                                         polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
                                     }
@@ -206,10 +209,16 @@ function onLocationFound(e) {
                                         circleRadius = polygonBounds[j]._northEast.distanceTo(polygonBounds[j]._southWest) / 2;
                                         let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
                                         let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
-                                        
+                                        let intersectPositionSwapped_1 = new L.LatLng(original_user_markers[i].lat, original_user_markers[i].lng);
+                                        let intersectPositionSwapped_2 = goal_marker_arr[i].getLatLng();
+    
                                         // SWAP PLACES OF LATITUDE & LONGITUDE
-                                        let intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
-                                        let intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
+                                        if (typeof intersectPointsOfCircle.features[0] != "undefined") {
+                                            intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
+                                        }
+                                        if (typeof intersectPointsOfCircle.features[1] != "undefined") {
+                                            intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
+                                        }
                                         intersectPositions_1.push(intersectPositionSwapped_1);
                                         intersectPositions_2.push(intersectPositionSwapped_2);
                                         // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
@@ -227,11 +236,14 @@ function onLocationFound(e) {
                                         let arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
                                         let arcValue = 0;
                                         // Turn the arc around until it intersects with the intersectpoints
-                                        while (!arcIntersect_1 && !arcIntersect_2) {
-                                            arcRoute = turf.lineArc(circleCenter, circleRadius, arcValue, centralAngle + arcValue, circleOptions);
-                                            arcValue = arcValue + turnIncrement;
-                                            arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
-                                            arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                        if (typeof intersectPointsOfCircle.features[0] != "undefined"
+                                            && typeof intersectPointsOfCircle.features[1] != "undefined") {
+                                            while (!arcIntersect_1 && !arcIntersect_2) {
+                                                arcRoute = turf.lineArc(circleCenter, circleRadius, arcValue, centralAngle + arcValue, circleOptions);
+                                                arcValue = arcValue + turnIncrement;
+                                                arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
+                                                arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                            }
                                         }
 
                                         let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};

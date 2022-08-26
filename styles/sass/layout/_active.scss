@@ -53,6 +53,7 @@
                 bottom: 0;
                 left: 0;
                 text-align: left;
+                pointer-events: none;
                 
                 .btn {
                     margin: 0;
@@ -63,6 +64,7 @@
                     top: 40%;
                     left: 12.5%;
                     transform: translate(-50%, -50%);
+                    pointer-events: auto;
 
                     i {
                         font-size: 30px;

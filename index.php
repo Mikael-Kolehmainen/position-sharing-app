@@ -1,22 +1,11 @@
 <!-- Gjort idag -->
     <!-- fick målpositions algoritmen någotlunda klar, finns ett par bugar -->
     <!-- en switch som användaren kan välja att markera vatten entiteterna eller inte -->
+    <!-- fixade en bug där man kunde inte flytta positionsmålen om de är "bakom" menyn -->
+    <!-- fixade programfel då användaren eller positionsmålet var för nära en vatten entitet-->
 
 <!-- TO-DO -->
-    <!-- Goal algorithm -->
-        <!-- Bugs -->
-            <!-- if goal or user is too close to a water entity when the route is drawn, js throws some errors -->
     
-    <!-- An option to highlight water entities -->
-        <!-- onclick initialize geoJSON -->
-
-    <!-- Issues: -->
-        <!-- reading the Geojson file is slow -->
-        <!-- Possible fixes: -->
-            <!-- get a smaller geojson file of a smaller area -->
-
-    <!-- Bugs -->
-        <!-- can't drag marker if marker is behind bottom div -->
     
 <!DOCTYPE html>
 <html>
