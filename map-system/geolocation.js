@@ -183,7 +183,6 @@ function onLocationFound(e) {
                             if (!goalRouteIsDrawn) {
                                 // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
                                 let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
-                                goalLayerGroup.addLayer(ghostLine);
                                 let intersectPoint;
                                 let polygonCenters = [];
                                 let polygonBounds = [];
@@ -255,7 +254,9 @@ function onLocationFound(e) {
                                     // DRAW ROUTELINES BETWEEN THE ARCHES
                                     // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
                                     const polyLineStyle = {color: 'red', opacity: 1};
+                                    // let j = intersectPositions_1.length; j > 0; j--
                                     for (let j = 0; j < intersectPositions_1.length; j++) {
+                                        console.log(j);
                                         if (j == 0) {
                                             if (intersectPositions_1[j].distanceTo(original_user_markers[i]) < intersectPositions_2[j].distanceTo(original_user_markers[i])) {
                                                 ghostLine = L.polyline([intersectPositions_1[j], original_user_markers[i]], polyLineStyle);
