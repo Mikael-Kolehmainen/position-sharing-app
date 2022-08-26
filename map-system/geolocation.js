@@ -5,11 +5,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// L.geoJSON(vaasa).addTo(map);
-
 // LAYER GROUPS
 let refreshedLayerGroup = L.layerGroup();
 let goalLayerGroup = L.layerGroup();
+let waterLayerGroup = L.layerGroup();
+waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
 // GET THE GROUPCODE FROM SEARCH FIELD
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
@@ -38,6 +38,8 @@ let goalRouteIsDrawn = false;
 
 let user_markers = [];
 let userPopupContent = [];
+
+let showWaterEnabled = false;
 
 function onLocationFound(e) {
     // REMOVE THE PREVIOUS LAYER OF OBJECTS THAT WILL BE REFRESHED
@@ -463,6 +465,17 @@ function removeActiveGoal() {
     goalRouteIsDrawn = false;
     map.removeLayer(goalLayerGroup);
     goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
+}
+// ONCLICK FOR WATER SWITCH
+function showWaterEntities() {
+
+    if (showWaterEnabled) {
+        map.removeLayer(waterLayerGroup);
+        showWaterEnabled = false;
+    } else {
+        waterLayerGroup.addTo(map);
+        showWaterEnabled = true;
+    }
 }
 
 // HANDLER EVENTS FOR MARKERS

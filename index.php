@@ -1,5 +1,6 @@
 <!-- Gjort idag -->
     <!-- fick målpositions algoritmen någotlunda klar, finns ett par bugar -->
+    <!-- en switch som användaren kan välja att markera vatten entiteterna eller inte -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
