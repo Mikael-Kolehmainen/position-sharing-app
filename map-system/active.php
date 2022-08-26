@@ -66,6 +66,10 @@
                 <div class='disclaimer' id='active-goal-disclaimer' style='display: none;' onclick='removeActiveGoal();'>
                     <p>There's an active goal</p>
                 </div>
+                <label class='switch'>
+                    <input type='checkbox'>
+                    <span class='slider'></span>
+                </label>
                 <div id='map'></div>
                 <div class='bottom'>
                     <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn", "delete-btn"])'>

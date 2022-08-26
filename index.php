@@ -1,10 +1,13 @@
 <!-- Gjort idag -->
-    
+    <!-- fick målpositions algoritmen någotlunda klar, finns ett par bugar -->
 
 <!-- TO-DO -->
     <!-- Goal algorithm -->
-        <!-- if user or goal is in circle when it's created then make a smaller circle -->
-        <!-- what happens if a user puts a marker on water -->
+        <!-- Bugs -->
+            <!-- if goal or user is too close to a water entity when the route is drawn, js throws some errors -->
+    
+    <!-- An option to highlight water entities -->
+        <!-- onclick initialize geoJSON -->
 
     <!-- Issues: -->
         <!-- reading the Geojson file is slow -->
