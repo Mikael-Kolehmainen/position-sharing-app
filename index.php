@@ -2,11 +2,6 @@
 
 
 <!-- TO-DO -->
-    <!-- goal algortihm -->
-        <!-- Bug: fails to draw the ghostlines correctly inbetween the arcs -->
-            <!-- -->    
-
-            <!-- today it works fine upwards but not downwards? -->
     
 <!DOCTYPE html>
 <html>

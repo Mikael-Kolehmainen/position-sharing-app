@@ -192,6 +192,7 @@ function onLocationFound(e) {
                                 let intersectPoint;
                                 let polygonCenters = [];
                                 let polygonBounds = [];
+                                let polygonSort = [];
                                 let circleCenter;
                                 let circleOptions = {steps: 100, units: 'meters', options: {}};
                                 let circleRadius = 80;
@@ -206,14 +207,18 @@ function onLocationFound(e) {
                                         && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][j])) {
                                         polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
                                         polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
+                                        polygonSort.push(L.geoJSON(vaasa['features'][j]).getBounds()._northEast);
                                     }
                                 }
                                 // sort array from lowest points to highest points
-                                polygonCenters.sort(function(a, b) {
+                                polygonSort.sort(function(a, b) {
                                     return a.lat - b.lat
                                 });
+                                polygonCenters.sort(function(a, b) {
+                                    return polygonSort.indexOf(a) - polygonSort.indexOf(b)
+                                });
                                 polygonBounds.sort(function(a, b) {
-                                    return polygonCenters.indexOf(a) - polygonCenters.indexOf(b)
+                                    return polygonSort.indexOf(a) - polygonSort.indexOf(b)
                                 });
                                 if (polygonCenters.length > 0) {
                                     for (let j = 0; j < polygonCenters.length; j++) {
@@ -234,14 +239,15 @@ function onLocationFound(e) {
                                         intersectPositions_1.push(intersectPositionSwapped_1);
                                         intersectPositions_2.push(intersectPositionSwapped_2);
                                         // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
-                                        let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2);
+                                        let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2); 
                                         let arcLength = Math.asin(chordLength / (2 * circleRadius)) * 2 * circleRadius;
                                         let centralAngle = arcLength / circleRadius;
                                         // convert angle to degrees from radians
                                         centralAngle = Math.round(centralAngle * 180 / Math.PI);
-                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, 0, circleOptions);
-                                        let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], 1, circleOptions);
-                                        let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], 1, circleOptions);
+                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, centralAngle, circleOptions);
+                                        let attachmentRadius = 1;
+                                        let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
+                                        let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
                                         let turnIncrement = .1;
                                         let arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
                                         let arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
@@ -254,6 +260,21 @@ function onLocationFound(e) {
                                                 arcValue = arcValue + turnIncrement;
                                                 arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
                                                 arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                                if (arcValue >= 360) {
+                                                    attachmentRadius = 2;
+                                                    if (arcValue >= 1800) {
+                                                        break;
+                                                    } else if (arcValue >= 1400) {
+                                                        attachmentRadius = 5;
+                                                    } else if (arcValue >= 1080) {
+                                                        attachmentRadius = 4;
+                                                    } else if (arcValue >= 720) {
+                                                        attachmentRadius = 3;
+                                                    }
+
+                                                    attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
+                                                    attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
+                                                }
                                             }
                                         }
 
@@ -338,7 +359,6 @@ function onLocationFound(e) {
                 }
             };
         }
-
         xmlhttp.open("GET", url, true);
         xmlhttp.onreadystatechange = function() {
             if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
@@ -514,15 +534,14 @@ function showWaterEntities() {
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
-        // We get the index of the marker by looking at the classname 'other-user-marker[index]'
-        let markerClassNames = this._icon.className;
-        let markerClasses = markerClassNames.split(" ");
-        for (let i = 0; i < goal_marker_pos.length; i++) {
-            if (markerClasses.includes("user-goal-marker-"+i)) {
-                goal_marker_pos[i] = this.getLatLng();
-            }
+    // We get the index of the marker by looking at the classname 'other-user-marker[index]'
+    let markerClassNames = this._icon.className;
+    let markerClasses = markerClassNames.split(" ");
+    for (let i = 0; i < goal_marker_pos.length; i++) {
+        if (markerClasses.includes("user-goal-marker-"+i)) {
+            goal_marker_pos[i] = this.getLatLng();
         }
-   // }
+    }
 }
 
 // Just to be clean and tidy remove the stored key on dragend:
