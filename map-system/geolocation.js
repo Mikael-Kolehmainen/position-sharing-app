@@ -177,8 +177,14 @@ function onLocationFound(e) {
                         userPopupContent = [];
                         let percentages = [];
                         for (let i = 0; i < goal_marker_arr.length; i++) {
-                            latlngs.push(original_user_markers[i]);
-                            latlngs.push(goal_marker_arr[i].getLatLng());
+                            // Check which of the positions are lower then save the lower one first so the ghostline gets drawn from the lower one to the higher one
+                            if (original_user_markers[i].lat < goal_marker_arr[i].getLatLng().lat) {
+                                latlngs.push(original_user_markers[i]);
+                                latlngs.push(goal_marker_arr[i].getLatLng());
+                            } else {
+                                latlngs.push(goal_marker_arr[i].getLatLng());
+                                latlngs.push(original_user_markers[i]);
+                            }
                             
                             if (!goalRouteIsDrawn) {
                                 // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
@@ -201,7 +207,14 @@ function onLocationFound(e) {
                                         polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
                                         polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
                                     }
-                                } 
+                                }
+                                // sort array from lowest points to highest points
+                                polygonCenters.sort(function(a, b) {
+                                    return a.lat - b.lat
+                                });
+                                polygonBounds.sort(function(a, b) {
+                                    return polygonCenters.indexOf(a) - polygonCenters.indexOf(b)
+                                });
                                 if (polygonCenters.length > 0) {
                                     for (let j = 0; j < polygonCenters.length; j++) {
                                         circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
@@ -226,8 +239,7 @@ function onLocationFound(e) {
                                         let centralAngle = arcLength / circleRadius;
                                         // convert angle to degrees from radians
                                         centralAngle = Math.round(centralAngle * 180 / Math.PI);
-
-                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, centralAngle, circleOptions);
+                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, 0, circleOptions);
                                         let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], 1, circleOptions);
                                         let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], 1, circleOptions);
                                         let turnIncrement = .1;
@@ -254,9 +266,7 @@ function onLocationFound(e) {
                                     // DRAW ROUTELINES BETWEEN THE ARCHES
                                     // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
                                     const polyLineStyle = {color: 'red', opacity: 1};
-                                    // let j = intersectPositions_1.length; j > 0; j--
                                     for (let j = 0; j < intersectPositions_1.length; j++) {
-                                        console.log(j);
                                         if (j == 0) {
                                             if (intersectPositions_1[j].distanceTo(original_user_markers[i]) < intersectPositions_2[j].distanceTo(original_user_markers[i])) {
                                                 ghostLine = L.polyline([intersectPositions_1[j], original_user_markers[i]], polyLineStyle);
@@ -297,8 +307,16 @@ function onLocationFound(e) {
                             }
                             
                             // GET PERCENTAGE OF DISTANCE MOVED
-                            let userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
-                            let goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                            let userlatlng;
+                            let goallatlng;
+                            if (original_user_markers[i].lat < goal_marker_arr[i].getLatLng().lat) {
+                                userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
+                                goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                            } else {
+                                userlatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                                goallatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
+                            }
+                            
                             
                             let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100);
                             percentages.push(percentage);

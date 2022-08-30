@@ -4,14 +4,9 @@
 <!-- TO-DO -->
     <!-- goal algortihm -->
         <!-- Bug: fails to draw the ghostlines correctly inbetween the arcs -->
-            <!-- Reason: when the intersections are saved the line can go through for example two water entities and
-            if the second one is detected before the first one then it will be saved as the first one and this
-            causes problems with the for loops (they're reversed), code works fine when route is going downwards but
-            doesn't work correctly when going upwards. -->
-            <!-- when looping through the geojson objects the water entities go from top left to bottom right of the 
-                specified location -->
-            <!-- Possible solution: check if route is going upwards or downwards and change the ghostline for loop
-                based on the information. -->
+            <!-- -->    
+
+            <!-- today it works fine upwards but not downwards? -->
     
 <!DOCTYPE html>
 <html>
