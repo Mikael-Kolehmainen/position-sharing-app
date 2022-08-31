@@ -31,12 +31,13 @@
             mysqli_query($conn, $sql);
         }
     } else if (isset($_GET['goalpos'])) {
-        $positions = $_GET['goalpos'];
+        $goalPositions = $_GET['goalpos'];
+        $startPositions = $_GET['startpos'];
         $groupCode = $_GET['groupcode'];
 
         require './../required-files/connection.php';
 
-        $sql = "INSERT INTO goals (positions, groups_groupcode) VALUES ('$positions', '$groupCode')";
+        $sql = "INSERT INTO goals (startpositions, goalpositions, groups_groupcode) VALUES ('$startPositions', '$goalPositions', '$groupCode')";
 
         mysqli_query($conn, $sql);
     }

@@ -2,7 +2,12 @@
 
 
 <!-- TO-DO -->
-    <!-- change length of groupcode to 3 -->    
+    <!-- create a start point marker for the goal algorithm -->
+        <!-- save positions of start marker to database and retrieve them -->
+        <!-- have a line going from start to goal and on confirmation run script to check for water entities -->
+        <!-- create custom css for start point marker -->
+    
+    <!-- Create a btn where you can check map legends -->
 
 <!DOCTYPE html>
 <html>

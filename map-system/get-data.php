@@ -11,7 +11,8 @@
         $messagesData['colors'] = array();
 
         $goalsData = array();
-        $goalsData['positions'] = array("empty");
+        $goalsData['startpositions'] = array("empty");
+        $goalsData['goalpositions'] = array("empty");
 
         // GET POSITIONS
         require './../required-files/connection.php';
@@ -47,16 +48,20 @@
 
         // GET GOALS
         require './../required-files/connection.php';
-        $sql = "SELECT positions, groups_groupcode FROM goals";
+        $sql = "SELECT startpositions, goalpositions, groups_groupcode FROM goals";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
                 if ($row['groups_groupcode'] == $_GET['groupcode']) {
                     // Remove first 'LatLng' from string
-                    $positions = substr($row['positions'], 6);
-                    $positions = explode(",LatLng", $positions);
-                    $goalsData['positions'] = $positions;
+                    $startPositions = substr($row['startpositions'], 6);
+                    $startPositions = explode(",LatLng", $startPositions);
+                    $goalsData['startpositions'] = $startPositions;
+                    // Remove first 'LatLng' from string
+                    $goalPositions = substr($row['goalpositions'], 6);
+                    $goalPositions = explode(",LatLng", $goalPositions);
+                    $goalsData['goalpositions'] = $goalPositions;
                 }
             }
         }

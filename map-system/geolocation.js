@@ -36,6 +36,9 @@ let goal_marker_arr = [];
 let goal_marker_pos = [];
 let goalRouteIsDrawn = false;
 
+let start_marker_arr = [];
+let start_marker_pos = [];
+
 let user_markers = [];
 let userPopupContent = [];
 
@@ -138,18 +141,25 @@ function onLocationFound(e) {
                 createStyle(styleSheetContent, 'js-style');
                 
                 // GOALS
-                const goalsArr = data.goalspositions.positions;
-                if (goalsArr[0] != "empty") {
+                const startsArr = data.goalspositions.startpositions;
+                const goalsArr = data.goalspositions.goalpositions;
+                if (goalsArr[0] != "empty" && startsArr[0] != "empty") {
                     // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
                     while (goalsArr.length < positionsArr.length) {
                         goalsArr.push("no goal");
                     }
                     for (let i = 0; i < goalsArr.length; i++) {
                         if (goalsArr[i] != "no goal") {
+                            // SAVE START POSITIONS TO VARIABLE
+                            startsArr[i] = startsArr[i].replace(/[^\d.,-]/g,'');
+                            latlngArr = startsArr[i].split(",");
+                            start_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                            // SAVE GOAL POSITIONS TO VARIABLE
                             goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
                             latlngArr = goalsArr[i].split(",");
                             goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
                         } else {
+                            start_marker_pos[i] = "no goal";
                             goal_marker_pos[i] = "no goal";
                         }
                     }
@@ -284,7 +294,7 @@ function onLocationFound(e) {
                                         
                                         L.geoJSON(arcRoute, {style: polystyle}).addTo(goalLayerGroup);
                                     }
-                                    // DRAW ROUTELINES BETWEEN THE ARCHES
+                                    // DRAW ROUTELINES BETWEEN THE ARCES
                                     // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
                                     const polyLineStyle = {color: 'red', opacity: 1};
                                     for (let j = 0; j < intersectPositions_1.length; j++) {
@@ -427,6 +437,7 @@ function showDraggableGoal() {
     // CREATE THE POSITIONS
     for (let i = 0; i < initialsArr.length; i++) {
         goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
+        start_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue + 0.002);
         latlngValue = latlngValue + 0.002;
     }
     styleSheetContent = createGoalLine(true);
@@ -437,22 +448,35 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
-    let classNameGoalMarkers, initial;
+    let classNameGoalMarkers, classNameStartMarkers, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
     for (let i = 0; i < goal_marker_pos.length; i++) {
         if (goal_marker_pos[i] != "no goal") {
+            // CREATE START POINTS
+            start_marker_arr[i] =  new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
+            goalLayerGroup.addLayer(start_marker_arr[i]);
+            // CREATE GOALS
             goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
             goalLayerGroup.addLayer(goal_marker_arr[i]);
             map.addLayer(goalLayerGroup);
+            // START POINTS CSS
+            classNameStartMarkers = 'user-start-marker-' + i;
+            styleSheetContent += '.' + classNameStartMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
+            // GOALS CSS
             classNameGoalMarkers = 'user-goal-marker-' + i;
             styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
             // INITIALS
             initial = '\"' + initialsArr[i] + '\"';
+            styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initial + '; }';
             styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
+            start_marker_arr[i]._icon.classList.add(classNameStartMarkers);
             goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
             // ASSIGN EVENTHANDLERS TO MARKERS
+            start_marker_arr[i]
+                    .on('drag', dragHandler)
+                    .on('dragend', dragEndHandler);
             goal_marker_arr[i]
                     .on('drag', dragHandler)
                     .on('dragend', dragEndHandler);
@@ -479,7 +503,7 @@ function removeDraggableGoal() {
 // SEND DATA FUNCTION
 function sendGoalData() {
     let xmlhttp = new XMLHttpRequest();
-    let url = 'send-data.php?goalpos=' + goal_marker_pos + "&groupcode=" + groupCode;
+    let url = 'send-data.php?goalpos=' + goal_marker_pos + '&startpos=' + start_marker_pos + '&groupcode=' + groupCode;
 
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {
@@ -519,7 +543,6 @@ function removeActiveGoal() {
 }
 // ONCLICK FOR WATER SWITCH
 function showWaterEntities() {
-
     if (showWaterEnabled) {
         map.removeLayer(waterLayerGroup);
         showWaterEnabled = false;
@@ -540,6 +563,9 @@ function dragHandler(e) {
     for (let i = 0; i < goal_marker_pos.length; i++) {
         if (markerClasses.includes("user-goal-marker-"+i)) {
             goal_marker_pos[i] = this.getLatLng();
+        }
+        if (markerClasses.includes("user-start-marker-"+i)) {
+            start_marker_pos[i] = this.getLatLng();
         }
     }
 }
