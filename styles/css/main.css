@@ -78,7 +78,8 @@
         left: 50%; }
     .active-page section article .bottom .chat {
       background-color: rgba(0, 12, 102, 0.6);
-      padding-top: 10px; }
+      padding-top: 10px;
+      pointer-events: auto; }
       .active-page section article .bottom .chat .messages {
         max-height: 240px;
         max-width: 510px;

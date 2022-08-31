@@ -89,6 +89,7 @@
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
                     padding-top: 10px;
+                    pointer-events: auto;
 
                     .messages {
                         max-height: 240px;
