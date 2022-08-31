@@ -1,11 +1,11 @@
-<!-- Lagar en grupp och kollar att gruppkoden är unik sedan för användare till gruppkartan med gruppkoden. -->
+<!-- Creates a group and checks if the groupcode is unique then directs the user to the groupmap with the groupcode. -->
 <?php
     createGroup();
 
     function createGroup() {
         require './../required-files/random-string.php';
         
-        $groupCode = getRandomString(10);
+        $groupCode = getRandomString(3);
 
         require './../required-files/connection.php';
         $sql = "SELECT groupcode FROM groups";

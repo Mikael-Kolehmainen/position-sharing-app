@@ -2,7 +2,8 @@
 
 
 <!-- TO-DO -->
-    
+    <!-- change length of groupcode to 3 -->    
+
 <!DOCTYPE html>
 <html>
     <head>
