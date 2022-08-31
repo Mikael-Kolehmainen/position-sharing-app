@@ -3,9 +3,8 @@
 
 <!-- TO-DO -->
     <!-- create a start point marker for the goal algorithm -->
-        <!-- save positions of start marker to database and retrieve them -->
-        <!-- have a line going from start to goal and on confirmation run script to check for water entities -->
-        <!-- create custom css for start point marker -->
+        <!-- an input where the user can define the distance between each start & goal point -->
+        <!-- option to increase amount of marker points for route use number input type -->
     
     <!-- Create a btn where you can check map legends -->
 

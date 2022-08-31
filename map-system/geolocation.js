@@ -8,6 +8,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // LAYER GROUPS
 let refreshedLayerGroup = L.layerGroup();
 let goalLayerGroup = L.layerGroup();
+let draggableRouteLayerGroup = L.layerGroup();
 let waterLayerGroup = L.layerGroup();
 waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
@@ -172,198 +173,186 @@ function onLocationFound(e) {
                     let goalBtn = document.getElementById('goal-btn');
                     goalBtn.style.display = 'none';
 
-                    // SAVE ORIGINAL POSITIONS OF USERS
-                    if (!localStorage.getItem('user-markers')) {
-                        let user_positions = [];
-                        for (let i = 0; i < user_markers.length; i++) {
-                            user_positions.push(user_markers[i].getLatLng());
-                        }
-                        localStorage.setItem('user-markers', JSON.stringify(user_positions));
-                    }
                     // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
-                    if (localStorage.getItem('user-markers')) {
-                        let latlngs = [];
-                        let original_user_markers = JSON.parse(localStorage.getItem('user-markers'));
-                        userPopupContent = [];
-                        let percentages = [];
-                        for (let i = 0; i < goal_marker_arr.length; i++) {
-                            // Check which of the positions are lower then save the lower one first so the ghostline gets drawn from the lower one to the higher one
-                            if (original_user_markers[i].lat < goal_marker_arr[i].getLatLng().lat) {
-                                latlngs.push(original_user_markers[i]);
-                                latlngs.push(goal_marker_arr[i].getLatLng());
-                            } else {
-                                latlngs.push(goal_marker_arr[i].getLatLng());
-                                latlngs.push(original_user_markers[i]);
-                            }
-                            
-                            if (!goalRouteIsDrawn) {
-                                // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE *change opacity to 0 after it works
-                                let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
-                                let intersectPoint;
-                                let polygonCenters = [];
-                                let polygonBounds = [];
-                                let polygonSort = [];
-                                let circleCenter;
-                                let circleOptions = {steps: 100, units: 'meters', options: {}};
-                                let circleRadius = 80;
-                                let intersectPositions_1 = [];
-                                let intersectPositions_2 = [];
-                                // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
-                                for (let j = 0; j < vaasa['features'].length; j++) {
-                                    intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
-                                    // Check if user or goal is in water
-                                    if (intersectPoint.features.length > 0
-                                        && !turf.booleanPointInPolygon([original_user_markers[i].lng, original_user_markers[i].lat], vaasa['features'][j])
-                                        && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][j])) {
-                                        polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
-                                        polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
-                                        polygonSort.push(L.geoJSON(vaasa['features'][j]).getBounds()._northEast);
-                                    }
-                                }
-                                // sort array from lowest points to highest points
-                                polygonSort.sort(function(a, b) {
-                                    return a.lat - b.lat
-                                });
-                                polygonCenters.sort(function(a, b) {
-                                    return polygonSort.indexOf(a) - polygonSort.indexOf(b)
-                                });
-                                polygonBounds.sort(function(a, b) {
-                                    return polygonSort.indexOf(a) - polygonSort.indexOf(b)
-                                });
-                                if (polygonCenters.length > 0) {
-                                    for (let j = 0; j < polygonCenters.length; j++) {
-                                        circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
-                                        circleRadius = polygonBounds[j]._northEast.distanceTo(polygonBounds[j]._southWest) / 2;
-                                        let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
-                                        let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
-                                        let intersectPositionSwapped_1 = new L.LatLng(original_user_markers[i].lat, original_user_markers[i].lng);
-                                        let intersectPositionSwapped_2 = goal_marker_arr[i].getLatLng();
-    
-                                        // SWAP PLACES OF LATITUDE & LONGITUDE
-                                        if (typeof intersectPointsOfCircle.features[0] != "undefined") {
-                                            intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
-                                        }
-                                        if (typeof intersectPointsOfCircle.features[1] != "undefined") {
-                                            intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
-                                        }
-                                        intersectPositions_1.push(intersectPositionSwapped_1);
-                                        intersectPositions_2.push(intersectPositionSwapped_2);
-                                        // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
-                                        let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2); 
-                                        let arcLength = Math.asin(chordLength / (2 * circleRadius)) * 2 * circleRadius;
-                                        let centralAngle = arcLength / circleRadius;
-                                        // convert angle to degrees from radians
-                                        centralAngle = Math.round(centralAngle * 180 / Math.PI);
-                                        let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, centralAngle, circleOptions);
-                                        let attachmentRadius = 1;
-                                        let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
-                                        let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
-                                        let turnIncrement = .1;
-                                        let arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
-                                        let arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
-                                        let arcValue = 0;
-                                        // Turn the arc around until it intersects with the intersectpoints
-                                        if (typeof intersectPointsOfCircle.features[0] != "undefined"
-                                            && typeof intersectPointsOfCircle.features[1] != "undefined") {
-                                            while (!arcIntersect_1 && !arcIntersect_2) {
-                                                arcRoute = turf.lineArc(circleCenter, circleRadius, arcValue, centralAngle + arcValue, circleOptions);
-                                                arcValue = arcValue + turnIncrement;
-                                                arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
-                                                arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
-                                                if (arcValue >= 360) {
-                                                    attachmentRadius = 2;
-                                                    if (arcValue >= 1800) {
-                                                        break;
-                                                    } else if (arcValue >= 1400) {
-                                                        attachmentRadius = 5;
-                                                    } else if (arcValue >= 1080) {
-                                                        attachmentRadius = 4;
-                                                    } else if (arcValue >= 720) {
-                                                        attachmentRadius = 3;
-                                                    }
-
-                                                    attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
-                                                    attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
-                                                }
-                                            }
-                                        }
-
-                                        let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
-                                        let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
-                                        L.geoJSON(intersectCircle, {style: ghoststyle}).addTo(goalLayerGroup);
-                                        
-                                        L.geoJSON(arcRoute, {style: polystyle}).addTo(goalLayerGroup);
-                                    }
-                                    // DRAW ROUTELINES BETWEEN THE ARCES
-                                    // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
-                                    const polyLineStyle = {color: 'red', opacity: 1};
-                                    for (let j = 0; j < intersectPositions_1.length; j++) {
-                                        if (j == 0) {
-                                            if (intersectPositions_1[j].distanceTo(original_user_markers[i]) < intersectPositions_2[j].distanceTo(original_user_markers[i])) {
-                                                ghostLine = L.polyline([intersectPositions_1[j], original_user_markers[i]], polyLineStyle);
-                                            } else {
-                                                ghostLine = L.polyline([intersectPositions_2[j], original_user_markers[i]], polyLineStyle);
-                                            }
-                                            goalLayerGroup.addLayer(ghostLine);
-                                        } else {
-                                            if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_1[j])) {
-                                                if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_1[j-1].distanceTo(intersectPositions_2[j])) {
-                                                    ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_1[j]], polyLineStyle);
-                                                } else {
-                                                    ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_2[j]], polyLineStyle);
-                                                }
-                                            } else {
-                                                if (intersectPositions_2[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_2[j])) {
-                                                    ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_1[j]], polyLineStyle);
-                                                } else {
-                                                    ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_2[j]], polyLineStyle);
-                                                }
-                                            }
-                                            goalLayerGroup.addLayer(ghostLine);
-                                        }
-                                        if (j == intersectPositions_1.length - 1) {
-                                            if (intersectPositions_1[j].distanceTo(goal_marker_arr[i].getLatLng()) < intersectPositions_2[j].distanceTo(goal_marker_arr[i].getLatLng())) {
-                                                ghostLine = L.polyline([intersectPositions_1[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
-                                            } else {
-                                                ghostLine = L.polyline([intersectPositions_2[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
-                                            }
-                                            goalLayerGroup.addLayer(ghostLine);
-                                        }
-                                    }
-                                } else {
-                                    let polylineRoute = L.polyline(latlngs, {color: 'red'});
-                                    goalLayerGroup.addLayer(polylineRoute);
-                                }
-                                goalLayerGroup.addTo(map);
-                            }
-                            
-                            // GET PERCENTAGE OF DISTANCE MOVED
-                            let userlatlng;
-                            let goallatlng;
-                            if (original_user_markers[i].lat < goal_marker_arr[i].getLatLng().lat) {
-                                userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
-                                goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
-                            } else {
-                                userlatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
-                                goallatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
-                            }
-                            
-                            
-                            let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100);
-                            percentages.push(percentage);
-
-                            // ADD PERCENTAGE TO POPUP CONTENT
-                            userPopupContent.push(percentage + "%");
-
-                            latlngs = [];
+                    let latlngs = [];
+                    userPopupContent = [];
+                    let percentages = [];
+                    for (let i = 0; i < goal_marker_arr.length; i++) {
+                        // Check which of the positions are lower then save the lower one first so the ghostline gets drawn from the lower one to the higher one
+                        if (start_marker_pos[i].lat < goal_marker_arr[i].getLatLng().lat) {
+                            latlngs.push(start_marker_pos[i]);
+                            latlngs.push(goal_marker_arr[i].getLatLng());
+                        } else {
+                            latlngs.push(goal_marker_arr[i].getLatLng());
+                            latlngs.push(start_marker_pos[i]);
                         }
-                        goalRouteIsDrawn = true;
-                        // TELL USER TO SLOW DOWN IF 10% FURTHER THAN OTHERS
-                        let smallestPercentage = Math.min(...percentages);
-                        for (let i = 0; i < percentages.length; i++) {
-                            if (smallestPercentage + 10 < percentages[i]) {
-                                userPopupContent[i] += "\n(Slow down)";
+                        
+                        if (!goalRouteIsDrawn) {
+                            // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE
+                            let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
+                            let intersectPoint;
+                            let polygonCenters = [];
+                            let polygonBounds = [];
+                            let polygonSort = [];
+                            let circleCenter;
+                            let circleOptions = {steps: 100, units: 'meters', options: {}};
+                            let circleRadius = 80;
+                            let intersectPositions_1 = [];
+                            let intersectPositions_2 = [];
+                            // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
+                            for (let j = 0; j < vaasa['features'].length; j++) {
+                                intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
+                                // Check if user or goal is in water
+                                if (intersectPoint.features.length > 0
+                                    && !turf.booleanPointInPolygon([start_marker_pos[i].lng, start_marker_pos[i].lat], vaasa['features'][j])
+                                    && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][j])) {
+                                    polygonCenters.push(L.geoJSON(vaasa['features'][j]).getBounds().getCenter());
+                                    polygonBounds.push(L.geoJSON(vaasa['features'][j]).getBounds());
+                                    polygonSort.push(L.geoJSON(vaasa['features'][j]).getBounds()._northEast);
+                                }
                             }
+                            // sort array from lowest points to highest points
+                            polygonSort.sort(function(a, b) {
+                                return a.lat - b.lat
+                            });
+                            polygonCenters.sort(function(a, b) {
+                                return polygonSort.indexOf(a) - polygonSort.indexOf(b)
+                            });
+                            polygonBounds.sort(function(a, b) {
+                                return polygonSort.indexOf(a) - polygonSort.indexOf(b)
+                            });
+                            if (polygonCenters.length > 0) {
+                                for (let j = 0; j < polygonCenters.length; j++) {
+                                    circleCenter = [polygonCenters[j].lng, polygonCenters[j].lat];
+                                    circleRadius = polygonBounds[j]._northEast.distanceTo(polygonBounds[j]._southWest) / 2;
+                                    let intersectCircle = turf.circle(circleCenter, circleRadius, circleOptions);
+                                    let intersectPointsOfCircle = turf.lineIntersect(intersectCircle, ghostLine.toGeoJSON());
+                                    let intersectPositionSwapped_1 = new L.LatLng(start_marker_pos[i].lat, start_marker_pos[i].lng);
+                                    let intersectPositionSwapped_2 = goal_marker_arr[i].getLatLng();
+
+                                    // SWAP PLACES OF LATITUDE & LONGITUDE
+                                    if (typeof intersectPointsOfCircle.features[0] != "undefined") {
+                                        intersectPositionSwapped_1 = new L.LatLng(intersectPointsOfCircle.features[0].geometry.coordinates[1], intersectPointsOfCircle.features[0].geometry.coordinates[0]);
+                                    }
+                                    if (typeof intersectPointsOfCircle.features[1] != "undefined") {
+                                        intersectPositionSwapped_2 = new L.LatLng(intersectPointsOfCircle.features[1].geometry.coordinates[1], intersectPointsOfCircle.features[1].geometry.coordinates[0]);
+                                    }
+                                    intersectPositions_1.push(intersectPositionSwapped_1);
+                                    intersectPositions_2.push(intersectPositionSwapped_2);
+                                    // Calculate the arc length from radius and chord length then use arc length and radius to calculate sector angle.
+                                    let chordLength = intersectPositionSwapped_1.distanceTo(intersectPositionSwapped_2); 
+                                    let arcLength = Math.asin(chordLength / (2 * circleRadius)) * 2 * circleRadius;
+                                    let centralAngle = arcLength / circleRadius;
+                                    // convert angle to degrees from radians
+                                    centralAngle = Math.round(centralAngle * 180 / Math.PI);
+                                    let arcRoute = turf.lineArc(circleCenter, circleRadius, 0.0, centralAngle, circleOptions);
+                                    let attachmentRadius = 1;
+                                    let attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
+                                    let attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
+                                    let turnIncrement = .1;
+                                    let arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
+                                    let arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                    let arcValue = 0;
+                                    // Turn the arc around until it intersects with the intersectpoints
+                                    if (typeof intersectPointsOfCircle.features[0] != "undefined"
+                                        && typeof intersectPointsOfCircle.features[1] != "undefined") {
+                                        while (!arcIntersect_1 && !arcIntersect_2) {
+                                            arcRoute = turf.lineArc(circleCenter, circleRadius, arcValue, centralAngle + arcValue, circleOptions);
+                                            arcValue = arcValue + turnIncrement;
+                                            arcIntersect_1 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_1);
+                                            arcIntersect_2 = turf.booleanIntersects(turf.point(arcRoute.geometry.coordinates[0]), attachmentPoint_2);
+                                            if (arcValue >= 360) {
+                                                attachmentRadius = 2;
+                                                if (arcValue >= 1800) {
+                                                    break;
+                                                } else if (arcValue >= 1400) {
+                                                    attachmentRadius = 5;
+                                                } else if (arcValue >= 1080) {
+                                                    attachmentRadius = 4;
+                                                } else if (arcValue >= 720) {
+                                                    attachmentRadius = 3;
+                                                }
+
+                                                attachmentPoint_1 = turf.circle([intersectPositionSwapped_1.lng, intersectPositionSwapped_1.lat], attachmentRadius, circleOptions);
+                                                attachmentPoint_2 = turf.circle([intersectPositionSwapped_2.lng, intersectPositionSwapped_2.lat], attachmentRadius, circleOptions);
+                                            }
+                                        }
+                                    }
+
+                                    let ghoststyle = {fillColor: 'none', color: 'red', opacity: 0};
+                                    let polystyle = {fillColor: 'none', color: 'red', opacity: 1};
+                                    L.geoJSON(intersectCircle, {style: ghoststyle}).addTo(goalLayerGroup);
+                                    
+                                    L.geoJSON(arcRoute, {style: polystyle}).addTo(goalLayerGroup);
+                                }
+                                // DRAW ROUTELINES BETWEEN THE ARCES
+                                // with the if statements we figure out which intersectposition in the water entity is closer to another intersecposition in another water entity
+                                const polyLineStyle = {color: 'red', opacity: 1};
+                                for (let j = 0; j < intersectPositions_1.length; j++) {
+                                    if (j == 0) {
+                                        if (intersectPositions_1[j].distanceTo(start_marker_pos[i]) < intersectPositions_2[j].distanceTo(start_marker_pos[i])) {
+                                            ghostLine = L.polyline([intersectPositions_1[j], start_marker_pos[i]], polyLineStyle);
+                                        } else {
+                                            ghostLine = L.polyline([intersectPositions_2[j], start_marker_pos[i]], polyLineStyle);
+                                        }
+                                        goalLayerGroup.addLayer(ghostLine);
+                                    } else {
+                                        if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_1[j])) {
+                                            if (intersectPositions_1[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_1[j-1].distanceTo(intersectPositions_2[j])) {
+                                                ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_1[j]], polyLineStyle);
+                                            } else {
+                                                ghostLine = L.polyline([intersectPositions_1[j-1], intersectPositions_2[j]], polyLineStyle);
+                                            }
+                                        } else {
+                                            if (intersectPositions_2[j-1].distanceTo(intersectPositions_1[j]) < intersectPositions_2[j-1].distanceTo(intersectPositions_2[j])) {
+                                                ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_1[j]], polyLineStyle);
+                                            } else {
+                                                ghostLine = L.polyline([intersectPositions_2[j-1], intersectPositions_2[j]], polyLineStyle);
+                                            }
+                                        }
+                                        goalLayerGroup.addLayer(ghostLine);
+                                    }
+                                    if (j == intersectPositions_1.length - 1) {
+                                        if (intersectPositions_1[j].distanceTo(goal_marker_arr[i].getLatLng()) < intersectPositions_2[j].distanceTo(goal_marker_arr[i].getLatLng())) {
+                                            ghostLine = L.polyline([intersectPositions_1[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
+                                        } else {
+                                            ghostLine = L.polyline([intersectPositions_2[j], goal_marker_arr[i].getLatLng()], polyLineStyle);
+                                        }
+                                        goalLayerGroup.addLayer(ghostLine);
+                                    }
+                                }
+                            } else {
+                                let polylineRoute = L.polyline(latlngs, {color: 'red'});
+                                goalLayerGroup.addLayer(polylineRoute);
+                            }
+                            goalLayerGroup.addTo(map);
+                        }
+                        
+                        // GET PERCENTAGE OF DISTANCE MOVED
+                        let userlatlng;
+                        let goallatlng;
+                        if (start_marker_pos[i].lat < goal_marker_arr[i].getLatLng().lat) {
+                            userlatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
+                            goallatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                        } else {
+                            userlatlng = new L.LatLng(latlngs[1]['lat'], latlngs[1]['lng']);
+                            goallatlng = new L.LatLng(latlngs[0]['lat'], latlngs[0]['lng']);
+                        }
+                        
+                        let percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goallatlng) / userlatlng.distanceTo(goallatlng)) * 100);
+                        percentages.push(percentage);
+
+                        // ADD PERCENTAGE TO POPUP CONTENT
+                        userPopupContent.push(percentage + "%");
+
+                        latlngs = [];
+                    }
+                    goalRouteIsDrawn = true;
+                    // TELL USER TO SLOW DOWN IF 10% FURTHER THAN OTHERS
+                    let smallestPercentage = Math.min(...percentages);
+                    for (let i = 0; i < percentages.length; i++) {
+                        if (smallestPercentage + 10 < percentages[i]) {
+                            userPopupContent[i] += "\n(Slow down)";
                         }
                     }
                 }
@@ -448,7 +437,7 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
-    let classNameGoalMarkers, classNameStartMarkers, initial;
+    let classNameGoalMarkers, classNameStartMarkers, polyline, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
@@ -461,12 +450,20 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
             goalLayerGroup.addLayer(goal_marker_arr[i]);
             map.addLayer(goalLayerGroup);
+            // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)
+            if (isDraggable) {
+                polyline = new L.Polyline([start_marker_pos[i], goal_marker_pos[i]]);
+                draggableRouteLayerGroup.addLayer(polyline);
+                start_marker_arr[i].parentLine = polyline;
+                goal_marker_arr[i].parentLine = polyline;
+                map.addLayer(draggableRouteLayerGroup);
+            }
             // START POINTS CSS
             classNameStartMarkers = 'user-start-marker-' + i;
-            styleSheetContent += '.' + classNameStartMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
+            styleSheetContent += '.' + classNameStartMarkers + '{ background-color: red; border-radius: 0 !important;}';
             // GOALS CSS
             classNameGoalMarkers = 'user-goal-marker-' + i;
-            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: ' + colorsArr[i] + '; border-radius: 0 !important;}';
+            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
             // INITIALS
             initial = '\"' + initialsArr[i] + '\"';
             styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initial + '; }';
@@ -475,9 +472,11 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
             // ASSIGN EVENTHANDLERS TO MARKERS
             start_marker_arr[i]
+                    .on('dragstart', dragStartHandler)
                     .on('drag', dragHandler)
                     .on('dragend', dragEndHandler);
             goal_marker_arr[i]
+                    .on('dragstart', dragStartHandler)
                     .on('drag', dragHandler)
                     .on('dragend', dragEndHandler);
 
@@ -499,6 +498,8 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
 function removeDraggableGoal() {
     map.removeLayer(goalLayerGroup);
     goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
+    map.removeLayer(draggableRouteLayerGroup);
+    draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
 }
 // SEND DATA FUNCTION
 function sendGoalData() {
@@ -515,6 +516,9 @@ function sendGoalData() {
     // HIDE CREATE GOAL BTN
     let goalBtn = document.getElementById('goal-btn');
     goalBtn.style.display = 'none';
+    // REMOVE DRAGGABLE ROUTE
+    map.removeLayer(draggableRouteLayerGroup);
+    draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
@@ -535,7 +539,6 @@ function removeActiveGoal() {
     let goalBtn = document.getElementById('goal-btn');
     goalBtn.style.display = 'block';
     // MISC
-    localStorage.clear();
     userPopupContent = [];
     goalRouteIsDrawn = false;
     map.removeLayer(goalLayerGroup);
@@ -554,6 +557,18 @@ function showWaterEntities() {
 
 // HANDLER EVENTS FOR MARKERS
 
+function dragStartHandler(e) {
+    var polyline = e.target.parentLine;
+    if(polyline){
+        var latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
+        latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
+        for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
+            if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
+                this.polylineLatlng = i;            // If equals store key in marker instance
+            }
+        }
+    }
+}
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
@@ -567,6 +582,13 @@ function dragHandler(e) {
         if (markerClasses.includes("user-start-marker-"+i)) {
             start_marker_pos[i] = this.getLatLng();
         }
+    }
+    var polyline = e.target.parentLine;
+    if (polyline){
+        var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
+        latlngMarker = this.getLatLng();            // Get the marker's current latlng
+        latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
+        polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
     }
 }
 
