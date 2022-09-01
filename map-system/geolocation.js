@@ -9,6 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let refreshedLayerGroup = L.layerGroup();
 let goalLayerGroup = L.layerGroup();
 let draggableRouteLayerGroup = L.layerGroup();
+let goalWaypointsLayerGroup = L.layerGroup();
 let waterLayerGroup = L.layerGroup();
 waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
@@ -39,6 +40,8 @@ let goalRouteIsDrawn = false;
 
 let start_marker_arr = [];
 let start_marker_pos = [];
+
+let goal_waypoints = [];
 
 let user_markers = [];
 let userPopupContent = [];
@@ -437,7 +440,7 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
-    let classNameGoalMarkers, classNameStartMarkers, polyline, initial;
+    let classNameGoalMarkers, classNameStartMarkers, initial;
     const initialsArr = data.positionsdata.initials;
     const colorsArr = data.positionsdata.colors;
 
@@ -452,10 +455,12 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             map.addLayer(goalLayerGroup);
             // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)
             if (isDraggable) {
-                polyline = new L.Polyline([start_marker_pos[i], goal_marker_pos[i]]);
-                draggableRouteLayerGroup.addLayer(polyline);
+                let polyline = [];
+                polyline.push(new L.Polyline([start_marker_pos[i], goal_marker_pos[i]], {id: i}));
+                draggableRouteLayerGroup.addLayer(polyline[0]);
                 start_marker_arr[i].parentLine = polyline;
                 goal_marker_arr[i].parentLine = polyline;
+                polyline[0].on('click', addWaypointToRoute);
                 map.addLayer(draggableRouteLayerGroup);
             }
             // START POINTS CSS
@@ -555,19 +560,69 @@ function showWaterEntities() {
     }
 }
 
+// HANDLER EVENT FOR ROUTE
+
+// WHEN ROUTE IS CLICKED ADD WAYPOINT WHERE CLICKED
+function addWaypointToRoute(e) {
+    // remove previous lines
+    map.removeLayer(draggableRouteLayerGroup);
+    draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
+    // add waypoint where user clicks and save it to an array
+    let waypoint = L.marker(e.latlng, {draggable: true})
+                    .on('dragstart', dragStartHandler)
+                    .on('drag', dragHandler)
+                    .on('dragend', dragEndHandler);
+    goalWaypointsLayerGroup.addLayer(waypoint);
+    goal_waypoints.push(waypoint);
+    const id = e.target.options.id;
+        // to-do: attach the polyline to the start marker and goal marker
+    for (let i = 0; i < goal_waypoints.length; i++) {
+        let polyline = [];
+
+        if (i == 0) {
+            polyline.push(new L.polyline([goal_waypoints[i].getLatLng(), start_marker_pos[id]]));
+            polyline[0].on('click', addWaypointToRoute);
+            draggableRouteLayerGroup.addLayer(polyline[0]);
+
+            if (i == goal_waypoints.length - 1) {
+                polyline.push(new L.polyline([goal_waypoints[i].getLatLng(), goal_marker_pos[id]]));
+                polyline[1].on('click', addWaypointToRoute);
+                draggableRouteLayerGroup.addLayer(polyline[1]);
+                goal_waypoints[i].parentLine = polyline;
+            } else {
+                goal_waypoints[i].parentLine = polyline[0];
+            }
+        } else if (i == goal_waypoints.length - 1) {
+            polyline = new L.polyline([goal_waypoints[i].getLatLng(), goal_marker_pos[id]]);
+            polyline.on('click', addWaypointToRoute);
+            draggableRouteLayerGroup.addLayer(polyline);
+            goal_waypoints[i].parentLine = polyline;
+        }
+        if (i != 0 && i != goal_waypoints.length - 1) {
+            polyline = new L.polyline([goal_waypoints[i].getLatLng(), goal_waypoints[i+1]]);
+            polyline.on('click', addWaypointToRoute);
+            draggableRouteLayerGroup.addLayer(polyline);
+            goal_waypoints[i].parentLine = polyline;
+        }
+    }
+    map.addLayer(goalWaypointsLayerGroup);
+    map.addLayer(draggableRouteLayerGroup);
+}
+
 // HANDLER EVENTS FOR MARKERS
 
 function dragStartHandler(e) {
-    var polyline = e.target.parentLine;
-    if(polyline){
-        var latlngPoly = polyline.getLatLngs(),     // Get the polyline's latlngs
-        latlngMarker = this.getLatLng();        // Get the actual, cliked MARKER's start latlng
+    var marker = e.target;
+    marker.polylineLatlng = {};
+    e.target.parentLine.forEach((line)=>{
+        var latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
+            latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
         for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
-            if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
-                this.polylineLatlng = i;            // If equals store key in marker instance
-            }
+        if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
+            marker.polylineLatlng[L.stamp(line)] = i;            // If equals store key in marker instance
         }
-    }
+        }
+    })
 }
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
@@ -583,16 +638,17 @@ function dragHandler(e) {
             start_marker_pos[i] = this.getLatLng();
         }
     }
-    var polyline = e.target.parentLine;
-    if (polyline){
-        var latlngPoly = e.target.parentLine.getLatLngs(),    // Get the polyline's latlngs
-        latlngMarker = this.getLatLng();            // Get the marker's current latlng
-        latlngPoly.splice(this.polylineLatlng, 1, latlngMarker);        // Replace the old latlng with the new
-        polyline.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
-    }
+    var marker = e.target;
+    e.target.parentLine.forEach((line)=>{
+        var latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
+          latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
+        latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker); // Replace the old latlng with the new
+        line.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
+    })
 }
 
 // Just to be clean and tidy remove the stored key on dragend:
 function dragEndHandler(e) {
-    delete this.polylineLatlng;
+    var marker = e.target;
+    delete marker.polylineLatlng;
 }
