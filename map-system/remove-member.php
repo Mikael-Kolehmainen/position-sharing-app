@@ -1,10 +1,17 @@
 <?php
-    if (isset($_GET['groupcode'])) {
+    require './../required-files/dbHandler.php';
+
+    if (isset($_GET['groupcode'])) 
+    {
         session_start();
-        require './../required-files/connection.php';
+
         $uniqueID = $_SESSION['uniqueID'];
-        $sql = "DELETE FROM positions WHERE uniqueID = '$uniqueID'";
+        removePosition($uniqueID);
         unset($_SESSION['uniqueID']);
-        mysqli_query($conn, $sql);
+    }
+
+    function removePosition($id)
+    {
+        dbHandler::query("DELETE FROM positions WHERE uniqueID = '$id'");
     }
 ?>

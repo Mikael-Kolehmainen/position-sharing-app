@@ -4,6 +4,8 @@ function removeDraggableGoal() {
     goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
     map.removeLayer(draggableRouteLayerGroup);
     draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
+    map.removeLayer(goalWaypointsLayerGroup);
+    goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
@@ -28,4 +30,5 @@ function removeActiveGoal() {
     goalRouteIsDrawn = false;
     map.removeLayer(goalLayerGroup);
     goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
+    goal_waypoints = [];
 }

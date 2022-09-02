@@ -146,9 +146,19 @@ function onLocationFound(e) {
                         // Check which of the positions are lower then save the lower one first so the ghostline gets drawn from the lower one to the higher one
                         if (start_marker_pos[i].lat < goal_marker_arr[i].getLatLng().lat) {
                             latlngs.push(start_marker_pos[i]);
+                            if (typeof goal_waypoints[i] != "undefined") {
+                                for (let j = 0; j < goal_waypoints[i].length; j++) {
+                                    latlngs.push(goal_waypoints[i][j].getLatLng());
+                                }
+                            }
                             latlngs.push(goal_marker_arr[i].getLatLng());
                         } else {
                             latlngs.push(goal_marker_arr[i].getLatLng());
+                            if (typeof goal_waypoints[i] != "undefined") {
+                                for (let j = 0; j < goal_waypoints[i].length; j++) {
+                                    latlngs.push(goal_waypoints[i][j].getLatLng());
+                                }
+                            }
                             latlngs.push(start_marker_pos[i]);
                         }
                         

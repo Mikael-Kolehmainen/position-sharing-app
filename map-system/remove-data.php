@@ -1,9 +1,15 @@
 <?php
-    if (isset($_GET['groupcode'])) {
+    require './../required-files/dbHandler.php';
+
+    if (isset($_GET['groupcode']))
+    {
         // REMOVE ACTIVE GOAL
-        require './../required-files/connection.php';
         $groupCode = $_GET['groupcode'];
-        $sql = "DELETE FROM goals WHERE groups_groupcode='$groupCode'";
-        mysqli_query($conn, $sql);
+        removeGoal($groupCode);
+    }
+
+    function removeGoal($groupCode)
+    {
+        dbHandler::query("DELETE FROM goals WHERE groups_groupcode='$groupCode'");
     }
 ?>

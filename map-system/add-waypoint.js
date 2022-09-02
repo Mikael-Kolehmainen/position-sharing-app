@@ -8,7 +8,6 @@ function addWaypointToRoute(e) {
     // remove previous lines
     map.removeLayer(draggableRouteLayerGroup);
     draggableRouteLayerGroup.eachLayer(function(layer) {
-        console.log(layer.options.id);
         if (id == layer.options.id) {
             draggableRouteLayerGroup.removeLayer(layer);
         }

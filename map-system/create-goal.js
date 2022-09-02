@@ -43,10 +43,10 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             }
             // START POINTS CSS
             classNameStartMarkers = 'user-start-marker-' + i;
-            styleSheetContent += '.' + classNameStartMarkers + '{ background-color: red; border-radius: 0 !important;}';
+            styleSheetContent += '.' + classNameStartMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
             // GOALS CSS
             classNameGoalMarkers = 'user-goal-marker-' + i;
-            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
+            styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
             // INITIALS
             initial = '\"' + initialsArr[i] + '\"';
             styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initial + '; }';
@@ -95,4 +95,7 @@ function sendGoalData() {
     // REMOVE DRAGGABLE ROUTE
     map.removeLayer(draggableRouteLayerGroup);
     draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
+    // REMOVE WAYPOINT MARKERS
+    map.removeLayer(goalWaypointsLayerGroup);
+    goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
 }

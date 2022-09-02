@@ -1,63 +1,90 @@
 <?php
+    require './../required-files/dbHandler.php';
+
     session_start();
-    if (isset($_GET['pos'])) {
-        if (isset($_SESSION['uniqueID'])) {
-            require './../required-files/connection.php';
-            $sql = "SELECT id, uniqueID FROM positions";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0) {
-                for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+    if (isset($_GET['pos'])) 
+    {
+        if (isset($_SESSION['uniqueID'])) 
+        {
+            $result = selectPositions();
+
+            if (mysqli_num_rows($result) > 0) 
+            {
+                for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+                {
                     $row = mysqli_fetch_assoc($result);
-                    if ($_SESSION['uniqueID'] == $row['uniqueID']) {
-                        $positionID = $row['id'];
+                    if ($_SESSION['uniqueID'] == $row['uniqueID']) 
+                    {
                         $newPosition = $_GET['pos'];
-                        $sql2 = "UPDATE positions SET position = '$newPosition' WHERE id = '$positionID'";
-                        mysqli_query($conn, $sql2);
+                        $positionID = $row['id'];
+                        updatePosition($newPosition, $positionID);
                     }
                 }
             }
-        } else {
+        } 
+        else 
+        {
             $position = $_GET['pos'];
             $uniqueID = getUniqueID();
-            $_SESSION['uniqueID'] = $uniqueID;
             $initials = $_SESSION['initials'];
             $color = $_SESSION['color'];
             $groupCode = $_GET['groupcode'];
 
-            require './../required-files/connection.php';
+            $_SESSION['uniqueID'] = $uniqueID;
 
-            $sql = "INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')";
-
-            mysqli_query($conn, $sql);
+            addPosition($position, $uniqueID, $initials, $color, $groupCode);
         }
-    } else if (isset($_GET['goalpos'])) {
-        $goalPositions = $_GET['goalpos'];
+    } 
+    else if (isset($_GET['goalpos'])) 
+    {
         $startPositions = $_GET['startpos'];
+        $goalPositions = $_GET['goalpos'];
         $groupCode = $_GET['groupcode'];
 
-        require './../required-files/connection.php';
-
-        $sql = "INSERT INTO goals (startpositions, goalpositions, groups_groupcode) VALUES ('$startPositions', '$goalPositions', '$groupCode')";
-
-        mysqli_query($conn, $sql);
+        addGoal($startPositions, $goalPositions, $groupCode);
     }
+
+    function addPosition($position, $uniqueID, $initials, $color, $groupCode) 
+    {
+        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
+	}
+
+    function updatePosition($position, $id)
+    {
+        dbHandler::query("UPDATE positions SET position = '$position' WHERE id = '$id'");
+    }
+
+    function selectPositions()
+    {
+        return dbHandler::query("SELECT id, uniqueID FROM positions");
+    }
+
+    function addGoal($startPositions, $goalPositions, $groupCode)
+    {
+        dbHandler::query("INSERT INTO goals (startpositions, goalpositions, groups_groupcode) VALUES ('$startPositions', '$goalPositions', '$groupCode')");
+    }
+
     // Checks if the unique id is actually unique
-    function getUniqueID() {
-        require './../required-files/connection.php';
+    function getUniqueID() 
+    {
         require './../required-files/random-string.php';
+
         $uniqueID = getRandomString(10);
-        $sql = "SELECT uniqueID FROM positions";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+        $result = selectPositions();
+
+        if (mysqli_num_rows($result) > 0) 
+        {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+            {
                 $row = mysqli_fetch_assoc($result);
-                if ($uniqueID == $row['uniqueID']) {
+
+                if ($uniqueID == $row['uniqueID']) 
+                {
                     $uniqueID = getUniqueID();
                 }
             }
         }
-        mysqli_close($conn);
-
+        
         return $uniqueID;
     }
 ?>

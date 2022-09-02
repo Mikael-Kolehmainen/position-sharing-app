@@ -1,22 +1,27 @@
 <?php
+    require './../required-files/dbHandler.php';
+
     session_start();
     // Man kan inte komma på sidan utan en gruppkod
-    if (isset($_GET['groupcode']) && isset($_SESSION['initials'])) {
-        require './../required-files/connection.php';
-        $sql = "SELECT id, groupcode FROM groups";
-        $result = mysqli_query($conn, $sql);
+    if (isset($_GET['groupcode']) && isset($_SESSION['initials'])) 
+    {
+        $result = selectGroups();
         $foundGroupCode = false;
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+
+        if (mysqli_num_rows($result) > 0) 
+        {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+            {
                 $row = mysqli_fetch_assoc($result);
-                if ($_GET['groupcode'] == $row['groupcode']) {
+                if ($_GET['groupcode'] == $row['groupcode']) 
+                {
                     $foundGroupCode = true;
                     $groupID = $row['id'];
                 }
             }
         }
-        mysqli_close($conn);
-        if ($foundGroupCode == false) {
+        if ($foundGroupCode == false) 
+        {
             echo "
                 <script>
                     alert('Couldn\'t find a group with the given code, try again.');
@@ -24,21 +29,30 @@
                 </script>
             ";
         }
-    } else if (isset($_GET['groupcode'])) {
+    } 
+    else if (isset($_GET['groupcode'])) 
+    {
         echo "
             <script>
                 alert('Please create a marker before joining a group.');
                 window.location.href = './../group-system/search-form.php';
             </script>
         ";
-    } else {
+    } 
+    else 
+    {
         echo "
             <script>
                 alert('Couldn\'t find a group with the given code, try again.');
                 window.location.href = './../group-system/search-form.php';
             </script>
         ";
-    }    
+    }
+
+    function selectGroups()
+    {
+        return dbHandler::query("SELECT id, groupcode FROM groups");
+    }
 ?>
 <!DOCTYPE html>
 <html>

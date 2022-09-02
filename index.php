@@ -1,9 +1,6 @@
 <!-- Gjort idag -->
-    <!-- Gjorde det lättare för användare att trycka på rutten och tillägga en waypoint -->
 
 <!-- TO-DO -->
-    <!-- clean geolocation.js and make multiple js files -->
-
     <!-- create a start point marker for the goal algorithm -->
         <!-- an input where the user can define the distance between each start & goal point -->
         <!-- option to increase amount of waypoints for route -->
