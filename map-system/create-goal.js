@@ -34,7 +34,7 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)
             if (isDraggable) {
                 let polyline = [];
-                polyline.push(new L.Polyline([start_marker_pos[i], goal_marker_pos[i]], {id: i}));
+                polyline.push(new L.Polyline([start_marker_pos[i], goal_marker_pos[i]], {weight: 5, id: i}));
                 draggableRouteLayerGroup.addLayer(polyline[0]);
                 start_marker_arr[i].parentLine = polyline;
                 goal_marker_arr[i].parentLine = polyline;

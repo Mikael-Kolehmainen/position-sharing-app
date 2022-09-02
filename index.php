@@ -1,5 +1,5 @@
 <!-- Gjort idag -->
-    <!-- Användaren kan tillägga så många waypoints som helst på rutten och ändra ruttens direktion -->
+    <!-- Gjorde det lättare för användare att trycka på rutten och tillägga en waypoint -->
 
 <!-- TO-DO -->
     <!-- clean geolocation.js and make multiple js files -->
@@ -7,7 +7,7 @@
     <!-- create a start point marker for the goal algorithm -->
         <!-- an input where the user can define the distance between each start & goal point -->
         <!-- option to increase amount of waypoints for route -->
-            <!-- easier to click the route and add waypoint -->
+            <!-- when removing previous lines only remove the previous lines for that specific goal -->
             <!-- draw the actual route so that it follows the created route -->
             <!-- a way to remove a waypoint (maybe a btn that removes previously added waypoint??) -->
     
