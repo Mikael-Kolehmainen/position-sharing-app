@@ -1,36 +1,41 @@
 <!-- Creates a group and checks if the groupcode is unique then directs the user to the groupmap with the groupcode. -->
 <?php
+    require './../required-files/dbHandler.php';
+
     createGroup();
 
-    function createGroup() {
+    function createGroup() 
+    {
         require './../required-files/random-string.php';
         
         $groupCode = getRandomString(3);
 
-        require './../required-files/connection.php';
-        $sql = "SELECT groupcode FROM groups";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
+        $result = selectGroups();
+        if (mysqli_num_rows($result) > 0) 
+        {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+            {
                 $row = mysqli_fetch_assoc($result);
-                if ($groupCode == $row['groupcode']) {
+                if ($groupCode == $row['groupcode'])
+                {
                     createGroup();
                 }
             }
         }
 
         insertGroup($groupCode);
-
-        mysqli_close($conn);
     }
 
-    function insertGroup($groupCode) {
-        require './../required-files/connection.php';
-        $sql = "INSERT INTO groups (groupcode) VALUES ('$groupCode')";
+    function insertGroup($groupCode) 
+    {
+        $result = addGroup($groupCode);
 
-        if (mysqli_query($conn, $sql)) {
+        if ($result) 
+        {
             header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
-        } else {
+        } 
+        else 
+        {
             echo "
                 <script>
                     alert('Something went wrong with group creation.');
@@ -38,6 +43,15 @@
                 </script>
             ";
         }
-        mysqli_close($conn);
+    }
+
+    function selectGroups()
+    {
+        return dbHandler::query("SELECT groupcode FROM groups");
+    }
+
+    function addGroup($groupCode)
+    {
+        return dbHandler::query("INSERT INTO groups (groupcode) VALUES ('$groupCode')");
     }
 ?>

@@ -1,19 +1,21 @@
 <?php
-    if (isset($_GET['groupcode'])) {
-        $groupCode = $_GET['groupcode'];
-        require './../required-files/connection.php';
-    
-        $sql = "DELETE FROM groups WHERE groupcode = '$groupCode'";
-        $sql2 = "DELETE FROM goals WHERE groups_groupcode = '$groupCode'";
-        $sql3 = "DELETE FROM messages WHERE groups_groupcode = '$groupCode'";
-        $sql4 = "DELETE FROM positions WHERE groups_groupcode = '$groupCode'";
+    require './../required-files/dbHandler.php';
 
-        if (mysqli_query($conn, $sql)) {
-            mysqli_query($conn, $sql2);
-            mysqli_query($conn, $sql3);
-            mysqli_query($conn, $sql4);
+    if (isset($_GET['groupcode'])) 
+    {
+        $groupCode = $_GET['groupcode'];
+    
+        $result = deleteEntry("DELETE FROM groups WHERE groupcode = '$groupCode'");
+        $result2 = deleteEntry("DELETE FROM goals WHERE groups_groupcode = '$groupCode'");
+        $result3 = deleteEntry("DELETE FROM messages WHERE groups_groupcode = '$groupCode'");
+        $result4 = deleteEntry("DELETE FROM positions WHERE groups_groupcode = '$groupCode'");
+
+        if ($result && $result2 && $result3 && $result4) 
+        {
             header("LOCATION: ./../index.php");
-        } else {
+        } 
+        else 
+        {
             echo "
                 <script>
                     alert('Something went wrong with group removal, try again.');
@@ -21,5 +23,10 @@
                 </script>
             ";
         }
+    }
+
+    function deleteEntry($sql)
+    {
+        return dbHandler::query($sql);
     }
 ?>

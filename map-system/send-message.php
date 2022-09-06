@@ -4,7 +4,7 @@
     if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['message'])) 
     {
         session_start();
-        $message = $_POST['message'];
+        $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
         $initials = $_SESSION['initials'];
         $color = $_SESSION['color'];
         $groupCode = $_GET['groupcode'];

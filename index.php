@@ -1,18 +1,9 @@
 <!-- Gjort idag -->
+    <!-- Bytte till dbHandler på alla ställen -->
 
 <!-- TO-DO -->
-    <!-- create a start point marker for the goal algorithm -->
-        <!-- an input where the user can define the distance between each start & goal point -->
-        <!-- option to increase amount of waypoints for route -->
-            <!-- draw the actual route so that it follows the created route -->
-            <!-- a way to remove a waypoint (maybe a btn that removes previously added waypoint??) -->
     
-    <!-- in the event handler instead of looking at the classname assign an id with options when creating object -->
-
-    <!-- Create a btn where you can check map legends -->
-
 <!-- BUGS -->
-    <!-- if user removes goal it doesn't remove it from other users until refresh of site -->
 
 <!DOCTYPE html>
 <html>
