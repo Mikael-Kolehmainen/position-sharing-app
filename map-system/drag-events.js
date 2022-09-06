@@ -7,9 +7,9 @@ function dragStartHandler(e) {
         var latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
             latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
         for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
-        if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
-            marker.polylineLatlng[L.stamp(line)] = i;            // If equals store key in marker instance
-        }
+            if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
+                marker.polylineLatlng[L.stamp(line)] = i;            // If equals store key in marker instance
+            }
         }
     })
 }

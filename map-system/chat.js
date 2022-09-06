@@ -23,12 +23,8 @@ function updateChat(messagesArr, initialsArr, colorsArr) {
         messageText.classList.add('text');
         message.appendChild(messageText);
 
-        let node;
-
-        node = document.createTextNode(initialsArr[i]);
-        initialsText.appendChild(node);
-        node = document.createTextNode(messagesArr[i]);
-        messageText.appendChild(node);
+        messageText.innerHTML = messagesArr[i];
+        initialsText.innerHTML = initialsArr[i];
 
         const messages = document.getElementById("messages");
         messages.appendChild(message);
