@@ -70,12 +70,17 @@
         left: 85%; }
       .active-page section article .bottom .btn:nth-of-type(3) {
         left: 85%; }
-      .active-page section article .bottom .btn.small {
+      .active-page section article .bottom .btn.small, .active-page section article .bottom .btn.number-input {
         width: fit-content;
         height: fit-content;
         background-color: #C3423F;
         top: 60%;
         left: 50%; }
+      .active-page section article .bottom .btn.number-input {
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        color: black; }
     .active-page section article .bottom .chat {
       background-color: rgba(0, 12, 102, 0.6);
       padding-top: 10px;
@@ -157,6 +162,9 @@
           transform: none; }
           .active-page section article .bottom .chat .btn-container .btn i {
             font-size: 26px; }
+    .active-page section article .bottom #distance-title {
+      text-align: center;
+      color: black; }
   .active-page section article #map {
     height: 100%;
     width: 100%;
@@ -293,6 +301,19 @@ body {
       text-align: center;
       font-size: 12px;
       font-weight: bold; }
+
+.number-input {
+  border: none;
+  background-color: white;
+  color: black;
+  height: 50px;
+  width: 50px;
+  font-size: 24px;
+  text-align: center; }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  opacity: 1; }
 
 .popup {
   background-color: #000C66;

@@ -78,12 +78,18 @@
                     &:nth-of-type(3) {
                         left: 85%;
                     }
-                    &.small {
+                    &.small, &.number-input {
                         width: fit-content;
                         height: fit-content;
                         background-color: $secondary-color;
                         top: 60%;
                         left: 50%;
+                    }
+                    &.number-input {
+                        width: 50px;
+                        height: 50px;
+                        background-color: white;
+                        color: black;
                     }
                 }
                 .chat {
@@ -187,6 +193,10 @@
                             }
                         }
                     }
+                }
+                #distance-title {
+                    text-align: center;
+                    color: black;
                 }
             }
             #map {

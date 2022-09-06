@@ -3,6 +3,7 @@
     <!-- Lade till filter_input på post/get -->
 
 <!-- TO-DO -->
+    <!-- Make js that removes the numbers til there's only two numbers in input number -->
     
 <!-- BUGS -->
 

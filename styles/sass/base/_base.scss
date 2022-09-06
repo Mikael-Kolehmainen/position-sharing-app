@@ -145,6 +145,22 @@ body {
     }
 }
 
+// NUMBER INPUT
+
+.number-input {
+    border: none;
+    background-color: white;
+    color: black;
+    height: 50px;
+    width: 50px;
+    font-size: 24px;
+    text-align: center;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+   opacity: 1;
+}
+
 // POPUP
 .popup {
     background-color: $background-color;

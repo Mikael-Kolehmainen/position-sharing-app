@@ -16,15 +16,17 @@ function dragStartHandler(e) {
 // Now you know the key of the polyline's latlng you can change it
 // when dragging the marker on the dragevent:
 function dragHandler(e) {
-    // We get the index of the marker by looking at the classname 'other-user-marker[index]'
+    // We get the index and what type of marker by looking at the classname 'user-[type]-marker-[index]'
     let markerClassNames = this._icon.className;
     let markerClasses = markerClassNames.split(" ");
     for (let i = 0; i < goal_marker_pos.length; i++) {
         if (markerClasses.includes("user-goal-marker-"+i)) {
             goal_marker_pos[i] = this.getLatLng();
+            goal_marker_arr[i].setLatLng(this.getLatLng());
         }
         if (markerClasses.includes("user-start-marker-"+i)) {
             start_marker_pos[i] = this.getLatLng();
+            start_marker_arr[i].setLatLng(this.getLatLng());
         }
     }
     var marker = e.target;

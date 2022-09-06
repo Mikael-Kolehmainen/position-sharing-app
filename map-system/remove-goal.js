@@ -6,6 +6,7 @@ function removeDraggableGoal() {
     draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
     map.removeLayer(goalWaypointsLayerGroup);
     goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
+    goal_waypoints = [];
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
