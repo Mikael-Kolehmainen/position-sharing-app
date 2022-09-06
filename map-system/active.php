@@ -7,13 +7,14 @@
     {
         $result = selectGroups();
         $foundGroupCode = false;
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
         if (mysqli_num_rows($result) > 0) 
         {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
-                if ($_GET['groupcode'] == $row['groupcode']) 
+                if ($groupCode == $row['groupcode']) 
                 {
                     $foundGroupCode = true;
                     $groupID = $row['id'];

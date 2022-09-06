@@ -1,5 +1,6 @@
 <!-- Gjort idag -->
     <!-- Bytte till dbHandler på alla ställen -->
+    <!-- Lade till filter_input på post/get -->
 
 <!-- TO-DO -->
     

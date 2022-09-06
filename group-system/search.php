@@ -19,7 +19,10 @@
 
         if (isset($groupCode)) 
         {
-            saveMarker($_POST['initials'], $_POST['color']);
+            $initials = filterPost('initials');
+            $color = filterPost('color');
+
+            saveMarker($initials, $color);
             header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } 
         else 
@@ -31,10 +34,13 @@
                 </script>
             ";
         }
-    } 
+    }
     else if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['initials'])) 
     {
-        saveMarker($_POST['initials'], $_POST['color']);
+        $initials = filterPost('initials');
+        $color = filterPost('color');
+
+        saveMarker($initials, $color);
         header("LOCATION: ./create.php");
     }
 
@@ -47,6 +53,11 @@
         $initials = strtoupper($initials);
         $_SESSION['initials'] = $initials;
         $_SESSION['color'] = $color;
+    }
+
+    function filterPost($postname)
+    {
+        return filter_input(INPUT_POST, $postname, FILTER_DEFAULT);
     }
 
     function selectGroups()

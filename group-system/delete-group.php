@@ -3,7 +3,7 @@
 
     if (isset($_GET['groupcode'])) 
     {
-        $groupCode = $_GET['groupcode'];
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
     
         $result = deleteEntry("DELETE FROM groups WHERE groupcode = '$groupCode'");
         $result2 = deleteEntry("DELETE FROM goals WHERE groups_groupcode = '$groupCode'");

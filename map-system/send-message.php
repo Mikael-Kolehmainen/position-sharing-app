@@ -7,13 +7,13 @@
         $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
         $initials = $_SESSION['initials'];
         $color = $_SESSION['color'];
-        $groupCode = $_GET['groupcode'];
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
         
         $result = addMessage($message, $initials, $color, $groupCode);
 
         if ($result) 
         {
-            header("LOCATION: active.php?groupcode=".$_GET['groupcode']);
+            header("LOCATION: active.php?groupcode=$groupCode");
         } 
         else 
         {

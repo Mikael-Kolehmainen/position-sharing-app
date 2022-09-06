@@ -15,7 +15,7 @@
                     $row = mysqli_fetch_assoc($result);
                     if ($_SESSION['uniqueID'] == $row['uniqueID']) 
                     {
-                        $newPosition = $_GET['pos'];
+                        $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);;
                         $positionID = $row['id'];
                         updatePosition($newPosition, $positionID);
                     }
@@ -24,11 +24,11 @@
         } 
         else 
         {
-            $position = $_GET['pos'];
+            $position = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);;
             $uniqueID = getUniqueID();
             $initials = $_SESSION['initials'];
             $color = $_SESSION['color'];
-            $groupCode = $_GET['groupcode'];
+            $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);;
 
             $_SESSION['uniqueID'] = $uniqueID;
 
@@ -37,9 +37,9 @@
     } 
     else if (isset($_GET['goalpos'])) 
     {
-        $startPositions = $_GET['startpos'];
-        $goalPositions = $_GET['goalpos'];
-        $groupCode = $_GET['groupcode'];
+        $startPositions = filter_input(INPUT_GET, 'startpos', FILTER_DEFAULT);;
+        $goalPositions = filter_input(INPUT_GET, 'goalpos', FILTER_DEFAULT);;
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);;
 
         addGoal($startPositions, $goalPositions, $groupCode);
     }

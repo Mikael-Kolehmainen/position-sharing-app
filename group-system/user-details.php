@@ -15,7 +15,7 @@
                 </a>
                 <h1>Create your marker</h1>
                 <form action='search.php' method='POST'>
-                    <input type='text' name='initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required>
+                    <input type='text' name='initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required onkeydown='return /[a-z0-9]/i.test(event.key)'>
                     <input type='text' name='color' placeholder='Color (HEX eg. #5BC0EB)' minlength='7' maxlength='7' class='center'>
                     <p style='text-align: center'>Default color: #FF0000</p>
                     <input type='submit' value='CREATE'>

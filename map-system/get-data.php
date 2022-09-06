@@ -16,6 +16,8 @@
         $goalsData['startpositions'] = array("empty");
         $goalsData['goalpositions'] = array("empty");
 
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+
         // GET POSITIONS
         $result = selectPositions();
         if (mysqli_num_rows($result) > 0) 
@@ -23,7 +25,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $_GET['groupcode']) 
+                if ($row['groups_groupcode'] == $groupCode) 
                 {
                     array_push($positionsData['positions'] , $row['position']);
                     array_push($positionsData['initials'], $row['initials']);
@@ -39,7 +41,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $_GET['groupcode']) 
+                if ($row['groups_groupcode'] == $groupCode) 
                 {
                     array_push($messagesData['messages'], $row['message']);
                     array_push($messagesData['initials'], $row['initials']);
@@ -55,7 +57,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $_GET['groupcode']) 
+                if ($row['groups_groupcode'] == $groupCode) 
                 {
                     // Remove first 'LatLng' from string
                     $startPositions = substr($row['startpositions'], 6);
