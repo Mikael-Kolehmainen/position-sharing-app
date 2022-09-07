@@ -1,4 +1,4 @@
-function updateWaypointLines() {
+function updateWaypointLines(id) {
     // remove previous lines
     map.removeLayer(draggableRouteLayerGroup);
     draggableRouteLayerGroup.eachLayer(function(layer) {

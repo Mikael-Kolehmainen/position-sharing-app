@@ -1,10 +1,11 @@
 // we use these in remove-waypoint.js
 let all_waypoints = [];
-let id;
+let goalIDs = [];
 
 // WHEN ROUTE IS CLICKED ADD WAYPOINT WHERE CLICKED
 function addWaypointToRoute(e) {
-    id = e.target.options.id;
+    const id = e.target.options.id;
+    goalIDs.push(id);
     if (typeof goal_waypoints[id] == "undefined") {
         goal_waypoints[id] = [];
     }
@@ -46,7 +47,7 @@ function addWaypointToRoute(e) {
     goal_waypoints[id][index] = temp; */
 
     // UPDATE LINES BETWEEN WAYPOINTS
-    updateWaypointLines();
-    
+    updateWaypointLines(id);
+
     map.addLayer(goalWaypointsLayerGroup);
 }
