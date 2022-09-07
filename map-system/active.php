@@ -80,6 +80,7 @@
         <script src='./remove-goal.js' async></script>
         <script src='./create-goal.js' async></script>
         <script src='./distance.js' async></script>
+        <script src='./remove-waypoint.js' async></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -118,17 +119,22 @@
                     <a class='btn small' onclick='openMenu("delete-btn", "delete-popup", "block");' id='delete-btn'>
                         <p>Delete group</p>
                     </a>
-                    <p id='distance-title' style='display: none;'>Distance</p>
-                    <input type='number' class='btn number-input' style='display: none;' onchange='applyDistance()' min='0' max='99' placeholder='99' id='distance-number'>
-                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn", "delete-btn", "distance-number", "distance-title"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
+                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn", "delete-btn"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn", "distance-number", "distance-title"]);removeDraggableGoal();'>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn"]);removeDraggableGoal();'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn", "distance-number", "distance-title"]);sendGoalData();'>
+                        <div class='distance'>
+                            <p>Distance</p>
+                            <input type='number' class='btn number-input' id='distance-number' onchange='applyDistance()' min='0' max='99' placeholder='99'>
+                        </div>
+                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn"]);sendGoalData();'>
                             <i class='fa-solid fa-check'></i>
+                        </a>
+                        <a class='btn small' onclick='removeWaypoint();'>
+                            <p>Remove waypoint</p>
                         </a>
                     </div>
                 </div>

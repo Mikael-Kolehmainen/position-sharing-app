@@ -59,7 +59,7 @@
       cursor: pointer;
       position: absolute;
       top: 40%;
-      left: 12.5%;
+      left: 15%;
       transform: translate(-50%, -50%);
       pointer-events: auto; }
       .active-page section article .bottom .btn i {
@@ -162,9 +162,20 @@
           transform: none; }
           .active-page section article .bottom .chat .btn-container .btn i {
             font-size: 26px; }
-    .active-page section article .bottom #distance-title {
-      text-align: center;
-      color: black; }
+    .active-page section article .bottom .options .distance {
+      position: absolute;
+      top: -5%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; }
+      .active-page section article .bottom .options .distance .btn {
+        position: static;
+        left: 0;
+        top: 0;
+        transform: none; }
+      .active-page section article .bottom .options .distance p {
+        color: black;
+        margin-bottom: 5px; }
   .active-page section article #map {
     height: 100%;
     width: 100%;

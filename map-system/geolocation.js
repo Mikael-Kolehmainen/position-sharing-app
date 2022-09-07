@@ -177,7 +177,7 @@ function onLocationFound(e) {
                             // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                             for (let j = 0; j < vaasa['features'].length; j++) {
                                 intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine.toGeoJSON());
-                                // Check if user or goal is in water
+                                // Check if there's an intersectpoint and if user or goal isn't in water
                                 if (intersectPoint.features.length > 0
                                     && !turf.booleanPointInPolygon([start_marker_pos[i].lng, start_marker_pos[i].lat], vaasa['features'][j])
                                     && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][j])) {

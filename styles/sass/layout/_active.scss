@@ -62,7 +62,7 @@
                     cursor: pointer;
                     position: absolute;
                     top: 40%;
-                    left: 12.5%;
+                    left: 15%;
                     transform: translate(-50%, -50%);
                     pointer-events: auto;
 
@@ -194,9 +194,25 @@
                         }
                     }
                 }
-                #distance-title {
-                    text-align: center;
-                    color: black;
+                .options {
+                    .distance {
+                        position: absolute;
+                        top: -5%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        text-align: center;
+
+                        .btn {
+                            position: static;
+                            left: 0;
+                            top: 0;
+                            transform: none;
+                        }
+                        p {
+                            color: black;
+                            margin-bottom: 5px;
+                        }
+                    }
                 }
             }
             #map {
