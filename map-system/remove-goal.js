@@ -9,6 +9,10 @@ function removeDraggableGoal() {
     goal_waypoints = [];
     all_waypoints = [];
     goalIDs = [];
+    start_marker_arr = [];
+    start_marker_pos = [];
+    goal_marker_arr = [];
+    goal_marker_pos = [];
 }
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
@@ -34,4 +38,10 @@ function removeActiveGoal() {
     map.removeLayer(goalLayerGroup);
     goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
     goal_waypoints = [];
+    all_waypoints = [];
+    goalIDs = [];
+    start_marker_arr = [];
+    start_marker_pos = [];
+    goal_marker_arr = [];
+    goal_marker_pos = [];
 }

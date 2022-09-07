@@ -12,6 +12,7 @@ function showDraggableGoal() {
     }
     styleSheetContent = createGoalLine(true);
     createStyle(styleSheetContent, 'js-style-goals');
+    goalIsBeingPlanned = true;
 }
 // CREATE FUNCTION
 function createGoalLine(returnStyleSheet = false, isDraggable = true) {
@@ -98,4 +99,6 @@ function sendGoalData() {
     // REMOVE WAYPOINT MARKERS
     map.removeLayer(goalWaypointsLayerGroup);
     goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
+    
+    goalIsBeingPlanned = false;
 }

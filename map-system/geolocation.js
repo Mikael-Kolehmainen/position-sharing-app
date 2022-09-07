@@ -37,6 +37,7 @@ let styleSheetContent =  "";
 let goal_marker_arr = [];
 let goal_marker_pos = [];
 let goalRouteIsDrawn = false;
+let goalIsBeingPlanned = false;
 
 let start_marker_arr = [];
 let start_marker_pos = [];
@@ -321,7 +322,7 @@ function onLocationFound(e) {
                             userPopupContent[i] += "\n(Slow down)";
                         }
                     }
-                } else {
+                } else if (!goalIsBeingPlanned) {
                     // REMOVE GOALS FROM MAP
                     map.removeLayer(goalLayerGroup);
                     goalLayerGroup.eachLayer(function(layer) {
