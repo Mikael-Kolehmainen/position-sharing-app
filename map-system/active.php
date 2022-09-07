@@ -75,6 +75,7 @@
         <script src='./chat.js' async></script>
         <script src='./percentage-moved.js' async></script>
         <script src='./drag-events.js' async></script>
+        <script src='./waypoint-lines.js' async></script>
         <script src='./add-waypoint.js' async></script>
         <script src='./show-water.js' async></script>
         <script src='./remove-goal.js' async></script>
