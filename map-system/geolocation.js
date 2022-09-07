@@ -321,6 +321,18 @@ function onLocationFound(e) {
                             userPopupContent[i] += "\n(Slow down)";
                         }
                     }
+                } else {
+                    // REMOVE GOALS FROM MAP
+                    map.removeLayer(goalLayerGroup);
+                    goalLayerGroup.eachLayer(function(layer) {
+                        goalLayerGroup.removeLayer(layer);
+                    });
+                    // HIDE ACTIVE GOAL DISCLAIMER
+                    let disclaimer = document.getElementById('active-goal-disclaimer');
+                    disclaimer.style.display = 'none';
+                    // SHOW CREATE GOAL BTN
+                    let goalBtn = document.getElementById('goal-btn');
+                    goalBtn.style.display = 'block';
                 }
             };
         }
