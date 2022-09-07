@@ -165,6 +165,11 @@ function onLocationFound(e) {
                         
                         if (!goalRouteIsDrawn) {
                             // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE
+
+                            // idea: run a for loop for all elements in latlngs and create a line
+                            // then check for intersectpoints on all lines with another for loop
+                            // then create new code for "DRAW ROUTELINES BETWEEN THE ARCES"
+
                             let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
                             let intersectPoint;
                             let polygonCenters = [];
@@ -189,13 +194,13 @@ function onLocationFound(e) {
                             }
                             // sort array from lowest points to highest points
                             polygonSort.sort(function(a, b) {
-                                return a.lat - b.lat
+                                return a.lat - b.lat;
                             });
                             polygonCenters.sort(function(a, b) {
-                                return polygonSort.indexOf(a) - polygonSort.indexOf(b)
+                                return polygonSort.indexOf(a) - polygonSort.indexOf(b);
                             });
                             polygonBounds.sort(function(a, b) {
-                                return polygonSort.indexOf(a) - polygonSort.indexOf(b)
+                                return polygonSort.indexOf(a) - polygonSort.indexOf(b);
                             });
                             if (polygonCenters.length > 0) {
                                 for (let j = 0; j < polygonCenters.length; j++) {
