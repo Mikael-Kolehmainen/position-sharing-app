@@ -1,4 +1,4 @@
-// we use these in remove-waypoint.js
+// we use these in remove-waypoint.js and create-goal.js
 let all_waypoints = [];
 let goalIDs = [];
 

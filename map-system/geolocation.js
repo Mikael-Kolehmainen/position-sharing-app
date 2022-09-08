@@ -110,7 +110,6 @@ function onLocationFound(e) {
                 // GOALS
                 const startsArr = data.goalspositions.startpositions;
                 const goalsArr = data.goalspositions.goalpositions;
-                console.log(goalsArr);
                 if (goalsArr[0] != "empty" && startsArr[0] != "empty") {
                     // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
                     while (goalsArr.length < positionsArr.length) {
