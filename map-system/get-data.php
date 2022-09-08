@@ -15,6 +15,7 @@
         $goalsData = array();
         $goalsData['startpositions'] = array();
         $goalsData['goalpositions'] = array();
+        $goalsData['waypoints'] = array();
 
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
@@ -70,6 +71,20 @@
                     $goalPosition = substr($goalPosition, 0, -1);
 
                     array_push($goalsData['goalpositions'], $goalPosition);
+
+                    // We remove 'LatLng(' and ')'
+                    if (isset($row['waypoints']))
+                    {
+                        $waypoints = explode('LatLng(', $row['waypoints']);
+                        for ($j = 0; $j < count($waypoints); $j++) 
+                        {
+                            $waypoints[$j] = substr($waypoints[$j], 0, -1);
+                        } 
+                        // Remove elements that are emtpy
+                        $waypoints = array_values(array_filter($waypoints));
+
+                        array_push($goalsData['waypoints'], $waypoints);
+                    }
                 }
             }
         }
@@ -99,6 +114,6 @@
 
     function selectGoals()
     {
-        return dbHandler::query("SELECT startposition, goalposition, groups_groupcode FROM goals");
+        return dbHandler::query("SELECT startposition, goalposition, waypoints, groups_groupcode FROM goals");
     }
 ?>

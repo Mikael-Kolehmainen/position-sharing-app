@@ -97,7 +97,6 @@ function sendGoalData() {
         IDcounts[goalIDs[i]] = IDcounts[goalIDs[i]] - 1;
     }
     url += '&groupcode=' + groupCode + '&goalamount=' + goal_marker_pos.length;
-    console.log(url);
 
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {

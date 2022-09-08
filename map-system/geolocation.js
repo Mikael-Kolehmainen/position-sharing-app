@@ -110,6 +110,7 @@ function onLocationFound(e) {
                 // GOALS
                 const startsArr = data.goalspositions.startpositions;
                 const goalsArr = data.goalspositions.goalpositions;
+                const waypointsArr = data.goalspositions.waypoints;
                 if (goalsArr[0] != "empty" && startsArr[0] != "empty") {
                     // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
                     while (goalsArr.length < positionsArr.length) {
@@ -120,6 +121,12 @@ function onLocationFound(e) {
                             // SAVE START POSITIONS TO VARIABLE
                             latlngArr = startsArr[i].split(",");
                             start_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                            // SAVE WAYPOINT POSITIONS TO VARIABLE
+                            goal_waypoints[i] = [];
+                            for (let j = 0; j < waypointsArr[i].length; j++) {
+                                latlngArr = waypointsArr[i][j].split(",");
+                                goal_waypoints[i][j] = new L.marker(latlngArr);
+                            }
                             // SAVE GOAL POSITIONS TO VARIABLE
                             latlngArr = goalsArr[i].split(",");
                             goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
