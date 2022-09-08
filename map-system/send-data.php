@@ -35,13 +35,20 @@
             addPosition($position, $uniqueID, $initials, $color, $groupCode);
         }
     } 
-    else if (isset($_GET['goalpos'])) 
+    else if (isset($_GET['goalamount'])) 
     {
-        $startPositions = filter_input(INPUT_GET, 'startpos', FILTER_DEFAULT);;
-        $goalPositions = filter_input(INPUT_GET, 'goalpos', FILTER_DEFAULT);;
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);;
+        $amountOfGoals = filter_input(INPUT_GET, 'goalamount', FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
-        addGoal($startPositions, $goalPositions, $groupCode);
+        for ($i = 0; $i < $amountOfGoals; $i++) {
+            $startKey = 'startpos'.$i;
+            $startPosition = filter_input(INPUT_GET, $startKey, FILTER_DEFAULT);
+
+            $goalKey = 'goalpos'.$i;
+            $goalPosition = filter_input(INPUT_GET, $goalKey, FILTER_DEFAULT);
+
+            addGoal($startPosition, $goalPosition, $groupCode);
+        }
     }
 
     function addPosition($position, $uniqueID, $initials, $color, $groupCode) 
@@ -59,9 +66,9 @@
         return dbHandler::query("SELECT id, uniqueID FROM positions");
     }
 
-    function addGoal($startPositions, $goalPositions, $groupCode)
+    function addGoal($startPosition, $goalPosition, $groupCode)
     {
-        dbHandler::query("INSERT INTO goals (startpositions, goalpositions, groups_groupcode) VALUES ('$startPositions', '$goalPositions', '$groupCode')");
+        dbHandler::query("INSERT INTO goals (startposition, goalposition, groups_groupcode) VALUES ('$startPosition', '$goalPosition', '$groupCode')");
     }
 
     // Checks if the unique id is actually unique

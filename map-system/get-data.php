@@ -13,8 +13,8 @@
         $messagesData['colors'] = array();
 
         $goalsData = array();
-        $goalsData['startpositions'] = array("empty");
-        $goalsData['goalpositions'] = array("empty");
+        $goalsData['startpositions'] = array();
+        $goalsData['goalpositions'] = array();
 
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
@@ -59,16 +59,24 @@
                 $row = mysqli_fetch_assoc($result);
                 if ($row['groups_groupcode'] == $groupCode) 
                 {
-                    // Remove first 'LatLng' from string
-                    $startPositions = substr($row['startpositions'], 6);
-                    $startPositions = explode(",LatLng", $startPositions);
-                    $goalsData['startpositions'] = $startPositions;
-                    // Remove first 'LatLng' from string
-                    $goalPositions = substr($row['goalpositions'], 6);
-                    $goalPositions = explode(",LatLng", $goalPositions);
-                    $goalsData['goalpositions'] = $goalPositions;
+                    // We remove 'LatLng(' and ')' from string
+                    $startPosition = substr($row['startposition'], 7);
+                    $startPosition = substr($startPosition, 0, -1);
+
+                    array_push($goalsData['startpositions'], $startPosition);
+
+                    // We remove 'LatLng(' and ')' from string
+                    $goalPosition = substr($row['goalposition'], 7);
+                    $goalPosition = substr($goalPosition, 0, -1);
+
+                    array_push($goalsData['goalpositions'], $goalPosition);
                 }
             }
+        }
+        if (count($goalsData['startpositions']) == 0)
+        {
+            array_push($goalsData['startpositions'], "empty");
+            array_push($goalsData['goalpositions'], "empty");
         }
 
         $data = array();
@@ -91,6 +99,6 @@
 
     function selectGoals()
     {
-        return dbHandler::query("SELECT startpositions, goalpositions, groups_groupcode FROM goals");
+        return dbHandler::query("SELECT startposition, goalposition, groups_groupcode FROM goals");
     }
 ?>

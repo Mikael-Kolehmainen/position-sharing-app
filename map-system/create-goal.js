@@ -81,7 +81,11 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
 // SEND DATA FUNCTION
 function sendGoalData() {
     let xmlhttp = new XMLHttpRequest();
-    let url = 'send-data.php?goalpos=' + goal_marker_pos + '&startpos=' + start_marker_pos + '&groupcode=' + groupCode;
+    let url = 'send-data.php?groupcode=' + groupCode;
+    for (let i = 0; i < goal_marker_pos.length; i++) {
+        url += '&goalpos' + i + '=' + goal_marker_pos[i] + '&startpos' + i + '=' + start_marker_pos[i];
+    }
+    url += '&groupcode=' + groupCode + '&goalamount=' + goal_marker_pos.length;
 
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {

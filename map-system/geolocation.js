@@ -110,6 +110,7 @@ function onLocationFound(e) {
                 // GOALS
                 const startsArr = data.goalspositions.startpositions;
                 const goalsArr = data.goalspositions.goalpositions;
+                console.log(goalsArr);
                 if (goalsArr[0] != "empty" && startsArr[0] != "empty") {
                     // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
                     while (goalsArr.length < positionsArr.length) {
@@ -118,11 +119,9 @@ function onLocationFound(e) {
                     for (let i = 0; i < goalsArr.length; i++) {
                         if (goalsArr[i] != "no goal") {
                             // SAVE START POSITIONS TO VARIABLE
-                            startsArr[i] = startsArr[i].replace(/[^\d.,-]/g,'');
                             latlngArr = startsArr[i].split(",");
                             start_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
                             // SAVE GOAL POSITIONS TO VARIABLE
-                            goalsArr[i] = goalsArr[i].replace(/[^\d.,-]/g,'');
                             latlngArr = goalsArr[i].split(",");
                             goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
                         } else {
