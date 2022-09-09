@@ -16,6 +16,9 @@ waterLayerGroup.addLayer(L.geoJSON(vaasa));
 // GET THE GROUPCODE FROM SEARCH FIELD
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
+let markerInitialsArr;
+let markerColorsArr;
+
 let userIcon = L.divIcon ({
     iconSize: [25, 25],
     iconAnchor: [12.5, 25],
@@ -72,8 +75,8 @@ function onLocationFound(e) {
                 user_markers = [];
                 data = JSON.parse(this.responseText);
                 let positionsArr = data.positionsdata.positions;
-                let initialsArr = data.positionsdata.initials;
-                let colorsArr = data.positionsdata.colors;
+                markerInitialsArr = data.positionsdata.initials;
+                markerColorsArr = data.positionsdata.colors;
                 let classNameOtherUsers;
                 for (let i = 0; i < positionsArr.length; i++) {
                     positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
@@ -81,18 +84,18 @@ function onLocationFound(e) {
                     marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon});
                     refreshedLayerGroup.addLayer(marker);
                     user_markers.push(marker);
-                    let initial = '\"' + initialsArr[i] + '\"';
+                    let initial = '\"' + markerInitialsArr[i] + '\"';
                     if (marker.getLatLng().equals(current_position.getLatLng())) {
                         // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
                         goalLayerGroup.removeLayer(marker);
                         // GIVES COLOR & INITIALS TO USERS MARKER
                         const stylesheet = document.styleSheets[0];
                         stylesheet.cssRules[1].style.setProperty('content', initial);
-                        stylesheet.cssRules[0].style.setProperty('background-color', colorsArr[i]);
+                        stylesheet.cssRules[0].style.setProperty('background-color', markerColorsArr[i]);
                     } else {
                          // GIVES COLOR & INITIALS TO OTHER MARKERS
                         classNameOtherUsers = 'other-user-marker-' + i;
-                        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
+                        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + markerColorsArr[i] + '; }';
                         // INITIALS
                         styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
 
@@ -102,8 +105,8 @@ function onLocationFound(e) {
                 createStyle(styleSheetContent, 'js-style');
                 // MESSAGES
                 let messagesArr = data.messagesdata.messages;
-                initialsArr = data.messagesdata.initials;
-                colorsArr = data.messagesdata.colors;
+                let initialsArr = data.messagesdata.initials;
+                let colorsArr = data.messagesdata.colors;
 
                 updateChat(messagesArr, initialsArr, colorsArr);
                 
@@ -167,14 +170,15 @@ function onLocationFound(e) {
                             }
                             latlngs.push(start_marker_pos[i]);
                         }
+
+                        let polylineRoute = L.polyline(latlngs, {color: 'red'});
+                        goalLayerGroup.addLayer(polylineRoute);
+                        goalLayerGroup.addTo(map);
                         
-                        if (!goalRouteIsDrawn) {
+                        /* WATER ALGORITHM CODE COMMENTED FOR NOW BECAUSE IT DOESN'T WORK WITH THE WAYPOINTS SYSTEM */
+
+                   /*     if (!goalRouteIsDrawn) {
                             // DRAW A GHOST LINE BEFORE THE ACTUAL ROUTE
-
-                            // idea: run a for loop for all elements in latlngs and create a line
-                            // then check for intersectpoints on all lines with another for loop
-                            // then create new code for "DRAW ROUTELINES BETWEEN THE ARCES"
-
                             let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
                             let intersectPoint;
                             let polygonCenters = [];
@@ -312,7 +316,7 @@ function onLocationFound(e) {
                                 goalLayerGroup.addLayer(polylineRoute);
                             }
                             goalLayerGroup.addTo(map);
-                        }
+                        } */
                         
                         // GET PERCENTAGE OF DISTANCE MOVED
                         let percentage = calculatePercentage(start_marker_pos[i], goal_marker_pos[i], latlngs, user_markers[i]);
@@ -341,9 +345,6 @@ function onLocationFound(e) {
                     // HIDE ACTIVE GOAL DISCLAIMER
                     let disclaimer = document.getElementById('active-goal-disclaimer');
                     disclaimer.style.display = 'none';
-                    // SHOW CREATE GOAL BTN
-                    let goalBtn = document.getElementById('goal-btn');
-                    goalBtn.style.display = 'block';
                 }
             };
         }

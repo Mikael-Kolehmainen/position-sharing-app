@@ -63,7 +63,7 @@
         <link rel='icon' type='image/svg' href='./../media/'>
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
-        <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+        <script src='./../js/turf.min.js'></script>
         <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
         <script src='./../js/open.js' async></script>
         <script src='./../js/remove-children.js' async></script>
@@ -82,6 +82,7 @@
         <script src='./create-goal.js' async></script>
         <script src='./distance.js' async></script>
         <script src='./remove-waypoint.js' async></script>
+        <script src='./goal-popup.js' async></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -120,7 +121,7 @@
                     <a class='btn small' onclick='openMenu("delete-btn", "delete-popup", "block");' id='delete-btn'>
                         <p>Delete group</p>
                     </a>
-                    <a class='btn round' onclick='openMenu("goal-btn", "goal-options", "block", ["message-btn", "delete-btn"]);showDraggableGoal();' id='goal-btn' style='display: inline-block;'>
+                    <a class='btn round' onclick='openMenu("goal-btn", "goal-popup", "block");createPopup();' id='goal-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
@@ -145,6 +146,17 @@
                         <p>No</p>
                     </a>
                     <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET['groupcode']; ?>'>
+                        <p>Yes</p>
+                    </a>
+                </div>
+                <div class='popup' id='goal-popup' style='display: none;'>
+                    <p>Choose which users get a goal?</p>
+                    <table id='users-table'>
+                    </table>
+                    <a class='btn' onclick='openMenu("goal-popup", "goal-btn", "block");'>
+                        <p>No</p>
+                    </a>
+                    <a class='btn' onclick='openMenu("goal-popup", "goal-options", "block", ["message-btn", "delete-btn"]);showDraggableGoal();'>
                         <p>Yes</p>
                     </a>
                 </div>

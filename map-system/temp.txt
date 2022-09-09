@@ -174,13 +174,16 @@ function onLocationFound(e) {
                             // idea: run a for loop for all elements in latlngs and create a line
                             // then check for intersectpoints on all lines with another for loop
                             // then create new code for "DRAW ROUTELINES BETWEEN THE ARCES"
+
+                            // draw a main ghostline then if it intersects with water, check which ghostline intersects with water
+
                             let ghostLine = [];
+                            let mainGhostLine = new L.polyline(latlngs, {color: 'red', opacity: 0});
 
                             for (let j = 0; j < latlngs.length - 1; j++) {
-                                ghostLine.push(ghostLine, new L.polyline([latlngs[j], latlngs[j+1]], {color: 'red', opacity: 0}));
+                                ghostLine.push(new L.polyline([latlngs[j], latlngs[j+1]], {color: 'red', opacity: 0}));
                             }
 
-                          //  let ghostLine = L.polyline(latlngs, {color: 'red', opacity: 0});
                             let intersectPoint;
                             let polygonCenters = [];
                             let polygonBounds = [];
@@ -190,20 +193,21 @@ function onLocationFound(e) {
                             let circleRadius = 80;
                             let intersectPositions_1 = [];
                             let intersectPositions_2 = [];
+
+                            for (let k = 0; k < vaasa['features'].length; k++) {
+                                intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][k]), mainGhostLine.toGeoJSON());
+                                // Check if there's an intersectpoint and if user or goal isn't in water
+                                if (intersectPoint.features.length > 0
+                                    && !turf.booleanPointInPolygon([start_marker_pos[i].lng, start_marker_pos[i].lat], vaasa['features'][k])
+                                    && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][k])) {
+                                    polygonCenters.push(L.geoJSON(vaasa['features'][k]).getBounds().getCenter());
+                                    polygonBounds.push(L.geoJSON(vaasa['features'][k]).getBounds());
+                                    polygonSort.push(L.geoJSON(vaasa['features'][k]).getBounds()._northEast);
+                                }
+                            }
+
                             // FIND IF GHOSTLINE INTERSECTS WITH A WATER ENTITY
                             for (let j = 0; j < ghostLine.length; j++) {
-                                for (let k = 0; k < vaasa['features'].length; k++) {
-                                    console.log(ghostLine[j]);
-                                    intersectPoint = turf.lineIntersect(turf.polygonToLine(vaasa['features'][j]), ghostLine[j].toGeoJSON());
-                                    // Check if there's an intersectpoint and if user or goal isn't in water
-                                    if (intersectPoint.features.length > 0
-                                        && !turf.booleanPointInPolygon([start_marker_pos[i].lng, start_marker_pos[i].lat], vaasa['features'][k])
-                                        && !turf.booleanPointInPolygon([goal_marker_arr[i].getLatLng().lng, goal_marker_arr[i].getLatLng().lat], vaasa['features'][k])) {
-                                        polygonCenters.push(L.geoJSON(vaasa['features'][k]).getBounds().getCenter());
-                                        polygonBounds.push(L.geoJSON(vaasa['features'][k]).getBounds());
-                                        polygonSort.push(L.geoJSON(vaasa['features'][k]).getBounds()._northEast);
-                                    }
-                                }
                             
                                 // sort array from lowest points to highest points
                                 polygonSort.sort(function(a, b) {

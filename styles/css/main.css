@@ -100,20 +100,6 @@
           flex-wrap: nowrap; }
           .active-page section article .bottom .chat .messages .message .profile, .active-page section article .bottom .chat .messages .message p {
             display: inline-block; }
-          .active-page section article .bottom .chat .messages .message .profile {
-            position: relative;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px; }
-            .active-page section article .bottom .chat .messages .message .profile p {
-              position: absolute;
-              left: 50%;
-              top: 50%;
-              transform: translate(-50%, -50%);
-              width: fit-content;
-              font-weight: bold;
-              color: white;
-              background-color: transparent; }
           .active-page section article .bottom .chat .messages .message .text {
             background-color: white;
             color: black;
@@ -176,6 +162,20 @@
       .active-page section article .bottom .options .distance p {
         color: black;
         margin-bottom: 5px; }
+  .active-page section article .profile {
+    position: relative;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px; }
+    .active-page section article .profile p {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: fit-content;
+      font-weight: bold;
+      color: white;
+      background-color: transparent; }
   .active-page section article #map {
     height: 100%;
     width: 100%;
