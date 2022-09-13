@@ -162,11 +162,31 @@
       .active-page section article .bottom .options .distance p {
         color: black;
         margin-bottom: 5px; }
+  .active-page section article table {
+    display: block;
+    width: 100%;
+    text-align: center;
+    max-height: 300px;
+    overflow-y: scroll;
+    margin-bottom: 5px; }
+    .active-page section article table tr {
+      display: block;
+      width: 100%;
+      margin-bottom: 5px; }
+      .active-page section article table tr td {
+        display: inline-block;
+        width: 50%; }
+        .active-page section article table tr td input[type=checkbox] {
+          width: 40px;
+          height: 40px; }
+      .active-page section article table tr:first-of-type {
+        margin-bottom: 10px; }
   .active-page section article .profile {
     position: relative;
     border-radius: 50%;
     width: 50px;
-    height: 50px; }
+    height: 50px;
+    display: inline-block; }
     .active-page section article .profile p {
       position: absolute;
       left: 50%;

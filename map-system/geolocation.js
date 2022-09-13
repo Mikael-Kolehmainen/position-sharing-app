@@ -346,6 +346,12 @@ function onLocationFound(e) {
                     let disclaimer = document.getElementById('active-goal-disclaimer');
                     disclaimer.style.display = 'none';
                 }
+                // CREATE STYLESHEET FOR GOAL MENU
+                for (let i = 0; i < markerColorsArr.length; i++) {
+                    const className = 'goal-menu-user-marker-' + i;
+                    styleSheetContent += '.' + className + '{ background-color: ' + markerColorsArr[i] + '; }';
+                }
+                createStyle(styleSheetContent, 'js-style');
             };
         }
         xmlhttp.open("GET", url, true);
