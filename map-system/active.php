@@ -2,34 +2,10 @@
     require './../required-files/dbHandler.php';
 
     session_start();
-    // Man kan inte komma på sidan utan en gruppkod
+
     if (isset($_GET['groupcode']) && isset($_SESSION['initials'])) 
     {
-        $result = selectGroups();
-        $foundGroupCode = false;
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
-
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
-                $row = mysqli_fetch_assoc($result);
-                if ($groupCode == $row['groupcode']) 
-                {
-                    $foundGroupCode = true;
-                    $groupID = $row['id'];
-                }
-            }
-        }
-        if ($foundGroupCode == false) 
-        {
-            echo "
-                <script>
-                    alert('Couldn\'t find a group with the given code, try again.');
-                    window.location.href = './../index.php';
-                </script>
-            ";
-        }
+        findGroupInDatabase();
     } 
     else if (isset($_GET['groupcode'])) 
     {
@@ -48,6 +24,35 @@
                 window.location.href = './../group-system/search-form.php';
             </script>
         ";
+    }
+
+    function findGroupInDatabase()
+    {
+        $result = selectGroups();
+        $foundGroupCode = false;
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+
+        if (mysqli_num_rows($result) > 0) 
+        {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+            {
+                $row = mysqli_fetch_assoc($result);
+
+                if ($groupCode == $row['groupcode']) 
+                {
+                    $foundGroupCode = true;
+                }
+            }
+        }
+        if ($foundGroupCode == false) 
+        {
+            echo "
+                <script>
+                    alert('Couldn\'t find a group with the given code, try again.');
+                    window.location.href = './../index.php';
+                </script>
+            ";
+        }
     }
 
     function selectGroups()

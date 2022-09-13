@@ -4,28 +4,52 @@
 
     if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['groupcode'])) 
     {
+        redirectUserToGroup($_POST['groupcode']);
+    }
+    else if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['initials']))
+    {
+        createGroup();
+    }
+
+/*    function findGroupInDatabase()
+    {
         $result = selectGroups();
-        if (mysqli_num_rows($result) >= 0) 
+        $groupCode = "";
+
+        if (mysqli_num_rows($result) >= 0)
         {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
+
                 if ($_POST['groupcode'] == $row['groupcode']) 
                 {
                     $groupCode = $row['groupcode'];
                 }
             }
         }
+        redirectUserToGroup($groupCode);
+    } */
 
-        if (isset($groupCode)) 
-        {
-            $initials = filterPost('initials');
-            $color = filterPost('color');
+    function createGroup()
+    {
+        $initials = filterPost('initials');
+        $color = filterPost('color');
 
-            saveMarker($initials, $color);
-            header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
-        } 
-        else 
+        saveMarkerToSession($initials, $color);
+        header("LOCATION: ./create.php");
+    }
+
+    // SLÅ IHOP DESSA TVÅ
+
+    function redirectUserToGroup($groupCode)
+    {
+        $initials = filterPost('initials');
+        $color = filterPost('color');
+
+        saveMarkerToSession($initials, $color);
+        header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
+     /*   else 
         {
             echo "
                 <script>
@@ -33,24 +57,20 @@
                     window.location.href = './search-form.php';
                 </script>
             ";
-        }
-    }
-    else if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['initials'])) 
-    {
-        $initials = filterPost('initials');
-        $color = filterPost('color');
-
-        saveMarker($initials, $color);
-        header("LOCATION: ./create.php");
+        } */
     }
 
-    function saveMarker($initials, $color) 
+    function saveMarkerToSession($initials, $color) 
     {
-        session_start();
-        if ($color == "") {
+        if ($color == "")
+        {
             $color = "#FF0000";
         }
+        
         $initials = strtoupper($initials);
+
+        session_start();
+
         $_SESSION['initials'] = $initials;
         $_SESSION['color'] = $color;
     }

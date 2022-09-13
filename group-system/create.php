@@ -1,13 +1,12 @@
 <!-- Creates a group and checks if the groupcode is unique then directs the user to the groupmap with the groupcode. -->
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/random-string.php';
 
-    createGroup();
+    createGroupCode();
 
-    function createGroup() 
+    function createGroupCode() 
     {
-        require './../required-files/random-string.php';
-        
         $groupCode = getRandomString(3);
 
         $result = selectGroups();
@@ -16,21 +15,22 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
+
                 if ($groupCode == $row['groupcode'])
                 {
-                    createGroup();
+                    createGroupCode();
                 }
             }
         }
 
-        insertGroup($groupCode);
+        insertGroupToDatabase($groupCode);
     }
 
-    function insertGroup($groupCode) 
+    function insertGroupToDatabase($groupCode) 
     {
         $result = addGroup($groupCode);
 
-        if ($result) 
+        if ($result)
         {
             header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
         } 
@@ -38,7 +38,7 @@
         {
             echo "
                 <script>
-                    alert('Something went wrong with group creation.');
+                    alert('Something went wrong with inserting the group to the database.');
                     window.location.href = './../index.php';
                 </script>
             ";

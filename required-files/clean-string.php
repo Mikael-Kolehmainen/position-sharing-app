@@ -1,6 +1,6 @@
 <?php
-    function cleanString($string) {
-
+    function cleanString($string)
+    {
         $string = str_replace("'", "", $string);
 
         return $string;
