@@ -5,7 +5,7 @@ function showDraggableGoal() {
     
     let latlngValue = 0.002;
     // CREATE THE POSITIONS
-    for (let i = 0; i < initialsArr.length; i++) {
+    for (let i = 0; i < idsOfGoals.length; i++) {
         goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
         start_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue + 0.002);
         latlngValue = latlngValue + 0.002;
@@ -20,8 +20,13 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     map.removeLayer(goalLayerGroup);
 
     let classNameGoalMarkers, classNameStartMarkers, initial;
-    const initialsArr = data.positionsdata.initials;
+    let initialsArrData = data.positionsdata.initials;
+    let initialsArr = [];
     const colorsArr = data.positionsdata.colors;
+
+    for (let i = 0; i < idsOfGoals.length; i++) {
+        initialsArr.push(initialsArrData[idsOfGoals[i]]);
+    }
 
     for (let i = 0; i < goal_marker_pos.length; i++) {
         if (goal_marker_pos[i] != "no goal") {

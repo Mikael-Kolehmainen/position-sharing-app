@@ -1,3 +1,6 @@
+// used in create-goal.js
+let idsOfGoals = [];
+
 function createPopup() {
     // We put the rows to the table
     // Structure of row
@@ -19,6 +22,8 @@ function createPopup() {
 
     // Clear previous rows
     removeChilds(usersTable);
+
+    idsOfGoals = [];
 
     const titleRow = document.createElement("tr");
     const titleCell_1 = document.createElement("td");
@@ -43,6 +48,7 @@ function createPopup() {
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.id = "userindex-" + i;
+        checkbox.onchange = function(){ getIdOfCheckbox(this)};
 
         usersTable.appendChild(userRow);
         userRow.appendChild(userCell_1);
@@ -59,3 +65,25 @@ function createPopup() {
 }
 
 // make onchange function that checks what value checkbox has and updates goal array accordingly
+function getIdOfCheckbox(checkbox)
+{
+    let idOfCheckbox = checkbox.id;
+    const idSplitted = idOfCheckbox.split('-');
+    idOfCheckbox = idSplitted[1];
+    
+    updateIdsOfGoals(idOfCheckbox);
+}
+
+function updateIdsOfGoals(idOfGoal)
+{
+    let indexOfId = idsOfGoals.indexOf(idOfGoal);
+
+    if (indexOfId == -1) 
+    {
+        idsOfGoals.push(idOfGoal);
+    } 
+    else 
+    {
+        idsOfGoals.splice(indexOfId, 1);
+    }
+}
