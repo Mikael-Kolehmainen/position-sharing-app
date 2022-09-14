@@ -4,27 +4,16 @@
     session_start();
     if (isset($_GET['pos'])) 
     {
+        $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);
+
         if (isset($_SESSION['uniqueID'])) 
         {
-            $result = selectPositions();
+            $uniqueID = $_SESSION['uniqueID'];
 
-            if (mysqli_num_rows($result) > 0) 
-            {
-                for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-                {
-                    $row = mysqli_fetch_assoc($result);
-                    if ($_SESSION['uniqueID'] == $row['uniqueID']) 
-                    {
-                        $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);;
-                        $positionID = $row['id'];
-                        updatePosition($newPosition, $positionID);
-                    }
-                }
-            }
+            updatePositionInDatabase($newPosition, $uniqueID);
         } 
         else 
         {
-            $position = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);;
             $uniqueID = getUniqueID();
             $initials = $_SESSION['initials'];
             $color = $_SESSION['color'];
@@ -32,7 +21,7 @@
 
             $_SESSION['uniqueID'] = $uniqueID;
 
-            addPosition($position, $uniqueID, $initials, $color, $groupCode);
+            insertPositionToDatabase($newPosition, $uniqueID, $initials, $color, $groupCode);
         }
     } 
     else if (isset($_GET['goalamount'])) 
@@ -60,37 +49,31 @@
                 $waypointKey = 'waypoint'.$i.'-'.$waypointID;
             }
 
-            addGoal($startPosition, $goalPosition, $waypoints, $groupCode);
+            insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $groupCode);
         }
     }
 
-    function addPosition($position, $uniqueID, $initials, $color, $groupCode) 
+    function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
     {
         dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
 	}
 
-    function updatePosition($position, $id)
+    function updatePositionInDatabase($position, $uniqueID)
     {
-        dbHandler::query("UPDATE positions SET position = '$position' WHERE id = '$id'");
+        dbHandler::query("UPDATE positions SET position = '$position' WHERE uniqueID = '$uniqueID'");
     }
 
-    function selectPositions()
-    {
-        return dbHandler::query("SELECT id, uniqueID FROM positions");
-    }
-
-    function addGoal($startPosition, $goalPosition, $waypoints, $groupCode)
+    function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $groupCode)
     {
         dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, groups_groupcode) VALUES ('$startPosition', '$goalPosition', '$waypoints', '$groupCode')");
     }
 
-    // Checks if the unique id is actually unique
     function getUniqueID() 
     {
         require './../required-files/random-string.php';
 
         $uniqueID = getRandomString(10);
-        $result = selectPositions();
+        $result = selectPositionsFromDatabase();
 
         if (mysqli_num_rows($result) > 0) 
         {
@@ -106,5 +89,10 @@
         }
         
         return $uniqueID;
+    }
+
+    function selectPositionsFromDatabase()
+    {
+        return dbHandler::query("SELECT id, uniqueID FROM positions");
     }
 ?>
