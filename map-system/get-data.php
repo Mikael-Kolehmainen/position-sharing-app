@@ -1,26 +1,33 @@
 <?php
     require './../required-files/dbHandler.php';
 
-    if (isset($_GET['groupcode'])) {
+    if (isset($_GET['groupcode'])) 
+    {
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+
+        $data = getData($groupCode);
+
+        echo json_encode($data);
+    }
+
+    function getData($groupCode)
+    {
+        $data = array();
+        $data['positionsdata'] = getPositions($groupCode);
+        $data['messagesdata'] = getMessages($groupCode);
+        $data['goalsdata'] = getGoals($groupCode);
+
+        return $data;
+    }
+
+    function getPositions($groupCode)
+    {
         $positionsData = array();
         $positionsData['positions'] = array();
         $positionsData['initials'] = array();
         $positionsData['colors'] = array();
 
-        $messagesData = array();
-        $messagesData['messages'] = array();
-        $messagesData['initials'] = array();
-        $messagesData['colors'] = array();
-
-        $goalsData = array();
-        $goalsData['startpositions'] = array();
-        $goalsData['goalpositions'] = array();
-        $goalsData['waypoints'] = array();
-
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
-
-        // GET POSITIONS
-        $result = selectPositions();
+        $result = selectPositionsFromDatabase();
         if (mysqli_num_rows($result) > 0) 
         {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
@@ -35,8 +42,22 @@
             }
         }
 
-        // GET MESSAGES
-        $result = selectMessages();
+        return $positionsData;
+    }
+
+    function selectPositionsFromDatabase()
+    {
+        return dbHandler::query("SELECT position, initials, color, groups_groupcode FROM positions");
+    }
+
+    function getMessages($groupCode)
+    {
+        $messagesData = array();
+        $messagesData['messages'] = array();
+        $messagesData['initials'] = array();
+        $messagesData['colors'] = array();
+
+        $result = selectMessagesFromDatabase();
         if (mysqli_num_rows($result) > 0) 
         {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
@@ -51,26 +72,36 @@
             }
         }
 
-        // GET GOALS
-        $result = selectGoals();
+        return $messagesData;
+    }
+
+    function selectMessagesFromDatabase()
+    {
+        return dbHandler::query("SELECT message, initials, color, groups_groupcode FROM messages");
+    }
+
+    function getGoals($groupCode)
+    {
+        $goalsData = array();
+        $goalsData['startpositions'] = array();
+        $goalsData['goalpositions'] = array();
+        $goalsData['waypoints'] = array();
+        $goalsData['goalids'] = array();
+
+        $result = selectGoalsFromDatabase();
         if (mysqli_num_rows($result) > 0) 
         {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) 
             {
                 $row = mysqli_fetch_assoc($result);
+
                 if ($row['groups_groupcode'] == $groupCode) 
                 {
-                    // We remove 'LatLng(' and ')' from string
-                    $startPosition = substr($row['startposition'], 7);
-                    $startPosition = substr($startPosition, 0, -1);
+                    array_push($goalsData['startpositions'], formatPosition($row['startposition']));
 
-                    array_push($goalsData['startpositions'], $startPosition);
+                    array_push($goalsData['goalpositions'], formatPosition($row['goalposition']));
 
-                    // We remove 'LatLng(' and ')' from string
-                    $goalPosition = substr($row['goalposition'], 7);
-                    $goalPosition = substr($goalPosition, 0, -1);
-
-                    array_push($goalsData['goalpositions'], $goalPosition);
+                    array_push($goalsData['goalids'], $row['goalID']);
 
                     // We remove 'LatLng(' and ')'
                     if (isset($row['waypoints']))
@@ -94,26 +125,20 @@
             array_push($goalsData['goalpositions'], "empty");
         }
 
-        $data = array();
-        $data['positionsdata'] = $positionsData;
-        $data['messagesdata'] = $messagesData;
-        $data['goalspositions'] = $goalsData;
-
-        echo json_encode($data);
+        return $goalsData;
     }
 
-    function selectPositions()
+    function selectGoalsFromDatabase()
     {
-        return dbHandler::query("SELECT position, initials, color, groups_groupcode FROM positions");
+        return dbHandler::query("SELECT startposition, goalposition, waypoints, goalID, groups_groupcode FROM goals");
     }
 
-    function selectMessages()
+    function formatPosition($position)
     {
-        return dbHandler::query("SELECT message, initials, color, groups_groupcode FROM messages");
-    }
+        // We remove 'LatLng(' and ')' from string
+        $position = substr($position, 7);
+        $position = substr($position, 0, -1);
 
-    function selectGoals()
-    {
-        return dbHandler::query("SELECT startposition, goalposition, waypoints, groups_groupcode FROM goals");
+        return $position;
     }
 ?>

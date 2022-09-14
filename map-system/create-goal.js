@@ -24,6 +24,10 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     let initialsArr = [];
     const colorsArr = data.positionsdata.colors;
 
+    if (idsOfGoals.length == 0) {
+        idsOfGoals = data.goalsdata.goalids;
+    }
+
     for (let i = 0; i < idsOfGoals.length; i++) {
         initialsArr.push(initialsArrData[idsOfGoals[i]]);
     }
@@ -88,7 +92,7 @@ function sendGoalData() {
     let xmlhttp = new XMLHttpRequest();
     let url = 'send-data.php?groupcode=' + groupCode;
     for (let i = 0; i < goal_marker_pos.length; i++) {
-        url += '&goalpos' + i + '=' + goal_marker_pos[i] + '&startpos' + i + '=' + start_marker_pos[i];
+        url += '&goalpos' + i + '=' + goal_marker_pos[i] + '&startpos' + i + '=' + start_marker_pos[i] + '&goalid' + i + '=' + idsOfGoals[i];
     }
 
     // We count how many of each id there's in goalIDs

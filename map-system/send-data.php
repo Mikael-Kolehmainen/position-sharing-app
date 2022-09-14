@@ -37,6 +37,16 @@
         header("LOCATION: ./../index.php");
     }
 
+    function updatePositionInDatabase($position, $uniqueID)
+    {
+        dbHandler::query("UPDATE positions SET position = '$position' WHERE uniqueID = '$uniqueID'");
+    }
+
+    function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
+    {
+        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
+	}
+
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
         for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++)
@@ -51,6 +61,9 @@
             $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
             $waypoints = "";
 
+            $goalIDKey = 'goalid'.$userIndex;
+            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
+
             while (isset($_GET[$waypointKey]))
             {
                 $waypoints .= filter_input(INPUT_GET, $waypointKey, FILTER_DEFAULT);
@@ -59,23 +72,13 @@
                 $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
             }
 
-            insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $groupCode);
+            insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode);
         }
     }
 
-    function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
+    function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode)
     {
-        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
-	}
-
-    function updatePositionInDatabase($position, $uniqueID)
-    {
-        dbHandler::query("UPDATE positions SET position = '$position' WHERE uniqueID = '$uniqueID'");
-    }
-
-    function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $groupCode)
-    {
-        dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, groups_groupcode) VALUES ('$startPosition', '$goalPosition', '$waypoints', '$groupCode')");
+        dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, goalID, groups_groupcode) VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
     }
 
     function getUniqueID() 

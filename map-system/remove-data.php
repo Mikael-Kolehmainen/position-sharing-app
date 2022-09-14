@@ -3,7 +3,6 @@
 
     if (isset($_GET['groupcode']))
     {
-        // REMOVE ACTIVE GOAL
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
         removeGoal($groupCode);
     }

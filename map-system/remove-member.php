@@ -6,7 +6,9 @@
         session_start();
 
         $uniqueID = $_SESSION['uniqueID'];
+
         removePosition($uniqueID);
+        
         unset($_SESSION['uniqueID']);
     }
 
