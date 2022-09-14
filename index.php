@@ -15,7 +15,7 @@
         <div class='bg-image'></div>
         <section>
             <article>
-                <a href='./group-system/user-details.php' class='btn' title='Create'>
+                <a href='./group-system/create-form.php' class='btn' title='Create'>
                     <i class='fa-solid fa-plus'></i>
                 </a>
                 <a href='./group-system/search-form.php' class='btn' title='Search'>

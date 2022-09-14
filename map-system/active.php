@@ -3,34 +3,109 @@
 
     session_start();
 
-    if (isset($_GET['groupcode']) && isset($_SESSION['initials'])) 
+    if (isset($_POST['create-group']))
     {
-        findGroupInDatabase();
-    } 
-    else if (isset($_GET['groupcode'])) 
+        $groupCode = createGroupCode();
+
+        if (insertGroupToDatabase($groupCode))
+        {
+            saveMarkerToSession();
+            redirectUserToGroupMap($groupCode);
+        }
+        else
+        {
+            redirectUserToCreateGroupForm();
+        }
+    }
+    else if (isset($_POST['search-group']))
     {
-        echo "
-            <script>
-                alert('Please create a marker before joining a group.');
-                window.location.href = './../group-system/search-form.php';
-            </script>
-        ";
-    } 
-    else 
+        $groupCode = filter_input(INPUT_POST, 'groupcode', FILTER_DEFAULT);
+
+        if (findGroupInDatabase($groupCode))
+        {
+            saveMarkerToSession();
+            redirectUserToGroupMap($groupCode);
+        }
+        else
+        {
+            redirectUserToSearchGroupForm();
+        }
+    }
+    else if (!isset($_GET['groupcode']) || !isset($_SESSION['initials']) || !isset($_SESSION['color']))
     {
-        echo "
-            <script>
-                alert('Couldn\'t find a group with the given code, try again.');
-                window.location.href = './../group-system/search-form.php';
-            </script>
-        ";
+        redirectUserToSearchGroupForm();
     }
 
-    function findGroupInDatabase()
+    function createGroupCode()
+    {
+        require './../required-files/random-string.php';
+
+        $groupCode = getRandomString(3);
+
+        $result = selectGroups();
+        if (mysqli_num_rows($result) > 0) 
+        {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
+            {
+                $row = mysqli_fetch_assoc($result);
+
+                if ($groupCode == $row['groupcode'])
+                {
+                    createGroupCode();
+                }
+            }
+        }
+        
+        return $groupCode;
+    }
+
+    function insertGroupToDatabase($groupCode)
+    {
+        return dbHandler::query("INSERT INTO groups (groupcode) VALUES ('$groupCode')");
+    }
+
+    function saveMarkerToSession() 
+    {
+        $initials = filterPost('initials');
+        $color = filterPost('color');
+
+        if ($color == "")
+        {
+            $color = "#FF0000";
+        }
+        
+        $initials = strtoupper($initials);
+
+        session_start();
+
+        $_SESSION['initials'] = $initials;
+        $_SESSION['color'] = $color;
+    }
+
+    function filterPost($postname)
+    {
+        return filter_input(INPUT_POST, $postname, FILTER_DEFAULT);
+    }
+
+    function redirectUserToGroupMap($groupCode)
+    {
+        header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
+    }
+
+    function redirectUserToCreateGroupForm()
+    {
+        echo "
+                <script>
+                    alert('Something went wrong with inserting the group to the database.');
+                    window.location.href = './../group-system/create-form.php';
+                </script>
+            ";
+    }
+
+    function findGroupInDatabase($groupCode)
     {
         $result = selectGroups();
         $foundGroupCode = false;
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
         if (mysqli_num_rows($result) > 0) 
         {
@@ -44,20 +119,23 @@
                 }
             }
         }
-        if ($foundGroupCode == false) 
-        {
-            echo "
-                <script>
-                    alert('Couldn\'t find a group with the given code, try again.');
-                    window.location.href = './../index.php';
-                </script>
-            ";
-        }
+
+        return $foundGroupCode;
     }
 
     function selectGroups()
     {
         return dbHandler::query("SELECT id, groupcode FROM groups");
+    }
+
+    function redirectUserToSearchGroupForm()
+    {
+        echo "
+                <script>
+                    alert('Couldn\'t find a group with the given code');
+                    window.location.href = './../group-system/search-form.php';
+                </script>
+            ";
     }
 ?>
 <!DOCTYPE html>
