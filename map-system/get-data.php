@@ -103,18 +103,9 @@
 
                     array_push($goalsData['goalids'], $row['goalID']);
 
-                    // We remove 'LatLng(' and ')'
                     if (isset($row['waypoints']))
                     {
-                        $waypoints = explode('LatLng(', $row['waypoints']);
-                        for ($j = 0; $j < count($waypoints); $j++) 
-                        {
-                            $waypoints[$j] = substr($waypoints[$j], 0, -1);
-                        } 
-                        // Remove elements that are emtpy
-                        $waypoints = array_values(array_filter($waypoints));
-
-                        array_push($goalsData['waypoints'], $waypoints);
+                        array_push($goalsData['waypoints'], formatPositionsArray($row['waypoints']));
                     }
                 }
             }
@@ -140,5 +131,19 @@
         $position = substr($position, 0, -1);
 
         return $position;
+    }
+
+    function formatPositionsArray($positionsArr)
+    {
+        // We remove 'LatLng(' and ')' from each element in array
+        $positions = explode('LatLng(', $positionsArr);
+        
+        for ($i = 0; $i < count($positions); $i++) 
+        {
+            $positions[$i] = substr($positions[$i], 0, -1);
+        } 
+
+        // Remove elements that are emtpy
+        return array_values(array_filter($positions));
     }
 ?>
