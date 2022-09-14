@@ -2,6 +2,7 @@
     require './../required-files/dbHandler.php';
 
     session_start();
+
     if (isset($_GET['pos'])) 
     {
         $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);
@@ -29,24 +30,33 @@
         $amountOfGoals = filter_input(INPUT_GET, 'goalamount', FILTER_DEFAULT);
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
-        for ($i = 0; $i < $amountOfGoals; $i++)
+        insertGoalsToDatabase($amountOfGoals, $groupCode);
+    }
+    else
+    {
+        header("LOCATION: ./../index.php");
+    }
+
+    function insertGoalsToDatabase($amountOfGoals, $groupCode)
+    {
+        for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++)
         {
-            $startKey = 'startpos'.$i;
+            $startKey = 'startpos'.$userIndex;
             $startPosition = filter_input(INPUT_GET, $startKey, FILTER_DEFAULT);
 
-            $goalKey = 'goalpos'.$i;
+            $goalKey = 'goalpos'.$userIndex;
             $goalPosition = filter_input(INPUT_GET, $goalKey, FILTER_DEFAULT);
 
-            $waypointID = 0;
-            $waypointKey = 'waypoint'.$i.'-'.$waypointID;
+            $waypointIndex = 0;
+            $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
             $waypoints = "";
 
             while (isset($_GET[$waypointKey]))
             {
                 $waypoints .= filter_input(INPUT_GET, $waypointKey, FILTER_DEFAULT);
 
-                $waypointID = $waypointID + 1;
-                $waypointKey = 'waypoint'.$i.'-'.$waypointID;
+                $waypointIndex = $waypointIndex + 1;
+                $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
             }
 
             insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $groupCode);
