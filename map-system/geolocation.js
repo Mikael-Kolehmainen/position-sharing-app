@@ -5,7 +5,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// LAYER GROUPS
 let refreshedLayerGroup = L.layerGroup();
 let goalLayerGroup = L.layerGroup();
 let draggableRouteLayerGroup = L.layerGroup();
@@ -13,7 +12,6 @@ let goalWaypointsLayerGroup = L.layerGroup();
 let waterLayerGroup = L.layerGroup();
 waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
-// GET THE GROUPCODE FROM SEARCH FIELD
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
 let markerInitialsArr;
@@ -52,12 +50,15 @@ let userPopupContent = [];
 
 let showWaterEnabled = false;
 
-function onLocationFound(e) {
-    // REMOVE THE PREVIOUS LAYER OF OBJECTS THAT WILL BE REFRESHED
+function onLocationFound(e) 
+{
     map.removeLayer(refreshedLayerGroup);
 
     current_position = L.marker(e.latlng, {icon: userIcon});
     refreshedLayerGroup.addLayer(current_position);
+
+    // TODO: Create this function and make similar function to get-data
+  //  sendDataToPHP("send-data.php?pos=" + e.latlng + "&groupcode=" + groupCode);
     
     // SEND POSITION DATA & GROUPCODE TO PHP
     let index = ['send-data', 'get-data'];
@@ -383,3 +384,12 @@ function locate() {
 
 locate();
 setInterval(locate, 3000);
+
+function sendDataToPHP(url)
+{
+    let xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.open("GET", url, true);
+
+    xmlhttp.send();
+}
