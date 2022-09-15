@@ -1,16 +1,12 @@
 <?php
     require './../required-files/dbHandler.php';
 
-    if (isset($_GET['groupcode']))
-    {
+    if (isset($_GET['groupcode'])) {
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
-        if (deleteGroupFromDatabase($groupCode))
-        {
+        if (deleteGroupFromDatabase($groupCode)) {
             header("LOCATION: ./../index.php");
-        }
-        else
-        {
+        } else {
             redirectUserToGroupMap($groupCode);
         }
     }
@@ -24,8 +20,7 @@
 
         $groupGotDeleted = false;
 
-        if ($result && $result2 && $result3 && $result4)
-        {
+        if ($result && $result2 && $result3 && $result4) {
             $groupGotDeleted = true;
         } 
 

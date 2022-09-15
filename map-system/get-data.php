@@ -1,8 +1,7 @@
 <?php
     require './../required-files/dbHandler.php';
 
-    if (isset($_GET['groupcode'])) 
-    {
+    if (isset($_GET['groupcode'])) {
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
         $data = getData($groupCode);
@@ -28,13 +27,10 @@
         $positionsData['colors'] = array();
 
         $result = selectPositionsFromDatabase();
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $groupCode) 
-                {
+                if ($row['groups_groupcode'] == $groupCode) {
                     array_push($positionsData['positions'] , $row['position']);
                     array_push($positionsData['initials'], $row['initials']);
                     array_push($positionsData['colors'], $row['color']);
@@ -58,13 +54,11 @@
         $messagesData['colors'] = array();
 
         $result = selectMessagesFromDatabase();
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $groupCode) 
-                {
+
+                if ($row['groups_groupcode'] == $groupCode) {
                     array_push($messagesData['messages'], $row['message']);
                     array_push($messagesData['initials'], $row['initials']);
                     array_push($messagesData['colors'], $row['color']);
@@ -89,29 +83,24 @@
         $goalsData['goalids'] = array();
 
         $result = selectGoalsFromDatabase();
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($row['groups_groupcode'] == $groupCode) 
-                {
+                if ($row['groups_groupcode'] == $groupCode) {
                     array_push($goalsData['startpositions'], formatPosition($row['startposition']));
 
                     array_push($goalsData['goalpositions'], formatPosition($row['goalposition']));
 
                     array_push($goalsData['goalids'], $row['goalID']);
 
-                    if (isset($row['waypoints']))
-                    {
+                    if (isset($row['waypoints'])) {
                         array_push($goalsData['waypoints'], formatPositionsArray($row['waypoints']));
                     }
                 }
             }
         }
-        if (count($goalsData['startpositions']) == 0)
-        {
+        if (count($goalsData['startpositions']) == 0) {
             array_push($goalsData['startpositions'], "empty");
             array_push($goalsData['goalpositions'], "empty");
         }
@@ -138,12 +127,10 @@
         // We remove 'LatLng(' and ')' from each element in array
         $positions = explode('LatLng(', $positionsArr);
         
-        for ($i = 0; $i < count($positions); $i++) 
-        {
+        for ($i = 0; $i < count($positions); $i++) {
             $positions[$i] = substr($positions[$i], 0, -1);
         } 
 
         // Remove elements that are emtpy
         return array_values(array_filter($positions));
     }
-?>

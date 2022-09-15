@@ -1,16 +1,12 @@
 <?php
     require './../required-files/dbHandler.php';
 
-    if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['message'])) 
-    {
+    if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['message'])) {
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
-        if (sendMessage($groupCode))
-        {
+        if (sendMessage($groupCode)) {
             header("LOCATION: active.php?groupcode=$groupCode");
-        }
-        else 
-        {
+        } else {
             redirectUserToGroupMap($groupCode);
         }
     }
@@ -39,4 +35,3 @@
                 </script>
             ";
     }
-?>

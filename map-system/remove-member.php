@@ -1,8 +1,7 @@
 <?php
     require './../required-files/dbHandler.php';
 
-    if (isset($_GET['groupcode'])) 
-    {
+    if (isset($_GET['groupcode'])) {
         session_start();
 
         $uniqueID = $_SESSION['uniqueID'];
@@ -16,4 +15,3 @@
     {
         dbHandler::query("DELETE FROM positions WHERE uniqueID = '$id'");
     }
-?>

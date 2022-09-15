@@ -3,18 +3,14 @@
 
     session_start();
 
-    if (isset($_GET['pos'])) 
-    {
+    if (isset($_GET['pos'])) {
         $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);
 
-        if (isset($_SESSION['uniqueID'])) 
-        {
+        if (isset($_SESSION['uniqueID'])) {
             $uniqueID = $_SESSION['uniqueID'];
 
             updatePositionInDatabase($newPosition, $uniqueID);
-        } 
-        else 
-        {
+        } else {
             $uniqueID = getUniqueID();
             $initials = $_SESSION['initials'];
             $color = $_SESSION['color'];
@@ -24,16 +20,12 @@
 
             insertPositionToDatabase($newPosition, $uniqueID, $initials, $color, $groupCode);
         }
-    } 
-    else if (isset($_GET['goalamount'])) 
-    {
+    } else if (isset($_GET['goalamount'])) {
         $amountOfGoals = filter_input(INPUT_GET, 'goalamount', FILTER_DEFAULT);
         $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
 
         insertGoalsToDatabase($amountOfGoals, $groupCode);
-    }
-    else
-    {
+    } else {
         header("LOCATION: ./../index.php");
     }
 
@@ -49,8 +41,7 @@
 
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
-        for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++)
-        {
+        for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++) {
             $startKey = 'startpos'.$userIndex;
             $startPosition = filter_input(INPUT_GET, $startKey, FILTER_DEFAULT);
 
@@ -64,8 +55,7 @@
             $goalIDKey = 'goalid'.$userIndex;
             $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
 
-            while (isset($_GET[$waypointKey]))
-            {
+            while (isset($_GET[$waypointKey])) {
                 $waypoints .= filter_input(INPUT_GET, $waypointKey, FILTER_DEFAULT);
 
                 $waypointIndex = $waypointIndex + 1;
@@ -88,14 +78,11 @@
         $uniqueID = getRandomString(10);
         $result = selectPositionsFromDatabase();
 
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($uniqueID == $row['uniqueID']) 
-                {
+                if ($uniqueID == $row['uniqueID']) {
                     $uniqueID = getUniqueID();
                 }
             }
@@ -108,4 +95,3 @@
     {
         return dbHandler::query("SELECT id, uniqueID FROM positions");
     }
-?>

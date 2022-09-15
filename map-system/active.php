@@ -3,36 +3,25 @@
 
     session_start();
 
-    if (isset($_POST['create-group']))
-    {
+    if (isset($_POST['create-group'])) {
         $groupCode = createGroupCode();
 
-        if (insertGroupToDatabase($groupCode))
-        {
+        if (insertGroupToDatabase($groupCode)) {
             saveMarkerToSession();
             redirectUserToGroupMap($groupCode);
-        }
-        else
-        {
+        } else {
             redirectUserToCreateGroupForm();
         }
-    }
-    else if (isset($_POST['search-group']))
-    {
+    } else if (isset($_POST['search-group'])) {
         $groupCode = filter_input(INPUT_POST, 'groupcode', FILTER_DEFAULT);
 
-        if (findGroupInDatabase($groupCode))
-        {
+        if (findGroupInDatabase($groupCode)) {
             saveMarkerToSession();
             redirectUserToGroupMap($groupCode);
-        }
-        else
-        {
+        } else {
             redirectUserToSearchGroupForm();
         }
-    }
-    else if (!isset($_GET['groupcode']) || !isset($_SESSION['initials']) || !isset($_SESSION['color']))
-    {
+    } else if (!isset($_GET['groupcode']) || !isset($_SESSION['initials']) || !isset($_SESSION['color'])) {
         redirectUserToSearchGroupForm();
     }
 
@@ -43,14 +32,11 @@
         $groupCode = getRandomString(3);
 
         $result = selectGroups();
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($groupCode == $row['groupcode'])
-                {
+                if ($groupCode == $row['groupcode']) {
                     createGroupCode();
                 }
             }
@@ -69,8 +55,7 @@
         $initials = filterPost('initials');
         $color = filterPost('color');
 
-        if ($color == "")
-        {
+        if ($color == "") {
             $color = "#FF0000";
         }
         
@@ -107,14 +92,11 @@
         $result = selectGroups();
         $foundGroupCode = false;
 
-        if (mysqli_num_rows($result) > 0) 
-        {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) 
-            {
+        if (mysqli_num_rows($result) > 0) {
+            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($groupCode == $row['groupcode']) 
-                {
+                if ($groupCode == $row['groupcode']) {
                     $foundGroupCode = true;
                 }
             }
