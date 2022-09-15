@@ -2,8 +2,8 @@
     require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
 
-    if (isset($_GET['groupcode'])) {
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+    if (isset($_GET[GROUPCODE])) {
+        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         $data = getData($groupCode);
 
@@ -13,9 +13,9 @@
     function getData($groupCode)
     {
         $data = array();
-        $data['positionsdata'] = getPositions($groupCode);
-        $data['messagesdata'] = getMessages($groupCode);
-        $data['goalsdata'] = getGoals($groupCode);
+        $data[POSITIONSDATA] = getPositions($groupCode);
+        $data[MESSAGESDATA] = getMessages($groupCode);
+        $data[GOALSDATA] = getGoals($groupCode);
 
         return $data;
     }
@@ -23,18 +23,18 @@
     function getPositions($groupCode)
     {
         $positionsData = array();
-        $positionsData['positions'] = array();
-        $positionsData['initials'] = array();
-        $positionsData['colors'] = array();
+        $positionsData[POSITIONS] = array();
+        $positionsData[INITIALS] = array();
+        $positionsData[COLORS] = array();
 
         $result = selectPositionsFromDatabase();
         if (mysqli_num_rows($result) > 0) {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
                 if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($positionsData['positions'] , $row['position']);
-                    array_push($positionsData['initials'], $row['initials']);
-                    array_push($positionsData['colors'], $row['color']);
+                    array_push($positionsData[POSITIONS] , $row[POSITION]);
+                    array_push($positionsData[INITIALS], $row[INITIALS]);
+                    array_push($positionsData[COLORS], $row[COLOR]);
                 }
             }
         }
@@ -44,15 +44,15 @@
 
     function selectPositionsFromDatabase()
     {
-        return dbHandler::query("SELECT position, initials, color, ".GROUPS_GROUPCODE." FROM positions");
+        return dbHandler::query("SELECT ".POSITION.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".POSITIONS);
     }
 
     function getMessages($groupCode)
     {
         $messagesData = array();
-        $messagesData['messages'] = array();
-        $messagesData['initials'] = array();
-        $messagesData['colors'] = array();
+        $messagesData[MESSAGES] = array();
+        $messagesData[INITIALS] = array();
+        $messagesData[COLORS] = array();
 
         $result = selectMessagesFromDatabase();
         if (mysqli_num_rows($result) > 0) {
@@ -60,9 +60,9 @@
                 $row = mysqli_fetch_assoc($result);
 
                 if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($messagesData['messages'], $row['message']);
-                    array_push($messagesData['initials'], $row['initials']);
-                    array_push($messagesData['colors'], $row['color']);
+                    array_push($messagesData[MESSAGES], $row[MESSAGE]);
+                    array_push($messagesData[INITIALS], $row[INITIALS]);
+                    array_push($messagesData[COLORS], $row[COLOR]);
                 }
             }
         }
@@ -72,16 +72,16 @@
 
     function selectMessagesFromDatabase()
     {
-        return dbHandler::query("SELECT message, initials, color, ".GROUPS_GROUPCODE." FROM messages");
+        return dbHandler::query("SELECT ".MESSAGE.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".MESSAGES);
     }
 
     function getGoals($groupCode)
     {
         $goalsData = array();
-        $goalsData['startpositions'] = array();
-        $goalsData['goalpositions'] = array();
-        $goalsData['waypoints'] = array();
-        $goalsData['goalids'] = array();
+        $goalsData[STARTPOSITIONS] = array();
+        $goalsData[GOALPOSITIONS] = array();
+        $goalsData[WAYPOINTS] = array();
+        $goalsData[GOALIDS] = array();
 
         $result = selectGoalsFromDatabase();
         if (mysqli_num_rows($result) > 0) {
@@ -89,21 +89,21 @@
                 $row = mysqli_fetch_assoc($result);
 
                 if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($goalsData['startpositions'], formatPosition($row['startposition']));
+                    array_push($goalsData[STARTPOSITIONS], formatPosition($row[STARTPOSITION]));
 
-                    array_push($goalsData['goalpositions'], formatPosition($row['goalposition']));
+                    array_push($goalsData[GOALPOSITIONS], formatPosition($row[GOALPOSITION]));
 
-                    array_push($goalsData['goalids'], $row['goalID']);
+                    array_push($goalsData[GOALIDS], $row[GOALID]);
 
-                    if (isset($row['waypoints'])) {
-                        array_push($goalsData['waypoints'], formatPositionsArray($row['waypoints']));
+                    if (isset($row[WAYPOINTS])) {
+                        array_push($goalsData[WAYPOINTS], formatPositionsArray($row[WAYPOINTS]));
                     }
                 }
             }
         }
-        if (count($goalsData['startpositions']) == 0) {
-            array_push($goalsData['startpositions'], "empty");
-            array_push($goalsData['goalpositions'], "empty");
+        if (count($goalsData[STARTPOSITIONS]) == 0) {
+            array_push($goalsData[STARTPOSITIONS], "empty");
+            array_push($goalsData[GOALPOSITIONS], "empty");
         }
 
         return $goalsData;
@@ -111,7 +111,7 @@
 
     function selectGoalsFromDatabase()
     {
-        return dbHandler::query("SELECT startposition, goalposition, waypoints, goalID, ".GROUPS_GROUPCODE." FROM goals");
+        return dbHandler::query("SELECT ".STARTPOSITION.", ".GOALPOSITION.", ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
     }
 
     function formatPosition($position)

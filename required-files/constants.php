@@ -1,2 +1,24 @@
 <?php
     define("GROUPS_GROUPCODE", "groups_groupcode");
+    define("GROUPCODE", "groupcode");
+    define("INITIALS", "initials");
+    define("POSITIONS", "positions");
+    define("POSITION", "position");
+    define("COLORS", "colors");
+    define("COLOR", "color");
+    define("MESSAGES", "messages");
+    define("MESSAGE", "message");
+    define("POSITIONSDATA", "positionsdata");
+    define("MESSAGESDATA", "messagesdata");
+    define("GOALSDATA", "goalsdata");
+    define("STARTPOSITIONS", "startpositions");
+    define("STARTPOSITION", "startposition");
+    define("GOALPOSITIONS", "goalpositions");
+    define("GOALPOSITION", "goalposition");
+    define("WAYPOINTS", "waypoints");
+    define("WAYPOINT", "waypoint");
+    define("GOALIDS", "goalids");
+    define("GOALID", "goalID");
+    define("GOALS", "goals");
+    define("UNIQUEID", "uniqueID");
+    define("GOALAMOUNT", "goalamount");

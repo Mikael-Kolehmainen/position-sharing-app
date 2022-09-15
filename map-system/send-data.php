@@ -7,23 +7,23 @@
     if (isset($_GET['pos'])) {
         $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);
 
-        if (isset($_SESSION['uniqueID'])) {
-            $uniqueID = $_SESSION['uniqueID'];
+        if (isset($_SESSION[UNIQUEID])) {
+            $uniqueID = $_SESSION[UNIQUEID];
 
             updatePositionInDatabase($newPosition, $uniqueID);
         } else {
             $uniqueID = getUniqueID();
-            $initials = $_SESSION['initials'];
-            $color = $_SESSION['color'];
-            $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+            $initials = $_SESSION[INITIALS];
+            $color = $_SESSION[COLOR];
+            $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-            $_SESSION['uniqueID'] = $uniqueID;
+            $_SESSION[UNIQUEID] = $uniqueID;
 
             insertPositionToDatabase($newPosition, $uniqueID, $initials, $color, $groupCode);
         }
-    } else if (isset($_GET['goalamount'])) {
-        $amountOfGoals = filter_input(INPUT_GET, 'goalamount', FILTER_DEFAULT);
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+    } else if (isset($_GET[GOALAMOUNT])) {
+        $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         insertGoalsToDatabase($amountOfGoals, $groupCode);
     } else {
@@ -32,12 +32,12 @@
 
     function updatePositionInDatabase($position, $uniqueID)
     {
-        dbHandler::query("UPDATE positions SET position = '$position' WHERE uniqueID = '$uniqueID'");
+        dbHandler::query("UPDATE ".POSITIONS." SET ".POSITION." = '$position' WHERE ".UNIQUEID." = '$uniqueID'");
     }
 
     function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
     {
-        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, ".GROUPS_GROUPCODE.") VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
+        dbHandler::query("INSERT INTO ".POSITIONS." (".POSITION.", ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
 	}
 
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
@@ -50,7 +50,7 @@
             $goalPosition = filter_input(INPUT_GET, $goalKey, FILTER_DEFAULT);
 
             $waypointIndex = 0;
-            $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
+            $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
             $waypoints = "";
 
             $goalIDKey = 'goalid'.$userIndex;
@@ -60,7 +60,7 @@
                 $waypoints .= filter_input(INPUT_GET, $waypointKey, FILTER_DEFAULT);
 
                 $waypointIndex = $waypointIndex + 1;
-                $waypointKey = 'waypoint'.$userIndex.'-'.$waypointIndex;
+                $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
             }
 
             insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode);
@@ -69,7 +69,7 @@
 
     function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode)
     {
-        dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, goalID, ".GROUPS_GROUPCODE.") VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
+        dbHandler::query("INSERT INTO ".GOALS." (".STARTPOSITION.", ".GOALPOSITION.", ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
     }
 
     function getUniqueID() 
@@ -83,7 +83,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($uniqueID == $row['uniqueID']) {
+                if ($uniqueID == $row[UNIQUEID]) {
                     $uniqueID = getUniqueID();
                 }
             }
@@ -94,5 +94,5 @@
 
     function selectPositionsFromDatabase()
     {
-        return dbHandler::query("SELECT id, uniqueID FROM positions");
+        return dbHandler::query("SELECT id, ".UNIQUEID." FROM ".POSITIONS);
     }

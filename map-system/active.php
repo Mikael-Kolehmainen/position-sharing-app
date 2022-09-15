@@ -1,5 +1,6 @@
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/constants.php';
 
     session_start();
 
@@ -13,7 +14,7 @@
             redirectUserToCreateGroupForm();
         }
     } else if (isset($_POST['search-group'])) {
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (findGroupInDatabase($groupCode)) {
             saveMarkerToSession();
@@ -21,7 +22,7 @@
         } else {
             redirectUserToSearchGroupForm();
         }
-    } else if (!isset($_GET['groupcode']) || !isset($_SESSION['initials']) || !isset($_SESSION['color'])) {
+    } else if (!isset($_GET[GROUPCODE]) || !isset($_SESSION[INITIALS]) || !isset($_SESSION[COLOR])) {
         redirectUserToSearchGroupForm();
     }
 
@@ -36,7 +37,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($groupCode == $row['groupcode']) {
+                if ($groupCode == $row[GROUPCODE]) {
                     createGroupCode();
                 }
             }
@@ -47,13 +48,13 @@
 
     function insertGroupToDatabase($groupCode)
     {
-        return dbHandler::query("INSERT INTO groups (groupcode) VALUES ('$groupCode')");
+        return dbHandler::query("INSERT INTO groups (".GROUPCODE.") VALUES ('$groupCode')");
     }
 
     function saveMarkerToSession() 
     {
-        $initials = filterPost('initials');
-        $color = filterPost('color');
+        $initials = filterPost(INITIALS);
+        $color = filterPost(COLOR);
 
         if ($color == "") {
             $color = "#FF0000";
@@ -63,8 +64,8 @@
 
         session_start();
 
-        $_SESSION['initials'] = $initials;
-        $_SESSION['color'] = $color;
+        $_SESSION[INITIALS] = $initials;
+        $_SESSION[COLOR] = $color;
     }
 
     function filterPost($postname)
@@ -74,7 +75,7 @@
 
     function redirectUserToGroupMap($groupCode)
     {
-        header("LOCATION: ./../map-system/active.php?groupcode=$groupCode");
+        header("LOCATION: ./../map-system/active.php?".GROUPCODE."=$groupCode");
     }
 
     function redirectUserToCreateGroupForm()
@@ -96,7 +97,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($groupCode == $row['groupcode']) {
+                if ($groupCode == $row[GROUPCODE]) {
                     $foundGroupCode = true;
                 }
             }
@@ -107,7 +108,7 @@
 
     function selectGroups()
     {
-        return dbHandler::query("SELECT id, groupcode FROM groups");
+        return dbHandler::query("SELECT id, ".GROUPCODE." FROM groups");
     }
 
     function redirectUserToSearchGroupForm()
