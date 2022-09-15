@@ -1,8 +1,9 @@
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/constants.php';
 
     if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['message'])) {
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (sendMessage($groupCode)) {
             header("LOCATION: active.php?groupcode=$groupCode");
@@ -23,7 +24,7 @@
 
     function insertMessageToDatabase($message, $initials, $color, $groupCode)
     {
-        return dbHandler::query("INSERT INTO messages (message, initials, color, groups_groupcode) VALUES ('$message', '$initials', '$color', '$groupCode')");
+        return dbHandler::query("INSERT INTO messages (message, initials, color, ".GROUPS_GROUPCODE.") VALUES ('$message', '$initials', '$color', '$groupCode')");
     }
 
     function redirectUserToGroupMap($groupCode)

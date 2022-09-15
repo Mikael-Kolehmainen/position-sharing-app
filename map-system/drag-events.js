@@ -1,12 +1,12 @@
 // HANDLER EVENTS FOR MARKERS
 
 function dragStartHandler(e) {
-    var marker = e.target;
+    let marker = e.target;
     marker.polylineLatlng = {};
     e.target.parentLine.forEach((line)=>{
-        var latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
+        let latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
             latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
-        for (var i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
+        for (let i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
             if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
                 marker.polylineLatlng[L.stamp(line)] = i;            // If equals store key in marker instance
             }
@@ -29,9 +29,9 @@ function dragHandler(e) {
             start_marker_arr[i].setLatLng(this.getLatLng());
         }
     }
-    var marker = e.target;
+    let marker = e.target;
     e.target.parentLine.forEach((line)=>{
-        var latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
+        let latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
           latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
         latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker); // Replace the old latlng with the new
         line.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
@@ -40,6 +40,6 @@ function dragHandler(e) {
 
 // Just to be clean and tidy remove the stored key on dragend:
 function dragEndHandler(e) {
-    var marker = e.target;
+    let marker = e.target;
     delete marker.polylineLatlng;
 }

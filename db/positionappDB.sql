@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 08, 2022 at 09:34 AM
+-- Generation Time: Sep 15, 2022 at 12:16 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -31,6 +31,8 @@ CREATE TABLE `goals` (
   `id` int(4) NOT NULL,
   `startposition` varchar(255) DEFAULT NULL,
   `goalposition` varchar(255) DEFAULT NULL,
+  `waypoints` varchar(1000) DEFAULT NULL,
+  `goalID` int(255) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -76,7 +78,8 @@ INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`
 (42, 'another test', 'MK', '#5BC0EB', 'qOv'),
 (46, 'test &#39;', 'MK', '#5BC0EB', 'qOv'),
 (47, 'test . &#39; , &#34; # $', 'MK', '#5BC0EB', 'qOv'),
-(48, 'test', 'MK', '#FF0000', 'qOv');
+(48, 'test', 'MK', '#FF0000', 'qOv'),
+(49, 'test', 'MK', '#5BC0EB', 'qOv');
 
 -- --------------------------------------------------------
 
@@ -100,7 +103,10 @@ CREATE TABLE `positions` (
 INSERT INTO `positions` (`id`, `position`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
 (2499, 'LatLng(63.167, 21.835)', 'testtest11', 'TT', '#FFAABB', 'qOv'),
 (2500, 'LatLng(63.165, 21.83)', 'testtest22', 'EE', '#AABBFF', 'qOv'),
-(2978, 'LatLng(63.17015, 21.813658)', 'YBDdXFZNEq', 'MK', '#5BC0EB', 'qOv');
+(3104, 'LatLng(63.1709, 21.813)', 'testtest44', 'RR', '#dddddd', 'qOv'),
+(3106, 'LatLng(63.1709, 21.813)', 'testtest55', 'VV', '#dddddd', 'qOv'),
+(3108, 'LatLng(63.1709, 21.813)', 'testtest66', 'OO', '#dddddd', 'qOv'),
+(3202, 'LatLng(63.10251, 21.61823)', 'GZdhYfPzK2', 'MK', '#5BC0EB', 'qOv');
 
 --
 -- Indexes for dumped tables
@@ -138,25 +144,25 @@ ALTER TABLE `positions`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=405;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2979;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3203;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

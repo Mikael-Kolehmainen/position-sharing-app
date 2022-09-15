@@ -1,5 +1,6 @@
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/constants.php';
 
     session_start();
 
@@ -14,7 +15,7 @@
             $uniqueID = getUniqueID();
             $initials = $_SESSION['initials'];
             $color = $_SESSION['color'];
-            $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);;
+            $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
             $_SESSION['uniqueID'] = $uniqueID;
 
@@ -22,7 +23,7 @@
         }
     } else if (isset($_GET['goalamount'])) {
         $amountOfGoals = filter_input(INPUT_GET, 'goalamount', FILTER_DEFAULT);
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         insertGoalsToDatabase($amountOfGoals, $groupCode);
     } else {
@@ -36,7 +37,7 @@
 
     function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
     {
-        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, groups_groupcode) VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
+        dbHandler::query("INSERT INTO positions (position, uniqueID, initials, color, ".GROUPS_GROUPCODE.") VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
 	}
 
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
@@ -68,7 +69,7 @@
 
     function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode)
     {
-        dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, goalID, groups_groupcode) VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
+        dbHandler::query("INSERT INTO goals (startposition, goalposition, waypoints, goalID, ".GROUPS_GROUPCODE.") VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
     }
 
     function getUniqueID() 

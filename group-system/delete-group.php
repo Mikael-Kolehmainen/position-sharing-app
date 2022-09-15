@@ -1,8 +1,9 @@
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/constants.php';
 
     if (isset($_GET['groupcode'])) {
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (deleteGroupFromDatabase($groupCode)) {
             header("LOCATION: ./../index.php");
@@ -14,9 +15,9 @@
     function deleteGroupFromDatabase($groupCode)
     {
         $result = deleteEntry("groups", "groupcode", $groupCode);
-        $result2 = deleteEntry("goals", "groups_groupcode", $groupCode);
-        $result3 = deleteEntry("messages", "groups_groupcode", $groupCode);
-        $result4 = deleteEntry("positions", "groups_groupcode", $groupCode);
+        $result2 = deleteEntry("goals", GROUPS_GROUPCODE, $groupCode);
+        $result3 = deleteEntry("messages", GROUPS_GROUPCODE, $groupCode);
+        $result4 = deleteEntry("positions", GROUPS_GROUPCODE, $groupCode);
 
         $groupGotDeleted = false;
 

@@ -1,8 +1,9 @@
 <?php
     require './../required-files/dbHandler.php';
+    require './../required-files/constants.php';
 
     if (isset($_GET['groupcode'])) {
-        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_DEFAULT);
+        $groupCode = filter_input(INPUT_GET, 'groupcode', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         $data = getData($groupCode);
 
@@ -30,7 +31,7 @@
         if (mysqli_num_rows($result) > 0) {
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
-                if ($row['groups_groupcode'] == $groupCode) {
+                if ($row[GROUPS_GROUPCODE] == $groupCode) {
                     array_push($positionsData['positions'] , $row['position']);
                     array_push($positionsData['initials'], $row['initials']);
                     array_push($positionsData['colors'], $row['color']);
@@ -43,7 +44,7 @@
 
     function selectPositionsFromDatabase()
     {
-        return dbHandler::query("SELECT position, initials, color, groups_groupcode FROM positions");
+        return dbHandler::query("SELECT position, initials, color, ".GROUPS_GROUPCODE." FROM positions");
     }
 
     function getMessages($groupCode)
@@ -58,7 +59,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($row['groups_groupcode'] == $groupCode) {
+                if ($row[GROUPS_GROUPCODE] == $groupCode) {
                     array_push($messagesData['messages'], $row['message']);
                     array_push($messagesData['initials'], $row['initials']);
                     array_push($messagesData['colors'], $row['color']);
@@ -71,7 +72,7 @@
 
     function selectMessagesFromDatabase()
     {
-        return dbHandler::query("SELECT message, initials, color, groups_groupcode FROM messages");
+        return dbHandler::query("SELECT message, initials, color, ".GROUPS_GROUPCODE." FROM messages");
     }
 
     function getGoals($groupCode)
@@ -87,7 +88,7 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
 
-                if ($row['groups_groupcode'] == $groupCode) {
+                if ($row[GROUPS_GROUPCODE] == $groupCode) {
                     array_push($goalsData['startpositions'], formatPosition($row['startposition']));
 
                     array_push($goalsData['goalpositions'], formatPosition($row['goalposition']));
@@ -110,7 +111,7 @@
 
     function selectGoalsFromDatabase()
     {
-        return dbHandler::query("SELECT startposition, goalposition, waypoints, goalID, groups_groupcode FROM goals");
+        return dbHandler::query("SELECT startposition, goalposition, waypoints, goalID, ".GROUPS_GROUPCODE." FROM goals");
     }
 
     function formatPosition($position)

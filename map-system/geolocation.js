@@ -32,7 +32,7 @@ let otherUsersIcon = L.divIcon ({
 
 let current_position;
 let counter = 0;
-let data;
+let dataGlobal;
 let styleSheetContent =  "";
 
 let goal_marker_arr = [];
@@ -63,6 +63,7 @@ function onLocationFound(e)
     {
         removeStyles('js-style');
         user_markers = [];
+        dataGlobal = data;
         let positionsArr = data.positionsdata.positions;
         markerInitialsArr = data.positionsdata.initials;
         markerColorsArr = data.positionsdata.colors;
