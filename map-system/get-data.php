@@ -46,7 +46,7 @@
 
     function selectPositionsFromDatabase()
     {
-        return dbHandler::query("SELECT lat, lng, ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".POSITIONS);
+        return dbHandler::query("SELECT lat, lng, ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM users");
     }
 
     function getMessages($groupCode)

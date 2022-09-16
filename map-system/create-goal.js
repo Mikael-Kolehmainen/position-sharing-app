@@ -90,7 +90,7 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
 // SEND DATA FUNCTION
 function sendGoalData() {
     let xmlhttp = new XMLHttpRequest();
-    let url = 'send-data.php?groupcode=' + groupCode;
+    let url = 'send-goals.php?groupcode=' + groupCode;
     let startlat, startlng, goallat, goallng;
     for (let i = 0; i < goal_marker_pos.length; i++) {
         goallat = goal_marker_pos[i].lat;

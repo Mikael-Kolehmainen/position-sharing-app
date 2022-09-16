@@ -14,7 +14,7 @@
             redirectUserToCreateGroupForm();
         }
     } else if (isset($_POST['search-group'])) {
-        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $groupCode = filter_input(INPUT_POST, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (findGroupInDatabase($groupCode)) {
             saveMarkerToSession();

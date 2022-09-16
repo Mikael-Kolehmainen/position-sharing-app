@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2022 at 09:30 AM
+-- Generation Time: Sep 16, 2022 at 10:18 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -86,10 +86,10 @@ INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `positions`
+-- Table structure for table `users`
 --
 
-CREATE TABLE `positions` (
+CREATE TABLE `users` (
   `id` int(4) NOT NULL,
   `lat` decimal(65,6) DEFAULT NULL,
   `lng` decimal(65,6) DEFAULT NULL,
@@ -100,14 +100,14 @@ CREATE TABLE `positions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `positions`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `positions` (`id`, `lat`, `lng`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
+INSERT INTO `users` (`id`, `lat`, `lng`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
 (2499, '63.167000', '21.835000', 'testtest11', 'TT', '#FFAABB', 'qOv'),
 (2500, '63.165000', '21.830000', 'testtest22', 'EE', '#AABBFF', 'qOv'),
 (3104, '63.170900', '21.813000', 'testtest44', 'RR', '#dddddd', 'qOv'),
-(3229, '63.102510', '21.618230', 'lQIHNtDGPR', 'MK', '#5BC0EB', 'qOv');
+(3299, '63.102510', '21.618230', 'mGNAcDtQFB', 'MK', '#5BC0EB', 'qOv');
 
 --
 -- Indexes for dumped tables
@@ -132,9 +132,9 @@ ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `positions`
+-- Indexes for table `users`
 --
-ALTER TABLE `positions`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -160,10 +160,10 @@ ALTER TABLE `messages`
   MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
--- AUTO_INCREMENT for table `positions`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3230;
+ALTER TABLE `users`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3300;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

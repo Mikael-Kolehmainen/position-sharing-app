@@ -57,7 +57,7 @@ function onLocationFound(e)
     current_position = L.marker(e.latlng, {icon: userIcon});
     refreshedLayerGroup.addLayer(current_position);
 
-    sendDataToPHP("send-data.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode);
+    sendDataToPHP("send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode);
 
     getDataFromPHP("get-data.php?groupcode=" + groupCode, function(data)
     {
