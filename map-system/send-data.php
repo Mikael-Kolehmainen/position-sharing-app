@@ -44,11 +44,15 @@
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
         for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++) {
-            $startKey = 'startpos'.$userIndex;
-            $startPosition = filter_input(INPUT_GET, $startKey, FILTER_DEFAULT);
+            $startLatKey = 'startlat'.$userIndex;
+            $startLat = filter_input(INPUT_GET, $startLatKey, FILTER_DEFAULT);
+            $startLngKey = 'startlng'.$userIndex;
+            $startLng = filter_input(INPUT_GET, $startLngKey, FILTER_DEFAULT);
 
-            $goalKey = 'goalpos'.$userIndex;
-            $goalPosition = filter_input(INPUT_GET, $goalKey, FILTER_DEFAULT);
+            $goalLatKey = 'goallat'.$userIndex;
+            $goalLat = filter_input(INPUT_GET, $goalLatKey, FILTER_DEFAULT);
+            $goalLngKey = 'goallng'.$userIndex;
+            $goalLng = filter_input(INPUT_GET, $goalLngKey, FILTER_DEFAULT);
 
             $waypointIndex = 0;
             $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
@@ -64,13 +68,14 @@
                 $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
             }
 
-            insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode);
+            insertGoalToDatabase($startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode);
         }
     }
 
-    function insertGoalToDatabase($startPosition, $goalPosition, $waypoints, $goalID, $groupCode)
+    function insertGoalToDatabase($startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode)
     {
-        dbHandler::query("INSERT INTO ".GOALS." (".STARTPOSITION.", ".GOALPOSITION.", ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") VALUES ('$startPosition', '$goalPosition', '$waypoints', '$goalID', '$groupCode')");
+        dbHandler::query("INSERT INTO ".GOALS." (startlat, startlng, goallat, goallng, ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") 
+                            VALUES ('$startLat', '$startLng', '$goalLat', '$goalLng', '$waypoints', '$goalID', '$groupCode')");
     }
 
     function getUniqueID() 

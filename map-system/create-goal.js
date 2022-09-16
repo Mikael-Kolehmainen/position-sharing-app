@@ -91,8 +91,19 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
 function sendGoalData() {
     let xmlhttp = new XMLHttpRequest();
     let url = 'send-data.php?groupcode=' + groupCode;
+    let startlat, startlng, goallat, goallng;
     for (let i = 0; i < goal_marker_pos.length; i++) {
-        url += '&goalpos' + i + '=' + goal_marker_pos[i] + '&startpos' + i + '=' + start_marker_pos[i] + '&goalid' + i + '=' + idsOfGoals[i];
+        goallat = goal_marker_pos[i].lat;
+        goallng = goal_marker_pos[i].lng;
+
+        startlat = start_marker_pos[i].lat;
+        startlng = start_marker_pos[i].lng;
+
+        url += '&goallat' + i + '=' + goallat + 
+                '&goallng' + i + '=' + goallng +
+                '&startlat' + i + '=' + startlat + 
+                '&startlng' + i + '=' + startlng + 
+                '&goalid' + i + '=' + idsOfGoals[i];
     }
 
     // We count how many of each id there's in goalIDs

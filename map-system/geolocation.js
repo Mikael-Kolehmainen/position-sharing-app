@@ -100,19 +100,20 @@ function onLocationFound(e)
         updateChat(messagesArr, initialsArr, colorsArr);
         
         // GOALS
-        const startsArr = data.goalsdata.startpositions;
-        const goalsArr = data.goalsdata.goalpositions;
+        const startsLatArr = data.goalsdata.startlat;
+        const startsLngArr = data.goalsdata.startlng;
+        const goalsLatArr = data.goalsdata.goallat;
+        const goalsLngArr = data.goalsdata.goallng;
         const waypointsArr = data.goalsdata.waypoints;
-        if (goalsArr[0] != "empty" && startsArr[0] != "empty") {
+        if (startsLatArr[0] != "empty") {
             // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
-            while (goalsArr.length < positionsArr.length) {
-                goalsArr.push("no goal");
+            while (startsLatArr.length < latsArr.length) {
+                startsLatArr.push("no goal");
             }
-            for (let i = 0; i < goalsArr.length; i++) {
-                if (goalsArr[i] != "no goal") {
+            for (let i = 0; i < startsLatArr.length; i++) {
+                if (startsLatArr[i] != "no goal") {
                     // SAVE START POSITIONS TO VARIABLE
-                    latlngArr = startsArr[i].split(",");
-                    start_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                    start_marker_pos[i] = new L.LatLng(startsLatArr[i], startsLngArr[i]);
                     // SAVE WAYPOINT POSITIONS TO VARIABLE
                     goal_waypoints[i] = [];
                     for (let j = 0; j < waypointsArr[i].length; j++) {
@@ -120,8 +121,7 @@ function onLocationFound(e)
                         goal_waypoints[i][j] = new L.marker(latlngArr);
                     }
                     // SAVE GOAL POSITIONS TO VARIABLE
-                    latlngArr = goalsArr[i].split(",");
-                    goal_marker_pos[i] = new L.LatLng(latlngArr[0], latlngArr[1]);
+                    goal_marker_pos[i] = new L.LatLng(goalsLatArr[i], goalsLngArr[i]);
                 } else {
                     start_marker_pos[i] = "no goal";
                     goal_marker_pos[i] = "no goal";

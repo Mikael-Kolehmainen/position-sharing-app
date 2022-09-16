@@ -80,8 +80,10 @@
     function getGoals($groupCode)
     {
         $goalsData = array();
-        $goalsData[STARTPOSITIONS] = array();
-        $goalsData[GOALPOSITIONS] = array();
+        $goalsData['startlat'] = array();
+        $goalsData['startlng'] = array();
+        $goalsData['goallat'] = array();
+        $goalsData['goallng'] = array();
         $goalsData[WAYPOINTS] = array();
         $goalsData[GOALIDS] = array();
 
@@ -91,9 +93,11 @@
                 $row = mysqli_fetch_assoc($result);
 
                 if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($goalsData[STARTPOSITIONS], formatPosition($row[STARTPOSITION]));
+                    array_push($goalsData['startlat'], $row['startlat']);
+                    array_push($goalsData['startlng'], $row['startlng']);
 
-                    array_push($goalsData[GOALPOSITIONS], formatPosition($row[GOALPOSITION]));
+                    array_push($goalsData['goallat'], $row['goallat']);
+                    array_push($goalsData['goallng'], $row['goallng']);
 
                     array_push($goalsData[GOALIDS], $row[GOALID]);
 
@@ -103,9 +107,11 @@
                 }
             }
         }
-        if (count($goalsData[STARTPOSITIONS]) == 0) {
-            array_push($goalsData[STARTPOSITIONS], "empty");
-            array_push($goalsData[GOALPOSITIONS], "empty");
+        if (count($goalsData['startlat']) == 0) {
+            array_push($goalsData['startlat'], "empty");
+            array_push($goalsData['startlng'], "empty");
+            array_push($goalsData['goallat'], "empty");
+            array_push($goalsData['goallng'], "empty");
         }
 
         return $goalsData;
@@ -113,16 +119,8 @@
 
     function selectGoalsFromDatabase()
     {
-        return dbHandler::query("SELECT ".STARTPOSITION.", ".GOALPOSITION.", ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
-    }
-
-    function formatPosition($position)
-    {
-        // We remove 'LatLng(' and ')' from string
-        $position = substr($position, 7);
-        $position = substr($position, 0, -1);
-
-        return $position;
+        return dbHandler::query("SELECT startlat, startlng, goallat, goallng, 
+                                ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
     }
 
     function formatPositionsArray($positionsArr)
