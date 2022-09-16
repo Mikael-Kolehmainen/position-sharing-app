@@ -32,7 +32,7 @@ class User
         $this->uniqueId = $uniqueId;
     }
 
-    public function getPositionID()
+    public function getPositionRowID()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE uniqueID = ?');

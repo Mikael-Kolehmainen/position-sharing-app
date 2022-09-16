@@ -14,7 +14,7 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
         $uniqueID = $_SESSION[UNIQUEID];
 
         $user = new User($uniqueID);
-        $positionRowId = $user->getPositionID();
+        $positionRowId = $user->getPositionRowID();
 
         $position = new Position($newLat, $newLng);
         $position->id = $positionRowId;
