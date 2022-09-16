@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 15, 2022 at 01:48 PM
+-- Generation Time: Sep 16, 2022 at 09:30 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -29,12 +29,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `goals` (
   `id` int(4) NOT NULL,
-  `startposition` varchar(255) DEFAULT NULL,
-  `startlat` decimal(65,0) DEFAULT NULL,
-  `startlng` decimal(65,0) DEFAULT NULL,
-  `goalposition` varchar(255) DEFAULT NULL,
-  `goallng` decimal(65,0) DEFAULT NULL,
-  `goallat` decimal(65,0) DEFAULT NULL,
+  `startlat` decimal(65,6) DEFAULT NULL,
+  `startlng` decimal(65,6) DEFAULT NULL,
+  `goallng` decimal(65,6) DEFAULT NULL,
+  `goallat` decimal(65,6) DEFAULT NULL,
   `waypoints` varchar(1000) DEFAULT NULL,
   `goalID` int(255) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
@@ -93,9 +91,8 @@ INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`
 
 CREATE TABLE `positions` (
   `id` int(4) NOT NULL,
-  `position` varchar(255) DEFAULT NULL,
-  `lat` decimal(65,0) DEFAULT NULL,
-  `lng` decimal(65,0) DEFAULT NULL,
+  `lat` decimal(65,6) DEFAULT NULL,
+  `lng` decimal(65,6) DEFAULT NULL,
   `uniqueID` varchar(10) DEFAULT NULL,
   `initials` varchar(2) DEFAULT NULL,
   `color` varchar(7) DEFAULT NULL,
@@ -106,13 +103,11 @@ CREATE TABLE `positions` (
 -- Dumping data for table `positions`
 --
 
-INSERT INTO `positions` (`id`, `position`, `lat`, `lng`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
-(2499, 'LatLng(63.167, 21.835)', NULL, NULL, 'testtest11', 'TT', '#FFAABB', 'qOv'),
-(2500, 'LatLng(63.165, 21.83)', NULL, NULL, 'testtest22', 'EE', '#AABBFF', 'qOv'),
-(3104, 'LatLng(63.1709, 21.813)', NULL, NULL, 'testtest44', 'RR', '#dddddd', 'qOv'),
-(3106, 'LatLng(63.1709, 21.813)', NULL, NULL, 'testtest55', 'VV', '#dddddd', 'qOv'),
-(3108, 'LatLng(63.1709, 21.813)', NULL, NULL, 'testtest66', 'OO', '#dddddd', 'qOv'),
-(3212, 'LatLng(63.10251, 21.61823)', NULL, NULL, 'A797u2139C', 'MK', '#5BC0EB', 'qOv');
+INSERT INTO `positions` (`id`, `lat`, `lng`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
+(2499, '63.167000', '21.835000', 'testtest11', 'TT', '#FFAABB', 'qOv'),
+(2500, '63.165000', '21.830000', 'testtest22', 'EE', '#AABBFF', 'qOv'),
+(3104, '63.170900', '21.813000', 'testtest44', 'RR', '#dddddd', 'qOv'),
+(3229, '63.102510', '21.618230', 'lQIHNtDGPR', 'MK', '#5BC0EB', 'qOv');
 
 --
 -- Indexes for dumped tables
@@ -150,7 +145,7 @@ ALTER TABLE `positions`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=410;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=420;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -168,7 +163,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3213;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3230;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
