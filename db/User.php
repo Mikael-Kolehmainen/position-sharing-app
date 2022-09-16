@@ -3,8 +3,7 @@
 class User
 {
     private const TABLE_NAME = 'users';
-    private const FIELD_LAT = 'lat';
-    private const FIELD_LNG = 'lng';
+    private const FIELD_POSITIONS_ID = 'positions_id';
     private const FIELD_UNIQUE_ID = 'uniqueID';
     private const FIELD_INITIALS = 'initials';
     private const FIELD_COLOR = 'color';
@@ -13,8 +12,35 @@ class User
     /** @var int */
     private $id;
 
-    /** @var decimal */
-    public $position;
+    /** @var int */
+    public $positionsId;
 
-    // TODO: Create a positions table in database so that we can use Position class properly
+    /** @var varchar */
+    public $uniqueId;
+
+    /** @var string */
+    public $initials;
+
+    /** @var string */
+    public $color;
+
+    /** @var string */
+    public $groupCode;
+
+    public function __construct($uniqueId)
+    {
+        $this->uniqueId = $uniqueId;
+    }
+
+    public function getPositionID()
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE uniqueID = ?');
+        $stmt->bindParam(1, $this->uniqueId);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return $row['positions_id'];
+        }
+    }
 }

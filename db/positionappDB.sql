@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2022 at 10:18 AM
+-- Generation Time: Sep 16, 2022 at 01:41 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -86,6 +86,25 @@ INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `positions`
+--
+
+CREATE TABLE `positions` (
+  `id` int(4) NOT NULL,
+  `lat` decimal(65,6) DEFAULT NULL,
+  `lng` decimal(65,6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `positions`
+--
+
+INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
+(298, '63.102510', '21.618230');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -93,6 +112,7 @@ CREATE TABLE `users` (
   `id` int(4) NOT NULL,
   `lat` decimal(65,6) DEFAULT NULL,
   `lng` decimal(65,6) DEFAULT NULL,
+  `positions_id` int(4) DEFAULT NULL,
   `uniqueID` varchar(10) DEFAULT NULL,
   `initials` varchar(2) DEFAULT NULL,
   `color` varchar(7) DEFAULT NULL,
@@ -103,11 +123,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `lat`, `lng`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
-(2499, '63.167000', '21.835000', 'testtest11', 'TT', '#FFAABB', 'qOv'),
-(2500, '63.165000', '21.830000', 'testtest22', 'EE', '#AABBFF', 'qOv'),
-(3104, '63.170900', '21.813000', 'testtest44', 'RR', '#dddddd', 'qOv'),
-(3299, '63.102510', '21.618230', 'mGNAcDtQFB', 'MK', '#5BC0EB', 'qOv');
+INSERT INTO `users` (`id`, `lat`, `lng`, `positions_id`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
+(2499, '63.167000', '21.835000', NULL, 'testtest11', 'TT', '#FFAABB', 'qOv'),
+(2500, '63.165000', '21.830000', NULL, 'testtest22', 'EE', '#AABBFF', 'qOv'),
+(3104, '63.170900', '21.813000', NULL, 'testtest44', 'RR', '#dddddd', 'qOv'),
+(3301, '63.102510', '21.618230', 298, 'HXYLCGi8Iu', 'MK', '#5BC0EB', 'qOv');
 
 --
 -- Indexes for dumped tables
@@ -129,6 +149,12 @@ ALTER TABLE `groups`
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `positions`
+--
+ALTER TABLE `positions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -160,10 +186,16 @@ ALTER TABLE `messages`
   MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
+-- AUTO_INCREMENT for table `positions`
+--
+ALTER TABLE `positions`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3300;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3302;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

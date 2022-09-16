@@ -1,5 +1,7 @@
 <?php
 require './../required-files/dbHandler.php';
+require './../db/Position.php';
+require './../db/User.php';
 require './../required-files/constants.php';
 
 session_start();
@@ -11,7 +13,14 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
     if (isset($_SESSION[UNIQUEID])) {
         $uniqueID = $_SESSION[UNIQUEID];
 
-        updatePositionInDatabase($newLat, $newLng, $uniqueID);
+        $user = new User($uniqueID);
+        $positionRowId = $user->getPositionID();
+
+        $position = new Position($newLat, $newLng);
+        $position->id = $positionRowId;
+        $position->save();
+
+        updatePositionInDatabase($newLat, $newLng, $positionRowId, $uniqueID);
     } else {
         $uniqueID = getUniqueID();
         $initials = $_SESSION[INITIALS];
@@ -20,18 +29,22 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
 
         $_SESSION[UNIQUEID] = $uniqueID;
 
-        insertPositionToDatabase($newLat, $newLng, $uniqueID, $initials, $color, $groupCode);
+        $position = new Position($newLat, $newLng);
+        $position->save();
+        $positionRowId = $position->id;
+
+        insertPositionToDatabase($newLat, $newLng, $positionRowId, $uniqueID, $initials, $color, $groupCode);
     }
 }
 
-function updatePositionInDatabase($lat, $lng, $uniqueID)
+function updatePositionInDatabase($lat, $lng, $positionId, $uniqueID)
 {
-    dbHandler::query("UPDATE users SET lat = '$lat', lng = '$lng' WHERE ".UNIQUEID." = '$uniqueID'");
+    dbHandler::query("UPDATE users SET lat = '$lat', lng = '$lng', positions_id = '$positionId' WHERE ".UNIQUEID." = '$uniqueID'");
 }
 
-function insertPositionToDatabase($lat, $lng, $uniqueID, $initials, $color, $groupCode) 
+function insertPositionToDatabase($lat, $lng, $positionId, $uniqueID, $initials, $color, $groupCode) 
 {
-    dbHandler::query("INSERT INTO users (lat, lng, ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$lat', '$lng', '$uniqueID', '$initials', '$color', '$groupCode')");
+    dbHandler::query("INSERT INTO users (lat, lng, positions_id, ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$lat', '$lng', '$positionId', '$uniqueID', '$initials', '$color', '$groupCode')");
 }
 
 function getUniqueID() 

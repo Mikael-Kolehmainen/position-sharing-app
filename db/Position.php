@@ -7,24 +7,18 @@ class Position
     private const FIELD_LNG = 'lng';
 
     /** @var id */
-    private $id;
+    public $id;
 
     /** @var decimal */
-    private $latitude;
+    public $latitude;
 
     /** @var decimal */
-    private $longitude;
+    public $longitude;
 
-    // Varför är det understryckningar före funktion namnet?
     public function __construct($latitude, $longitude)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
-    }
-
-    public function __toString()
-    {
-        return 'string eqvivalent...';
     }
 
     public function save(): void
@@ -49,10 +43,23 @@ class Position
     private function update(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_LAT . ' =  ?, ' . self::FIELD_LNG . ' = ? WHERE ID = ?');
-        $stmt->bindParam(1, $this->startPosition);
-        $stmt->bindParam(2, $this->goalPosition);
+        $stmt = $pdo->prepare('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_LAT . ' =  ?, ' . self::FIELD_LNG . ' = ? WHERE id = ?');
+        $stmt->bindParam(1, $this->latitude);
+        $stmt->bindParam(2, $this->longitude);
         $stmt->bindParam(3, $this->id);
         $stmt->execute();
+    }
+
+    public function getPosition(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_LAT . ', ' . self::FIELD_LNG . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');
+        $stmt->bindParam(1, $this->id);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->latitude = $row['lat'];
+            $this->longitude = $row['lng'];
+        } 
     }
 }
