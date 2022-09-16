@@ -4,13 +4,14 @@
 
     session_start();
 
-    if (isset($_GET['pos'])) {
-        $newPosition = filter_input(INPUT_GET, 'pos', FILTER_DEFAULT);
+    if (isset($_GET['lat']) && isset($_GET['lng'])) {
+        $newLat = filter_input(INPUT_GET, 'lat', FILTER_DEFAULT);
+        $newLng = filter_input(INPUT_GET, 'lng', FILTER_DEFAULT);
 
         if (isset($_SESSION[UNIQUEID])) {
             $uniqueID = $_SESSION[UNIQUEID];
 
-            updatePositionInDatabase($newPosition, $uniqueID);
+            updatePositionInDatabase($newLat, $newLng, $uniqueID);
         } else {
             $uniqueID = getUniqueID();
             $initials = $_SESSION[INITIALS];
@@ -19,7 +20,7 @@
 
             $_SESSION[UNIQUEID] = $uniqueID;
 
-            insertPositionToDatabase($newPosition, $uniqueID, $initials, $color, $groupCode);
+            insertPositionToDatabase($newLat, $newLng, $uniqueID, $initials, $color, $groupCode);
         }
     } else if (isset($_GET[GOALAMOUNT])) {
         $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_DEFAULT);
@@ -30,14 +31,14 @@
         header("LOCATION: ./../index.php");
     }
 
-    function updatePositionInDatabase($position, $uniqueID)
+    function updatePositionInDatabase($lat, $lng, $uniqueID)
     {
-        dbHandler::query("UPDATE ".POSITIONS." SET ".POSITION." = '$position' WHERE ".UNIQUEID." = '$uniqueID'");
+        dbHandler::query("UPDATE ".POSITIONS." SET lat = '$lat', lng = '$lng' WHERE ".UNIQUEID." = '$uniqueID'");
     }
 
-    function insertPositionToDatabase($position, $uniqueID, $initials, $color, $groupCode) 
+    function insertPositionToDatabase($lat, $lng, $uniqueID, $initials, $color, $groupCode) 
     {
-        dbHandler::query("INSERT INTO ".POSITIONS." (".POSITION.", ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$position', '$uniqueID', '$initials', '$color', '$groupCode')");
+        dbHandler::query("INSERT INTO ".POSITIONS." (lat, lng, ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$lat', '$lng', '$uniqueID', '$initials', '$color', '$groupCode')");
 	}
 
     function insertGoalsToDatabase($amountOfGoals, $groupCode)

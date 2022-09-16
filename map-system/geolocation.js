@@ -57,21 +57,20 @@ function onLocationFound(e)
     current_position = L.marker(e.latlng, {icon: userIcon});
     refreshedLayerGroup.addLayer(current_position);
 
-    sendDataToPHP("send-data.php?pos=" + e.latlng + "&groupcode=" + groupCode);
+    sendDataToPHP("send-data.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode);
 
-    getDataFromPHP("get-data.php?pos=" + e.latlng + "&groupcode=" + groupCode, function(data)
+    getDataFromPHP("get-data.php?groupcode=" + groupCode, function(data)
     {
         removeStyles('js-style');
         user_markers = [];
         dataGlobal = data;
-        let positionsArr = data.positionsdata.positions;
+        let latsArr = data.positionsdata.lat;
+        let lngsArr = data.positionsdata.lng;
         markerInitialsArr = data.positionsdata.initials;
         markerColorsArr = data.positionsdata.colors;
         let classNameOtherUsers;
-        for (let i = 0; i < positionsArr.length; i++) {
-            positionsArr[i] = positionsArr[i].replace(/[^\d.,-]/g,'');
-            latlngArr = positionsArr[i].split(",");
-            marker = L.marker(L.latLng(latlngArr[0], latlngArr[1]), {icon: otherUsersIcon});
+        for (let i = 0; i < latsArr.length; i++) {
+            marker = L.marker(L.latLng(latsArr[i], lngsArr[i]), {icon: otherUsersIcon});
             refreshedLayerGroup.addLayer(marker);
             user_markers.push(marker);
             let initial = '\"' + markerInitialsArr[i] + '\"';

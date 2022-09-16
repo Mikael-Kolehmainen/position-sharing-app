@@ -42,4 +42,3 @@
     {
         return dbHandler::query("DELETE FROM $tableName WHERE $rowName = '$rowValue'");
     }
-?>

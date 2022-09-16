@@ -23,7 +23,8 @@
     function getPositions($groupCode)
     {
         $positionsData = array();
-        $positionsData[POSITIONS] = array();
+        $positionsData['lat'] = array();
+        $positionsData['lng'] = array();
         $positionsData[INITIALS] = array();
         $positionsData[COLORS] = array();
 
@@ -32,7 +33,8 @@
             for ($i = 0; $i < mysqli_num_rows($result); $i++) {
                 $row = mysqli_fetch_assoc($result);
                 if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($positionsData[POSITIONS] , $row[POSITION]);
+                    array_push($positionsData['lat'] , $row['lat']);
+                    array_push($positionsData['lng'], $row['lng']);
                     array_push($positionsData[INITIALS], $row[INITIALS]);
                     array_push($positionsData[COLORS], $row[COLOR]);
                 }
@@ -44,7 +46,7 @@
 
     function selectPositionsFromDatabase()
     {
-        return dbHandler::query("SELECT ".POSITION.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".POSITIONS);
+        return dbHandler::query("SELECT lat, lng, ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".POSITIONS);
     }
 
     function getMessages($groupCode)
