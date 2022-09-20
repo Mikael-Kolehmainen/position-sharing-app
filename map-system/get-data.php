@@ -1,6 +1,8 @@
 <?php
     require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
+    require './../db/Position.php';
+    require './../db/User.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -13,7 +15,8 @@
     function getData($groupCode)
     {
         $data = array();
-        $data[POSITIONSDATA] = getPositions($groupCode);
+        $data[POSITIONSDATA] = getPositions($groupCode); /* use getAllPositionRowIDs() from User class in this function */
+        $data['usersdata'] = getUsersFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessages($groupCode);
         $data[GOALSDATA] = getGoals($groupCode);
 
@@ -47,6 +50,16 @@
     function selectPositionsFromDatabase()
     {
         return dbHandler::query("SELECT lat, lng, ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM users");
+    }
+
+    function getUsersFromDatabase($groupCode)
+    {
+        $user = new User();
+        $user->groupCode = $groupCode;
+
+        $userInitials = $user->getInitials();
+
+        return $userInitials;
     }
 
     function getMessages($groupCode)

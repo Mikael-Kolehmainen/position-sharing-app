@@ -68,6 +68,7 @@ function onLocationFound(e)
         let lngsArr = data.positionsdata.lng;
         markerInitialsArr = data.positionsdata.initials;
         markerColorsArr = data.positionsdata.colors;
+        console.log(data.usersdata);
         let classNameOtherUsers;
         for (let i = 0; i < latsArr.length; i++) {
             marker = L.marker(L.latLng(latsArr[i], lngsArr[i]), {icon: otherUsersIcon});
