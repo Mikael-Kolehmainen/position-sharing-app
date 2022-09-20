@@ -14,8 +14,7 @@ waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
-let markerInitialsArr;
-let markerColorsArr;
+let usersData;
 
 let userIcon = L.divIcon ({
     iconSize: [25, 25],
@@ -64,28 +63,24 @@ function onLocationFound(e)
         removeStyles('js-style');
         user_markers = [];
         dataGlobal = data;
-        let latsArr = data.positionsdata.lat;
-        let lngsArr = data.positionsdata.lng;
-        markerInitialsArr = data.positionsdata.initials;
-        markerColorsArr = data.positionsdata.colors;
-        console.log(data.usersdata);
+        usersData = data.usersdata;
         let classNameOtherUsers;
-        for (let i = 0; i < latsArr.length; i++) {
-            marker = L.marker(L.latLng(latsArr[i], lngsArr[i]), {icon: otherUsersIcon});
+        for (let i = 0; i < usersData.length; i++) {
+            marker = L.marker(L.latLng(usersData[i].position[0], usersData[i].position[1]), {icon: otherUsersIcon});
             refreshedLayerGroup.addLayer(marker);
             user_markers.push(marker);
-            let initial = '\"' + markerInitialsArr[i] + '\"';
+            let initial = '\"' + usersData[i].initials + '\"';
             if (marker.getLatLng().equals(current_position.getLatLng())) {
                 // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
                 goalLayerGroup.removeLayer(marker);
                 // GIVES COLOR & INITIALS TO USERS MARKER
                 const stylesheet = document.styleSheets[0];
                 stylesheet.cssRules[1].style.setProperty('content', initial);
-                stylesheet.cssRules[0].style.setProperty('background-color', markerColorsArr[i]);
+                stylesheet.cssRules[0].style.setProperty('background-color', usersData[i].color);
             } else {
                     // GIVES COLOR & INITIALS TO OTHER MARKERS
                 classNameOtherUsers = 'other-user-marker-' + i;
-                styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + markerColorsArr[i] + '; }';
+                styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
                 // INITIALS
                 styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initial + '; }';
 
@@ -108,7 +103,7 @@ function onLocationFound(e)
         const waypointsArr = data.goalsdata.waypoints;
         if (startsLatArr[0] != "empty") {
             // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
-            while (startsLatArr.length < latsArr.length) {
+            while (startsLatArr.length < usersData.length) {
                 startsLatArr.push("no goal");
             }
             for (let i = 0; i < startsLatArr.length; i++) {
@@ -337,9 +332,9 @@ function onLocationFound(e)
             disclaimer.style.display = 'none';
         }
         // CREATE STYLESHEET FOR GOAL MENU
-        for (let i = 0; i < markerColorsArr.length; i++) {
+        for (let i = 0; i < usersData.length; i++) {
             const className = 'goal-menu-user-marker-' + i;
-            styleSheetContent += '.' + className + '{ background-color: ' + markerColorsArr[i] + '; }';
+            styleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
         }
             createStyle(styleSheetContent, 'js-style');    
     });

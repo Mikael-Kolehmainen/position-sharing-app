@@ -15,7 +15,7 @@ class Position
     /** @var decimal */
     public $longitude;
 
-    public function __construct($latitude, $longitude)
+    public function __construct($latitude = 0, $longitude = 0)
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
@@ -50,7 +50,7 @@ class Position
         $stmt->execute();
     }
 
-    public function getPosition(): void
+    public function getPosition()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT ' . self::FIELD_LAT . ', ' . self::FIELD_LNG . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');
@@ -58,8 +58,7 @@ class Position
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->latitude = $row['lat'];
-            $this->longitude = $row['lng'];
+            return [$row['lat'], $row['lng']];
         } 
     }
 }

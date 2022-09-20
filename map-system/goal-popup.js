@@ -35,14 +35,14 @@ function createPopup() {
     titleRow.appendChild(titleCell_1);
     titleRow.appendChild(titleCell_2);
 
-    for (let i = 0; i < markerInitialsArr.length; i++) {
+    for (let i = 0; i < usersData.length; i++) {
         const userRow = document.createElement("tr");
         const userCell_1 = document.createElement("td");
         const userCell_2 = document.createElement("td");
         
         const userProfile = document.createElement("div");
         const initialsText = document.createElement("p");
-        initialsText.innerHTML = markerInitialsArr[i];
+        initialsText.innerHTML = usersData[i].initials;
         userProfile.classList.add('profile');
         
         const checkbox = document.createElement("input");
@@ -59,7 +59,7 @@ function createPopup() {
 
         const className = 'goal-menu-user-marker-' + i;
         userProfile.classList.add(className);
-        styleSheetContent += '.' + className + '{ background-color: ' + markerColorsArr[i] + '; }';
+        styleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
     }
     createStyle(styleSheetContent, 'js-style');
 }

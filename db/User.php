@@ -45,46 +45,14 @@ class User
         }
     }
 
-    public function getAllPositionRowIDs()
+    public function getMarkerDetails()
     {
         $pdo = dbHandler::getPdbConnection();
 
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getInitials()
-    {
-        $pdo = dbHandler::getPdbConnection();
-
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_INITIALS . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?');
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getColor()
-    {
-        $pdo = dbHandler::getPdbConnection();
-
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_COLOR . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?');
-        $stmt->bindParam(1, $this->$groupCode);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    private function returnArrayFromDatabase($result, $rowKeys)
-    {
-        $array = array();
-
-        for ($i = 0; $i < $result->num_rows; $i++) {
-            array_push($array, $result[$i]);
-        }
-
-        return $result;
     }
 }

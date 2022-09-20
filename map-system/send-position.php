@@ -21,7 +21,7 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
         $position->id = $positionRowId;
         $position->save();
 
-        updatePositionInDatabase($newLat, $newLng, $positionRowId, $uniqueID);
+        updatePositionInDatabase($positionRowId, $uniqueID);
     } else {
         $uniqueID = getUniqueID();
         $initials = $_SESSION[INITIALS];
@@ -34,13 +34,13 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
         $position->save();
         $positionRowId = $position->id;
 
-        insertPositionToDatabase($newLat, $newLng, $positionRowId, $uniqueID, $initials, $color, $groupCode);
+        insertPositionToDatabase($positionRowId, $uniqueID, $initials, $color, $groupCode);
     }
 }
 
-function updatePositionInDatabase($lat, $lng, $positionId, $uniqueID)
+function updatePositionInDatabase($positionId, $uniqueID)
 {
-    dbHandler::query("UPDATE users SET lat = '$lat', lng = '$lng', positions_id = '$positionId' WHERE ".UNIQUEID." = '$uniqueID'");
+    dbHandler::query("UPDATE users SET positions_id = '$positionId' WHERE " . UNIQUEID . " = '$uniqueID'");
 }
 
 function insertPositionToDatabase($lat, $lng, $positionId, $uniqueID, $initials, $color, $groupCode) 

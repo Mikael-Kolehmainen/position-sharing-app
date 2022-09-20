@@ -15,51 +15,29 @@
     function getData($groupCode)
     {
         $data = array();
-        $data[POSITIONSDATA] = getPositions($groupCode); /* use getAllPositionRowIDs() from User class in this function */
-        $data['usersdata'] = getUsersFromDatabase($groupCode);
+        $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessages($groupCode);
         $data[GOALSDATA] = getGoals($groupCode);
 
         return $data;
     }
-
-    function getPositions($groupCode)
-    {
-        $positionsData = array();
-        $positionsData['lat'] = array();
-        $positionsData['lng'] = array();
-        $positionsData[INITIALS] = array();
-        $positionsData[COLORS] = array();
-
-        $result = selectPositionsFromDatabase();
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-                $row = mysqli_fetch_assoc($result);
-                if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($positionsData['lat'] , $row['lat']);
-                    array_push($positionsData['lng'], $row['lng']);
-                    array_push($positionsData[INITIALS], $row[INITIALS]);
-                    array_push($positionsData[COLORS], $row[COLOR]);
-                }
-            }
-        }
-
-        return $positionsData;
-    }
-
-    function selectPositionsFromDatabase()
-    {
-        return dbHandler::query("SELECT lat, lng, ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM users");
-    }
-
-    function getUsersFromDatabase($groupCode)
+    
+    function getUsersDetailsFromDatabase($groupCode)
     {
         $user = new User();
         $user->groupCode = $groupCode;
 
-        $userInitials = $user->getInitials();
+        $userMarkerDetails = $user->getMarkerDetails();
 
-        return $userInitials;
+        $userPositions = array();
+
+        for ($i = 0; $i < count($userMarkerDetails); $i++) {
+            $position = new Position();
+            $position->id = $userMarkerDetails[$i]["positions_id"];
+            $userMarkerDetails[$i]["position"] = $position->getPosition();
+        }
+
+        return $userMarkerDetails;
     }
 
     function getMessages($groupCode)
