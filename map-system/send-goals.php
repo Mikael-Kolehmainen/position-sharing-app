@@ -3,6 +3,7 @@
     require './../required-files/constants.php';
     require './../db/Position.php';
     require './../db/Goal.php';
+    require './../db/Waypoint.php';
 
     session_start();
 
@@ -18,47 +19,68 @@
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
         for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++) {
-            $startLatKey = 'startlat'.$userIndex;
-            $startLat = filter_input(INPUT_GET, $startLatKey, FILTER_DEFAULT);
-            $startLngKey = 'startlng'.$userIndex;
-            $startLng = filter_input(INPUT_GET, $startLngKey, FILTER_DEFAULT);
+            $startPosition = getPositionFromURL('startlat'.$userIndex, 'startlng'.$userIndex);
+            $goalPosition = getPositionFromURL('goallat'.$userIndex, 'goallng'.$userIndex);
 
-            $goalLatKey = 'goallat'.$userIndex;
-            $goalLat = filter_input(INPUT_GET, $goalLatKey, FILTER_DEFAULT);
-            $goalLngKey = 'goallng'.$userIndex;
-            $goalLng = filter_input(INPUT_GET, $goalLngKey, FILTER_DEFAULT);
-
+            $startPositionRowID = insertPositionToDatabase($startPosition->latitude, $startPosition->longitude);
+            $goalPositionRowID = insertPositionToDatabase($goalPosition->latitude, $goalPosition->longitude);
+            $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode);
+        
             $waypointIndex = 0;
-            $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
-            $waypoints = "";
+            $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lat';
+            $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lng';
 
             $goalIDKey = 'goalid'.$userIndex;
             $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
 
-            while (isset($_GET[$waypointKey])) {
-                $waypoints .= filter_input(INPUT_GET, $waypointKey, FILTER_DEFAULT);
+            while (isset($_GET[$waypointLatKey]) && isset($_GET[$waypointLngKey])) {
+                $waypointPosition = getPositionFromURL($waypointLatKey, $waypointLngKey);
+
+                $waypointPositionRowID = insertPositionToDatabase($waypointPosition->latitude, $waypointPosition->longitude);
+                insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
 
                 $waypointIndex = $waypointIndex + 1;
-                $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
+                $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lat';
+                $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lng';
             }
-
-            $startPositionRowId = insertPositionToDatabase($startLat, $startLng);
-            $goalPositionRowId = insertPositionToDatabase($goalLat, $goalLng);
-            insertGoalToDatabase($startPositionRowId, $goalPositionRowId, $startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode);
         }
     }
 
-    function insertGoalToDatabase($startPositionRowId, $goalPositionRowId, $startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode)
+    function getPositionFromURL($latKey, $lngKey)
     {
-        dbHandler::query("INSERT INTO ".GOALS." (start_positions_id, goal_positions_id, startlat, startlng, goallat, goallng, ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") 
-                            VALUES ('$startPositionRowId', '$goalPositionRowId', '$startLat', '$startLng', '$goalLat', '$goalLng', '$waypoints', '$goalID', '$groupCode')");
+        $latValue = filter_input(INPUT_GET, $latKey, FILTER_DEFAULT);
+        $lngValue = filter_input(INPUT_GET, $lngKey, FILTER_DEFAULT);
+
+        $position = new Position($latValue, $lngValue);
+
+        return $position;
     }
 
     function insertPositionToDatabase($lat, $lng)
     {
         $position = new Position($lat, $lng);
         $position->save();
-        $positionRowId = $position->id;
+        $positionRowID = $position->id;
+    
+        return $positionRowID;
+    }
 
-        return $positionRowId;
+    function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode)
+    {
+        $goal = new Goal();
+        $goal->startPositionID = $startPositionRowID;
+        $goal->goalPositionID = $goalPositionRowID;
+        $goal->goalID = $goalID;
+        $goal->groupCode = $groupCode;
+        $goal->save();
+
+        return $goal->id;
+    }
+
+    function insertWaypointToDatabase($goalRowID, $positionRowID)
+    {
+        $waypoint = new Waypoint();
+        $waypoint->goalsID = $goalRowID;
+        $waypoint->positionsID = $positionRowID;
+        $waypoint->save();
     }

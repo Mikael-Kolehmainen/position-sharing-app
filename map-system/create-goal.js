@@ -111,11 +111,12 @@ function sendGoalData() {
     // We save the waypoint positions
     // We run the loop in reverse because I want to save the waypoints to the database in correct order
     for (let i = all_waypoints.length - 1; i >= 0; i--) {
-        url += '&waypoint' + goalIDs[i] + '-' + (IDcounts[goalIDs[i]]-1) + '=' + all_waypoints[i].getLatLng();
+        url += '&waypoint' + goalIDs[i] + '-' + (IDcounts[goalIDs[i]]-1) + '-lat' + '=' + all_waypoints[i].getLatLng().lat;
+        url += '&waypoint' + goalIDs[i] + '-' + (IDcounts[goalIDs[i]]-1) + '-lng' + '=' + all_waypoints[i].getLatLng().lng;
         IDcounts[goalIDs[i]] = IDcounts[goalIDs[i]] - 1;
     }
     url += '&groupcode=' + groupCode + '&goalamount=' + goal_marker_pos.length;
-
+    console.log(url);
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {
         if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {

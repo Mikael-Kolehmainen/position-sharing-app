@@ -4,6 +4,7 @@
     require './../db/Position.php';
     require './../db/User.php';
     require './../db/Goal.php';
+    require './../db/Waypoint.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -18,8 +19,7 @@
         $data = array();
         $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessages($groupCode);
-        $data[GOALSDATA] = getGoals($groupCode);
-        $data['testdata'] = getGoalPositionsFromDatabase($groupCode);
+        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
 
         return $data;
     }
@@ -70,88 +70,42 @@
         return dbHandler::query("SELECT ".MESSAGE.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".MESSAGES);
     }
 
-    function getGoals($groupCode)
+    function getGoalPositionsFromDatabase($groupCode)
     {
+        $startGoalPositionsRowIDs = getStartGoalPositionsRowIDs($groupCode);
+
+        $goalsID = getGoalsID($groupCode);
+
         $goalsData = array();
-        $goalsData['startlat'] = array();
-        $goalsData['startlng'] = array();
-        $goalsData['goallat'] = array();
-        $goalsData['goallng'] = array();
-        $goalsData[WAYPOINTS] = array();
-        $goalsData[GOALIDS] = array();
 
-        $result = selectGoalsFromDatabase();
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-                $row = mysqli_fetch_assoc($result);
+        for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
+            $position = new Position();
+            $position->id = $startGoalPositionsRowIDs[$i]["start_positions_id"];
+            $goalsData[$i]["start_position"] = $position->getPosition();
 
-                if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($goalsData['startlat'], $row['startlat']);
-                    array_push($goalsData['startlng'], $row['startlng']);
+            $position->id = $startGoalPositionsRowIDs[$i]["goal_positions_id"];
+            $goalsData[$i]["goal_position"] = $position->getPosition();
 
-                    array_push($goalsData['goallat'], $row['goallat']);
-                    array_push($goalsData['goallng'], $row['goallng']);
-
-                    array_push($goalsData[GOALIDS], $row[GOALID]);
-
-                    if (isset($row[WAYPOINTS])) {
-                        array_push($goalsData[WAYPOINTS], formatPositionsArray($row[WAYPOINTS]));
-                    }
-                }
-            }
-        }
-        if (count($goalsData['startlat']) == 0) {
-            array_push($goalsData['startlat'], "empty");
-            array_push($goalsData['startlng'], "empty");
-            array_push($goalsData['goallat'], "empty");
-            array_push($goalsData['goallng'], "empty");
+            $waypoint = new Waypoint();
+            $waypoint->goalsID = $goalsID[$i];
+            $goalsData[$i]["waypoints"] = $waypoint->getWaypointsPositionIDs();
         }
 
         return $goalsData;
     }
 
-    function selectGoalsFromDatabase()
-    {
-        return dbHandler::query("SELECT startlat, startlng, goallat, goallng, 
-                                ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
-    }
-
-    function getGoalPositionsFromDatabase($groupCode)
-    {
-        $startGoalPositionsRowIds = getStartGoalPositionsRowIDs($groupCode);
-
-        $startGoalPositions = array();
-
-        for ($i = 0; $i < count($startGoalPositionsRowIds); $i++) {
-            $position = new Position();
-            $position->id = $startGoalPositionsRowIds[$i]["start_positions_id"];
-            $startGoalPositions[$i]["start_position"] = $position->getPosition();
-
-            $position->id = $startGoalPositionsRowIds[$i]["goal_positions_id"];
-            $startGoalPositions[$i]["goal_position"] = $position->getPosition();
-        }
-
-        return $startGoalPositions;
-    }
-
     function getStartGoalPositionsRowIDs($groupCode)
     {
         $goal = new Goal();
-
+        $goal->groupCode = $groupCode;
         $startGoalPositionsRowIds = $goal->getStartGoalPositionsRowIDs();
 
         return $startGoalPositionsRowIds;
     }
 
-    function formatPositionsArray($positionsArr)
+    function getGoalsID($groupCode)
     {
-        // We remove 'LatLng(' and ')' from each element in array
-        $positions = explode('LatLng(', $positionsArr);
-        
-        for ($i = 0; $i < count($positions); $i++) {
-            $positions[$i] = substr($positions[$i], 0, -1);
-        } 
-
-        // Remove elements that are emtpy
-        return array_values(array_filter($positions));
+        $goal = new Goal();
+        $goal->groupCode = $groupCode;
+        return $goal->getGoalsID();
     }

@@ -101,6 +101,7 @@ function onLocationFound(e)
         const goalsLatArr = data.goalsdata.goallat;
         const goalsLngArr = data.goalsdata.goallng;
         const waypointsArr = data.goalsdata.waypoints;
+        const goalsData = data.goalsData;
         console.log(data.testdata);
         if (startsLatArr[0] != "empty") {
             // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
