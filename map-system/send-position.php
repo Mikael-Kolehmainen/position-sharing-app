@@ -68,22 +68,19 @@ function getUniqueID()
     require './../required-files/random-string.php';
 
     $uniqueID = getRandomString(10);
-    $result = selectPositionsFromDatabase();
+    $uniqueIDs = getUsersUniqueIDsFromDatabase();
 
-    if (mysqli_num_rows($result) > 0) {
-        for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-            $row = mysqli_fetch_assoc($result);
-
-            if ($uniqueID == $row[UNIQUEID]) {
-                $uniqueID = getUniqueID();
-            }
+    for ($i = 0; $i < count($uniqueIDs); $i++) {
+        if ($uniqueID == $uniqueIDs[$i]['uniqueID']) {
+            $uniqueID = getUniqueID();
         }
     }
     
     return $uniqueID;
 }
 
-function selectPositionsFromDatabase()
+function getUsersUniqueIDsFromDatabase()
 {
-    return dbHandler::query("SELECT id, ".UNIQUEID." FROM users");
+    $user = new User();
+    return $user->getUniqueIDs();
 }
