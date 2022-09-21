@@ -1,6 +1,8 @@
 <?php
     require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
+    require './../db/Position.php';
+    require './../db/Goal.php';
 
     session_start();
 
@@ -40,12 +42,23 @@
                 $waypointKey = WAYPOINT.$userIndex.'-'.$waypointIndex;
             }
 
-            insertGoalToDatabase($startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode);
+            $startPositionRowId = insertPositionToDatabase($startLat, $startLng);
+            $goalPositionRowId = insertPositionToDatabase($goalLat, $goalLng);
+            insertGoalToDatabase($startPositionRowId, $goalPositionRowId, $startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode);
         }
     }
 
-    function insertGoalToDatabase($startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode)
+    function insertGoalToDatabase($startPositionRowId, $goalPositionRowId, $startLat, $startLng, $goalLat, $goalLng, $waypoints, $goalID, $groupCode)
     {
-        dbHandler::query("INSERT INTO ".GOALS." (startlat, startlng, goallat, goallng, ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") 
-                            VALUES ('$startLat', '$startLng', '$goalLat', '$goalLng', '$waypoints', '$goalID', '$groupCode')");
+        dbHandler::query("INSERT INTO ".GOALS." (start_positions_id, goal_positions_id, startlat, startlng, goallat, goallng, ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE.") 
+                            VALUES ('$startPositionRowId', '$goalPositionRowId', '$startLat', '$startLng', '$goalLat', '$goalLng', '$waypoints', '$goalID', '$groupCode')");
+    }
+
+    function insertPositionToDatabase($lat, $lng)
+    {
+        $position = new Position($lat, $lng);
+        $position->save();
+        $positionRowId = $position->id;
+
+        return $positionRowId;
     }

@@ -19,7 +19,7 @@
         $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessages($groupCode);
         $data[GOALSDATA] = getGoals($groupCode);
-        $data['testdata'] = getGoalsFromDatabase($groupCode);
+        $data['testdata'] = getGoalPositionsFromDatabase($groupCode);
 
         return $data;
     }
@@ -116,7 +116,25 @@
                                 ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
     }
 
-    function getGoalsFromDatabase($groupCode)
+    function getGoalPositionsFromDatabase($groupCode)
+    {
+        $startGoalPositionsRowIds = getStartGoalPositionsRowIDs($groupCode);
+
+        $startGoalPositions = array();
+
+        for ($i = 0; $i < count($startGoalPositionsRowIds); $i++) {
+            $position = new Position();
+            $position->id = $startGoalPositionsRowIds[$i]["start_positions_id"];
+            $startGoalPositions[$i]["start_position"] = $position->getPosition();
+
+            $position->id = $startGoalPositionsRowIds[$i]["goal_positions_id"];
+            $startGoalPositions[$i]["goal_position"] = $position->getPosition();
+        }
+
+        return $startGoalPositions;
+    }
+
+    function getStartGoalPositionsRowIDs($groupCode)
     {
         $goal = new Goal();
 

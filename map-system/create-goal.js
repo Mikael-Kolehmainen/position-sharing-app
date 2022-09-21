@@ -1,7 +1,6 @@
 // CREATE GOAL BTN ONCLICK FUNCTION
 function showDraggableGoal() {
     removeStyles('js-style-goals');
-    const initialsArr = dataGlobal.positionsdata.initials;
     
     let latlngValue = 0.002;
     // CREATE THE POSITIONS
@@ -20,16 +19,15 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     map.removeLayer(goalLayerGroup);
 
     let classNameGoalMarkers, classNameStartMarkers, initial;
-    let initialsArrData = dataGlobal.positionsdata.initials;
+    let usersData = dataGlobal.usersdata;
     let initialsArr = [];
-    const colorsArr = dataGlobal.positionsdata.colors;
 
     if (idsOfGoals.length == 0) {
         idsOfGoals = dataGlobal.goalsdata.goalids;
     }
 
     for (let i = 0; i < idsOfGoals.length; i++) {
-        initialsArr.push(initialsArrData[idsOfGoals[i]]);
+        initialsArr.push(usersData[idsOfGoals[i]].initials);
     }
 
     for (let i = 0; i < goal_marker_pos.length; i++) {
