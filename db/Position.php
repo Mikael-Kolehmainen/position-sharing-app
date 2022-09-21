@@ -15,10 +15,18 @@ class Position
     /** @var decimal */
     public $longitude;
 
-    public function __construct($latitude = 0, $longitude = 0)
+    public function __construct($latitude = "no value given", $longitude = "no value given")
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
+    }
+
+    public function remove(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?');
+        $stmt->bindParam(1, $this->id);
+        $stmt->execute();
     }
 
     public function save(): void

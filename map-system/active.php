@@ -156,7 +156,7 @@
             <article>
                 <div class='top'>
                     <p>Group code:</p>
-                    <p><?php echo $_GET['groupcode']; ?></p>
+                    <p><?php echo $_GET[GROUPCODE]; ?></p>
                 </div>
                 <div class='disclaimer' id='active-goal-disclaimer' style='display: none;' onclick='removeActiveGoal();'>
                     <p>There's an active goal</p>

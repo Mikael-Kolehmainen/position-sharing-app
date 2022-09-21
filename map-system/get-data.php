@@ -3,6 +3,7 @@
     require './../required-files/constants.php';
     require './../db/Position.php';
     require './../db/User.php';
+    require './../db/Goal.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -18,10 +19,11 @@
         $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessages($groupCode);
         $data[GOALSDATA] = getGoals($groupCode);
+        $data['testdata'] = getGoalsFromDatabase($groupCode);
 
         return $data;
     }
-    
+
     function getUsersDetailsFromDatabase($groupCode)
     {
         $user = new User();
@@ -112,6 +114,15 @@
     {
         return dbHandler::query("SELECT startlat, startlng, goallat, goallng, 
                                 ".WAYPOINTS.", ".GOALID.", ".GROUPS_GROUPCODE." FROM ".GOALS);
+    }
+
+    function getGoalsFromDatabase($groupCode)
+    {
+        $goal = new Goal();
+
+        $startGoalPositionsRowIds = $goal->getStartGoalPositionsRowIDs();
+
+        return $startGoalPositionsRowIds;
     }
 
     function formatPositionsArray($positionsArr)

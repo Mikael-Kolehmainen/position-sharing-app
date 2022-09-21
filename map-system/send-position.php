@@ -4,48 +4,63 @@ require './../db/Position.php';
 require './../db/User.php';
 require './../required-files/constants.php';
 
-session_start();
-
 if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
+    session_start();
     $newLat = filter_input(INPUT_GET, 'lat', FILTER_DEFAULT);
     $newLng = filter_input(INPUT_GET, 'lng', FILTER_DEFAULT);
 
     if (isset($_SESSION[UNIQUEID])) {
         $uniqueID = $_SESSION[UNIQUEID];
+        $positionRowId = getPositionRowID($uniqueID);
 
-        $user = new User();
-        $user->uniqueId = $uniqueID;
-        $positionRowId = $user->getPositionRowID();
-
-        $position = new Position($newLat, $newLng);
-        $position->id = $positionRowId;
-        $position->save();
-
-        updatePositionInDatabase($positionRowId, $uniqueID);
+        updatePositionInDatabase($newLat, $newLng, $positionRowId);
     } else {
+        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
         $uniqueID = getUniqueID();
+        $_SESSION[UNIQUEID] = $uniqueID;
         $initials = $_SESSION[INITIALS];
         $color = $_SESSION[COLOR];
-        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-        $_SESSION[UNIQUEID] = $uniqueID;
+        $positionRowId = insertPositionToDatabase($newLat, $newLng);
 
-        $position = new Position($newLat, $newLng);
-        $position->save();
-        $positionRowId = $position->id;
-
-        insertPositionToDatabase($positionRowId, $uniqueID, $initials, $color, $groupCode);
+        insertUserToDatabase($groupCode, $positionRowId, $uniqueID, $initials, $color);
     }
 }
 
-function updatePositionInDatabase($positionId, $uniqueID)
+function getPositionRowID($uniqueID)
 {
-    dbHandler::query("UPDATE users SET positions_id = '$positionId' WHERE " . UNIQUEID . " = '$uniqueID'");
+    $user = new User();
+    $user->uniqueId = $uniqueID;
+    $positionRowId = $user->getPositionRowID();
+
+    return $positionRowId;
 }
 
-function insertPositionToDatabase($lat, $lng, $positionId, $uniqueID, $initials, $color, $groupCode) 
+function updatePositionInDatabase($lat, $lng, $positionRowId)
 {
-    dbHandler::query("INSERT INTO users (lat, lng, positions_id, ".UNIQUEID.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE.") VALUES ('$lat', '$lng', '$positionId', '$uniqueID', '$initials', '$color', '$groupCode')");
+    $position = new Position($lat, $lng);
+    $position->id = $positionRowId;
+    $position->save();
+}
+
+function insertPositionToDatabase($lat, $lng)
+{
+    $position = new Position($lat, $lng);
+    $position->save();
+    $positionRowId = $position->id;
+
+    return $positionRowId;
+}
+
+function insertUserToDatabase($groupCode, $positionRowId, $uniqueID, $initials, $color)
+{
+    $user = new User();
+    $user->groupCode = $groupCode;
+    $user->positionsId = $positionRowId;
+    $user->uniqueId = $uniqueID;
+    $user->initials = $initials;
+    $user->color = $color;
+    $user->save();
 }
 
 function getUniqueID() 

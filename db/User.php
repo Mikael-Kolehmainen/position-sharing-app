@@ -55,4 +55,47 @@ class User
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function remove(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE uniqueID = ?');
+        $stmt->bindParam(1, $this->uniqueId);
+        $stmt->execute();
+    }
+
+    public function save(): void
+    {
+        if (empty($this->id)) {
+            $this->insert();
+        } else {
+            $this->update();
+        }
+    }
+
+    private function insert(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_UNIQUE_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?, ?)');
+        $stmt->bindParam(1, $this->positionsId);
+        $stmt->bindParam(2, $this->uniqueId);
+        $stmt->bindParam(3, $this->initials);
+        $stmt->bindParam(4, $this->color);
+        $stmt->bindParam(5, $this->groupCode);
+        $stmt->execute();
+        $this->id = $pdo->lastInsertId();
+    }
+
+    private function update(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_POSITIONS_ID . ' =  ?, ' . self::FIELD_UNIQUE_ID . ' = ?, ' . self::FIELD_INITIALS . ' = ?, ' . self::FIELD_COLOR . ' = ?, ' . self::FIELD_GROUPCODE . ' = ?' . 'WHERE id = ?');
+        $stmt->bindParam(1, $this->positionsId);
+        $stmt->bindParam(2, $this->uniqueId);
+        $stmt->bindParam(3, $this->initials);
+        $stmt->bindParam(4, $this->color);
+        $stmt->bindParam(5, $this->groupCode);
+        $stmt->bindParam(6, $this->id);
+        $stmt->execute();
+    }
 }
