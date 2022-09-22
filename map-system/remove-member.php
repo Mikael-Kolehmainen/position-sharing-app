@@ -11,7 +11,7 @@
 
         unset($_SESSION[UNIQUEID]);
 
-        removePosition(getPositionRowID($uniqueID));
+        removePosition(getPositionsRowID($uniqueID));
         removeUser($uniqueID);
     }
 
@@ -29,11 +29,11 @@
         $position->remove();
     }
 
-    function getPositionRowID($uniqueID)
+    function getPositionsRowID($uniqueID)
     {
         $user = new User();
         $user->uniqueId = $uniqueID;
-        $positionRowId = $user->getPositionRowID();
+        $positionRowId = $user->getPositionsRowID();
 
         return $positionRowId;
     }

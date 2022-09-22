@@ -21,7 +21,7 @@ class Position
         $this->longitude = $longitude;
     }
 
-    public function getPosition()
+    public function getLatLng()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT ' . self::FIELD_LAT . ', ' . self::FIELD_LNG . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');

@@ -43,17 +43,15 @@
         $waypoint = new Waypoint();
         $waypoint->goalsID = $goalsID[0]['id'];
 
-        return $waypoint->getWaypointsPositionIDs();
+        return $waypoint->getPositionsRowIDs();
     }
 
     function getGoalsID($groupCode)
     {
         $goal = new Goal();
         $goal->groupCode = $groupCode;
-
-        $testArr = $goal->getGoalsID();
         
-        return $goal->getGoalsID();
+        return $goal->getIDs();
     }
 
     function removeGoalWaypoints($goalsID)

@@ -20,7 +20,7 @@ class Waypoint
 
     }
 
-    public function getWaypointsPositionIDs()
+    public function getPositionsRowIDs()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GOALS_ID . ' = ?');

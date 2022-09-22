@@ -11,9 +11,9 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
 
     if (isset($_SESSION[UNIQUEID])) {
         $uniqueID = $_SESSION[UNIQUEID];
-        $positionRowId = getPositionRowID($uniqueID);
+        $positionsRowID = getPositionsRowID($uniqueID);
 
-        updatePositionInDatabase($newLat, $newLng, $positionRowId);
+        updatePositionInDatabase($newLat, $newLng, $positionsRowID);
     } else {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
         $uniqueID = getUniqueID();
@@ -21,25 +21,25 @@ if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
         $initials = $_SESSION[INITIALS];
         $color = $_SESSION[COLOR];
 
-        $positionRowId = insertPositionToDatabase($newLat, $newLng);
+        $positionsRowID = insertPositionToDatabase($newLat, $newLng);
 
-        insertUserToDatabase($groupCode, $positionRowId, $uniqueID, $initials, $color);
+        insertUserToDatabase($groupCode, $positionsRowID, $uniqueID, $initials, $color);
     }
 }
 
-function getPositionRowID($uniqueID)
+function getPositionsRowID($uniqueID)
 {
     $user = new User();
     $user->uniqueId = $uniqueID;
-    $positionRowId = $user->getPositionRowID();
+    $positionsRowID = $user->getPositionsRowID();
 
-    return $positionRowId;
+    return $positionsRowID;
 }
 
-function updatePositionInDatabase($lat, $lng, $positionRowId)
+function updatePositionInDatabase($lat, $lng, $positionsRowID)
 {
     $position = new Position($lat, $lng);
-    $position->id = $positionRowId;
+    $position->id = $positionsRowID;
     $position->save();
 }
 
@@ -47,16 +47,16 @@ function insertPositionToDatabase($lat, $lng)
 {
     $position = new Position($lat, $lng);
     $position->save();
-    $positionRowId = $position->id;
+    $positionsRowID = $position->id;
 
-    return $positionRowId;
+    return $positionsRowID;
 }
 
-function insertUserToDatabase($groupCode, $positionRowId, $uniqueID, $initials, $color)
+function insertUserToDatabase($groupCode, $positionsRowID, $uniqueID, $initials, $color)
 {
     $user = new User();
     $user->groupCode = $groupCode;
-    $user->positionsId = $positionRowId;
+    $user->positionsId = $positionsRowID;
     $user->uniqueId = $uniqueID;
     $user->initials = $initials;
     $user->color = $color;

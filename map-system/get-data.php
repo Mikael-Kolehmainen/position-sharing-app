@@ -36,7 +36,7 @@
         for ($i = 0; $i < count($userMarkerDetails); $i++) {
             $position = new Position();
             $position->id = $userMarkerDetails[$i]["positions_id"];
-            $userMarkerDetails[$i]["position"] = $position->getPosition();
+            $userMarkerDetails[$i]["position"] = $position->getLatLng();
         }
 
         return $userMarkerDetails;
@@ -77,7 +77,7 @@
         $goalsData = array();
         if (count($startGoalPositionsRowIDs) > 0) {
             for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-                $goalsData[$i]["goal_id"] = getGoalIndex($groupCode)[$i];
+                $goalsData[$i]["goal_id"] = getGoalIndexes($groupCode)[$i];
 
                 $goalsData[$i]["start_position"] = getPosition($startGoalPositionsRowIDs[$i], "start_positions_id");
                 $goalsData[$i]["goal_position"] = getPosition($startGoalPositionsRowIDs[$i], "goal_positions_id");
@@ -99,12 +99,12 @@
         return $goal->getStartGoalPositionsRowIDs();
     }
 
-    function getGoalIndex($groupCode)
+    function getGoalIndexes($groupCode)
     {
         $goal = new Goal();
         $goal->groupCode = $groupCode;
         
-        return $goal->getIndex();
+        return $goal->getIndexes();
     }
 
     function getPosition($rowID, $positionName)
@@ -112,7 +112,7 @@
         $position = new Position();
         $position->id = $rowID[$positionName];
 
-        return $position->getPosition();
+        return $position->getLatLng();
     }
 
     function getWaypointPositions($loopIndex, $groupCode)
@@ -125,9 +125,9 @@
 
         $waypoints = array();
 
-        for ($i = 0; $i < count($waypoint->getWaypointsPositionIDs()); $i++) {
-            $position->id = $waypoint->getWaypointsPositionIDs()[$i]["positions_id"];
-            $waypoints[$i] = $position->getPosition();
+        for ($i = 0; $i < count($waypoint->getPositionsRowIDs()); $i++) {
+            $position->id = $waypoint->getPositionsRowIDs()[$i]["positions_id"];
+            $waypoints[$i] = $position->getLatLng();
         }
 
         return $waypoints;
@@ -137,5 +137,5 @@
     {
         $goal = new Goal();
         $goal->groupCode = $groupCode;
-        return $goal->getGoalsID();
+        return $goal->getIDs();
     }

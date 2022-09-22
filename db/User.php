@@ -32,7 +32,7 @@ class User
 
     }
 
-    public function getPositionRowID()
+    public function getPositionsRowID()
     {
         $pdo = dbHandler::getPdbConnection();
 

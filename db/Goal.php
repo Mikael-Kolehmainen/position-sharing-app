@@ -38,7 +38,7 @@ class Goal
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getGoalsID()
+    public function getIDs()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT id FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
@@ -48,7 +48,7 @@ class Goal
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getIndex()
+    public function getIndexes()
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('SELECT goalIndex FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
