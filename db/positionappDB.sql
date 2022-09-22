@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2022 at 01:41 PM
+-- Generation Time: Sep 22, 2022 at 10:31 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -29,12 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `goals` (
   `id` int(4) NOT NULL,
-  `startlat` decimal(65,6) DEFAULT NULL,
-  `startlng` decimal(65,6) DEFAULT NULL,
-  `goallng` decimal(65,6) DEFAULT NULL,
-  `goallat` decimal(65,6) DEFAULT NULL,
-  `waypoints` varchar(1000) DEFAULT NULL,
-  `goalID` int(255) DEFAULT NULL,
+  `start_positions_id` int(4) DEFAULT NULL,
+  `goal_positions_id` int(4) DEFAULT NULL,
+  `goalIndex` int(255) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -81,7 +78,8 @@ INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`
 (46, 'test &#39;', 'MK', '#5BC0EB', 'qOv'),
 (47, 'test . &#39; , &#34; # $', 'MK', '#5BC0EB', 'qOv'),
 (48, 'test', 'MK', '#FF0000', 'qOv'),
-(49, 'test', 'MK', '#5BC0EB', 'qOv');
+(49, 'test', 'MK', '#5BC0EB', 'qOv'),
+(50, 'test', 'MK', '#5BC0EB', 'qOv');
 
 -- --------------------------------------------------------
 
@@ -100,7 +98,7 @@ CREATE TABLE `positions` (
 --
 
 INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
-(298, '63.102510', '21.618230');
+(736, '63.105632', '21.615515');
 
 -- --------------------------------------------------------
 
@@ -110,8 +108,6 @@ INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
 
 CREATE TABLE `users` (
   `id` int(4) NOT NULL,
-  `lat` decimal(65,6) DEFAULT NULL,
-  `lng` decimal(65,6) DEFAULT NULL,
   `positions_id` int(4) DEFAULT NULL,
   `uniqueID` varchar(10) DEFAULT NULL,
   `initials` varchar(2) DEFAULT NULL,
@@ -123,11 +119,20 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `lat`, `lng`, `positions_id`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
-(2499, '63.167000', '21.835000', NULL, 'testtest11', 'TT', '#FFAABB', 'qOv'),
-(2500, '63.165000', '21.830000', NULL, 'testtest22', 'EE', '#AABBFF', 'qOv'),
-(3104, '63.170900', '21.813000', NULL, 'testtest44', 'RR', '#dddddd', 'qOv'),
-(3301, '63.102510', '21.618230', 298, 'HXYLCGi8Iu', 'MK', '#5BC0EB', 'qOv');
+INSERT INTO `users` (`id`, `positions_id`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
+(3395, 726, 'tuRPpbpPBF', 'MK', '#5BC0EB', 'qOv');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `waypoints`
+--
+
+CREATE TABLE `waypoints` (
+  `id` int(4) NOT NULL,
+  `goals_id` int(4) DEFAULT NULL,
+  `positions_id` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -164,6 +169,12 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -171,7 +182,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=420;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=435;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -183,19 +194,25 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=737;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3302;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3396;
+
+--
+-- AUTO_INCREMENT for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
