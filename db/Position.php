@@ -21,6 +21,18 @@ class Position
         $this->longitude = $longitude;
     }
 
+    public function getPosition()
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_LAT . ', ' . self::FIELD_LNG . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');
+        $stmt->bindParam(1, $this->id);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return [$row[self::FIELD_LAT], $row[self::FIELD_LNG]];
+        } 
+    }
+
     public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();
@@ -56,17 +68,5 @@ class Position
         $stmt->bindParam(2, $this->longitude);
         $stmt->bindParam(3, $this->id);
         $stmt->execute();
-    }
-
-    public function getPosition()
-    {
-        $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_LAT . ', ' . self::FIELD_LNG . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');
-        $stmt->bindParam(1, $this->id);
-        $stmt->execute();
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            return [$row[self::FIELD_LAT], $row[self::FIELD_LNG]];
-        } 
     }
 }

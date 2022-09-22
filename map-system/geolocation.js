@@ -66,7 +66,7 @@ function onLocationFound(e)
         usersData = data.usersdata;
         let classNameOtherUsers;
         for (let i = 0; i < usersData.length; i++) {
-            marker = L.marker(L.latLng(usersData[i].position[0], usersData[i].position[1]), {icon: otherUsersIcon});
+            marker = L.marker(L.latLng(usersData[i].position), {icon: otherUsersIcon});
             refreshedLayerGroup.addLayer(marker);
             user_markers.push(marker);
             let initial = '\"' + usersData[i].initials + '\"';
@@ -96,30 +96,23 @@ function onLocationFound(e)
         updateChat(messagesArr, initialsArr, colorsArr);
         
         // GOALS
-        const startsLatArr = data.goalsdata.startlat;
-        const startsLngArr = data.goalsdata.startlng;
-        const goalsLatArr = data.goalsdata.goallat;
-        const goalsLngArr = data.goalsdata.goallng;
-        const waypointsArr = data.goalsdata.waypoints;
         const goalsData = data.goalsdata;
-        console.log(goalsData);
-        if (startsLatArr[0] != "empty") {
+        if (goalsData[0] != "empty") {
             // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
-            while (startsLatArr.length < usersData.length) {
-                startsLatArr.push("no goal");
+            while (goalsData.length < usersData.length) {
+                goalsData.push("no goal");
             }
-            for (let i = 0; i < startsLatArr.length; i++) {
-                if (startsLatArr[i] != "no goal") {
+            for (let i = 0; i < goalsData.length; i++) {
+                if (goalsData[i] != "no goal") {
                     // SAVE START POSITIONS TO VARIABLE
-                    start_marker_pos[i] = new L.LatLng(startsLatArr[i], startsLngArr[i]);
+                    start_marker_pos[i] = new L.LatLng(goalsData[i].start_position[0], goalsData[i].start_position[1]);
                     // SAVE WAYPOINT POSITIONS TO VARIABLE
                     goal_waypoints[i] = [];
-                    for (let j = 0; j < waypointsArr[i].length; j++) {
-                        latlngArr = waypointsArr[i][j].split(",");
-                        goal_waypoints[i][j] = new L.marker(latlngArr);
+                    for (let j = 0; j < goalsData[i].waypoints.length; j++) {
+                        goal_waypoints[i][j] = new L.marker(goalsData[i].waypoints[j]);
                     }
                     // SAVE GOAL POSITIONS TO VARIABLE
-                    goal_marker_pos[i] = new L.LatLng(goalsLatArr[i], goalsLngArr[i]);
+                    goal_marker_pos[i] = new L.LatLng(goalsData[i].goal_position[0], goalsData[i].goal_position[1]);
                 } else {
                     start_marker_pos[i] = "no goal";
                     goal_marker_pos[i] = "no goal";

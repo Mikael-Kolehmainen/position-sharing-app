@@ -24,14 +24,14 @@
 
             $startPositionRowID = insertPositionToDatabase($startPosition->latitude, $startPosition->longitude);
             $goalPositionRowID = insertPositionToDatabase($goalPosition->latitude, $goalPosition->longitude);
+
+            $goalIDKey = 'goalid'.$userIndex;
+            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
             $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode);
         
             $waypointIndex = 0;
             $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lat';
             $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lng';
-
-            $goalIDKey = 'goalid'.$userIndex;
-            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
 
             while (isset($_GET[$waypointLatKey]) && isset($_GET[$waypointLngKey])) {
                 $waypointPosition = getPositionFromURL($waypointLatKey, $waypointLngKey);

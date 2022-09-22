@@ -75,12 +75,17 @@
         $startGoalPositionsRowIDs = getStartGoalPositionsRowIDs($groupCode);
 
         $goalsData = array();
+        if (count($startGoalPositionsRowIDs) > 0) {
+            for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
+                $goalsData[$i]["goal_id"] = getGoalIndex($groupCode)[$i];
 
-        for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-            $goalsData[$i]["start_position"] = getPosition($startGoalPositionsRowIDs[$i], "start_positions_id");
-            $goalsData[$i]["goal_position"] = getPosition($startGoalPositionsRowIDs[$i], "goal_positions_id");
-
-            $goalsData[$i]["waypoints"] = getWaypointPositions($i, $groupCode);
+                $goalsData[$i]["start_position"] = getPosition($startGoalPositionsRowIDs[$i], "start_positions_id");
+                $goalsData[$i]["goal_position"] = getPosition($startGoalPositionsRowIDs[$i], "goal_positions_id");
+    
+                $goalsData[$i]["waypoints"] = getWaypointPositions($i, $groupCode);
+            }
+        } else {
+            $goalsData[0] = "empty";
         }
 
         return $goalsData;
@@ -90,9 +95,16 @@
     {
         $goal = new Goal();
         $goal->groupCode = $groupCode;
-        $startGoalPositionsRowIDs = $goal->getStartGoalPositionsRowIDs();
 
-        return $startGoalPositionsRowIDs;
+        return $goal->getStartGoalPositionsRowIDs();
+    }
+
+    function getGoalIndex($groupCode)
+    {
+        $goal = new Goal();
+        $goal->groupCode = $groupCode;
+        
+        return $goal->getIndex();
     }
 
     function getPosition($rowID, $positionName)

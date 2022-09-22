@@ -23,7 +23,9 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     let initialsArr = [];
 
     if (idsOfGoals.length == 0) {
-        idsOfGoals = dataGlobal.goalsdata.goalids;
+        for (let i = 0; i < dataGlobal.goalsdata.length; i++) {
+            idsOfGoals = dataGlobal.goalsdata[i].goal_id;
+        }
     }
 
     for (let i = 0; i < idsOfGoals.length; i++) {
@@ -116,7 +118,6 @@ function sendGoalData() {
         IDcounts[goalIDs[i]] = IDcounts[goalIDs[i]] - 1;
     }
     url += '&groupcode=' + groupCode + '&goalamount=' + goal_marker_pos.length;
-    console.log(url);
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {
         if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {

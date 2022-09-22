@@ -30,6 +30,14 @@ class Waypoint
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function remove()
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GOALS_ID . ' = ?');
+        $stmt->bindParam(1, $this->goalsID);
+        $stmt->execute();
+    }
+
     public function save()
     {
         if (empty($this->id)) {
