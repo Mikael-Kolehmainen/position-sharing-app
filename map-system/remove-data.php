@@ -3,33 +3,55 @@
     require './../required-files/constants.php';
     require './../db/Goal.php';
     require './../db/Waypoint.php';
+    require './../db/Position.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
-        removeGoalPositions(getPositionsID(getGoalsID($groupCode)));
-        removeGoalWaypoints(getGoalsID($groupCode));
+        $goalsID = getGoalsID($groupCode);
+        removeGoalPositions(getStartGoalPositionsIDs($groupCode), getWaypointPositionsIDs($goalsID));
+        removeGoalWaypoints($goalsID);
         removeGoal($groupCode);
     }
 
-    function removeGoalPositions($positionsID)
+    function removeGoalPositions($startGoalPositionsIDs, $waypointPositionsIDs)
     {
-        // TODO: do for loop on array and remove positions with id equal to the array element
         $position = new Position();
-        $position->id = $positionsID;
-        $position->remove();
+
+        for ($i = 0; $i < count($startGoalPositionsIDs); $i++) {
+            $position->id = $startGoalPositionsIDs[$i]['start_positions_id'];
+            $position->remove();
+            $position->id = $startGoalPositionsIDs[$i]['goal_positions_id'];
+            $position->remove();
+        }
+
+        for ($i = 0; $i < count($waypointPositionsIDs); $i++) {
+            $position->id = $waypointPositionsIDs[$i]['positions_id'];
+            $position->remove();
+        }
     }
 
-    function getPositionsID($goalsID)
+    function getStartGoalPositionsIDs($groupCode)
     {
-        // TODO: get positions id of waypoint and start/goal and put them in an array
-        $waypoint = new Waypoint();
+        $goal = new Goal();
+        $goal->groupCode = $groupCode;
 
+        return $goal->getStartGoalPositionsRowIDs();
+    }
+
+    function getWaypointPositionsIDs($goalsID)
+    {
+        $waypoint = new Waypoint();
+        $waypoint->goalsID = $goalsID[0]['id'];
+
+        return $waypoint->getWaypointsPositionIDs();
     }
 
     function getGoalsID($groupCode)
     {
         $goal = new Goal();
         $goal->groupCode = $groupCode;
+
+        $testArr = $goal->getGoalsID();
         
         return $goal->getGoalsID();
     }
@@ -37,7 +59,7 @@
     function removeGoalWaypoints($goalsID)
     {
         $waypoint = new Waypoint();
-        $waypoint->goalsID = $goalsID[0];
+        $waypoint->goalsID = $goalsID[0]['id'];
         $waypoint->remove();
     }
 
