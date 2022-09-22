@@ -89,11 +89,8 @@ function onLocationFound(e)
         }
         createStyle(styleSheetContent, 'js-style');
         // MESSAGES
-        let messagesArr = data.messagesdata.messages;
-        let initialsArr = data.messagesdata.initials;
-        let colorsArr = data.messagesdata.colors;
 
-        updateChat(messagesArr, initialsArr, colorsArr);
+        updateChat(data.messagesdata);
         
         // GOALS
         const goalsData = data.goalsdata;

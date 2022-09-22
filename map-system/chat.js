@@ -1,4 +1,4 @@
-function updateChat(messagesArr, initialsArr, colorsArr) {
+function updateChat(messagesData) {
     removeChilds(document.getElementById('messages'));
 
     // Create structure of message
@@ -11,7 +11,7 @@ function updateChat(messagesArr, initialsArr, colorsArr) {
         </div>
     */
     styleSheetContent = "";
-    for (let i = 0; i < messagesArr.length; i++) {
+    for (let i = 0; i < messagesData.length; i++) {
         const message = document.createElement("div");
         message.classList.add('message');
         const profile = document.createElement("div");
@@ -23,15 +23,15 @@ function updateChat(messagesArr, initialsArr, colorsArr) {
         messageText.classList.add('text');
         message.appendChild(messageText);
 
-        messageText.innerHTML = messagesArr[i];
-        initialsText.innerHTML = initialsArr[i];
+        messageText.innerHTML = messagesData[i].message;
+        initialsText.innerHTML = messagesData[i].initials;
 
         const messages = document.getElementById("messages");
         messages.appendChild(message);
 
         classNameOtherUsers = 'other-profile-icon-' + i;
         profile.classList.add(classNameOtherUsers);
-        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + colorsArr[i] + '; }';
+        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + messagesData[i].color + '; }';
     }
     createStyle(styleSheetContent, 'js-style');
 }

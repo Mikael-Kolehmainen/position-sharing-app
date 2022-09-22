@@ -30,7 +30,12 @@ class Message
 
     public function get()
     {
-        
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_MESSAGE . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function save(): void

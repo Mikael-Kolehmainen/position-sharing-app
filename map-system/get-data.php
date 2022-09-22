@@ -5,6 +5,7 @@
     require './../db/User.php';
     require './../db/Goal.php';
     require './../db/Waypoint.php';
+    require './../db/Message.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
@@ -18,7 +19,7 @@
     {
         $data = array();
         $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
-        $data[MESSAGESDATA] = getMessages($groupCode);
+        $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
         $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
 
         return $data;
@@ -42,27 +43,13 @@
         return $userMarkerDetails;
     }
 
-    function getMessages($groupCode)
+    function getMessagesFromDatabase($groupCode)
     {
-        $messagesData = array();
-        $messagesData[MESSAGES] = array();
-        $messagesData[INITIALS] = array();
-        $messagesData[COLORS] = array();
+        $message = new Message();
+        $message->groupCode = $groupCode;
+        $messages = $message->get();
 
-        $result = selectMessagesFromDatabase();
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-                $row = mysqli_fetch_assoc($result);
-
-                if ($row[GROUPS_GROUPCODE] == $groupCode) {
-                    array_push($messagesData[MESSAGES], $row[MESSAGE]);
-                    array_push($messagesData[INITIALS], $row[INITIALS]);
-                    array_push($messagesData[COLORS], $row[COLOR]);
-                }
-            }
-        }
-
-        return $messagesData;
+        return $messages;
     }
 
     function selectMessagesFromDatabase()
