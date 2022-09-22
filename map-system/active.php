@@ -131,24 +131,24 @@
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../js/turf.min.js'></script>
         <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
-        <script src='./../js/open.js' async></script>
-        <script src='./../js/remove-children.js' async></script>
-        <script src='./../js/remove-style.js' async></script>
-        <script src='./../js/create-style.js' async></script>
+        <script src='./../js/open.js' defer></script>
+        <script src='./../js/remove-children.js' defer></script>
+        <script src='./../js/remove-style.js' defer></script>
+        <script src='./../js/create-style.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
-        <script src='./geolocation.js' async></script>
-        <script src='./beforeunload.js' async></script>
-        <script src='./chat.js' async></script>
-        <script src='./percentage-moved.js' async></script>
-        <script src='./drag-events.js' async></script>
-        <script src='./waypoint-lines.js' async></script>
-        <script src='./add-waypoint.js' async></script>
-        <script src='./show-water.js' async></script>
-        <script src='./remove-goal.js' async></script>
-        <script src='./create-goal.js' async></script>
-        <script src='./distance.js' async></script>
-        <script src='./remove-waypoint.js' async></script>
-        <script src='./goal-popup.js' async></script>
+        <script src='./geolocation.js' defer></script>
+        <script src='./beforeunload.js' defer></script>
+        <script src='./chat.js' defer></script>
+        <script src='./percentage-moved.js' defer></script>
+        <script src='./drag-events.js' defer></script>
+        <script src='./waypoint-lines.js' defer></script>
+        <script src='./add-waypoint.js' defer></script>
+        <script src='./show-water.js' defer></script>
+        <script src='./remove-goal.js' defer></script>
+        <script src='./create-goal.js' defer></script>
+        <script src='./distance.js' defer></script>
+        <script src='./remove-waypoint.js' defer></script>
+        <script src='./goal-popup.js' defer></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
