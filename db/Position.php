@@ -66,7 +66,7 @@ class Position
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            return [$row['lat'], $row['lng']];
+            return [$row[self::FIELD_LAT], $row[self::FIELD_LNG]];
         } 
     }
 }
