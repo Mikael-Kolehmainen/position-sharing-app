@@ -67,11 +67,10 @@
 
     function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode)
     {
-        $goal = new Goal();
+        $goal = new Goal($groupCode);
         $goal->startPositionID = $startPositionRowID;
         $goal->goalPositionID = $goalPositionRowID;
         $goal->goalID = $goalID;
-        $goal->groupCode = $groupCode;
         $goal->save();
 
         return $goal->id;

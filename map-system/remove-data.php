@@ -13,6 +13,13 @@
         removeGoal($groupCode);
     }
 
+    function getGoalsID($groupCode)
+    {
+        $goal = new Goal($groupCode);
+        
+        return $goal->getIDs();
+    }
+
     function removeGoalPositions($startGoalPositionsIDs, $waypointPositionsIDs)
     {
         $position = new Position();
@@ -32,8 +39,7 @@
 
     function getStartGoalPositionsIDs($groupCode)
     {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
+        $goal = new Goal($groupCode);
 
         return $goal->getStartGoalPositionsRowIDs();
     }
@@ -46,14 +52,6 @@
         return $waypoint->getPositionsRowIDs();
     }
 
-    function getGoalsID($groupCode)
-    {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
-        
-        return $goal->getIDs();
-    }
-
     function removeGoalWaypoints($goalsID)
     {
         $waypoint = new Waypoint();
@@ -63,7 +61,7 @@
 
     function removeGoal($groupCode)
     {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
+        $goal = new Goal($groupCode);
+
         $goal->remove();
     }

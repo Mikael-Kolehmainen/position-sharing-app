@@ -45,16 +45,9 @@
 
     function getMessagesFromDatabase($groupCode)
     {
-        $message = new Message();
-        $message->groupCode = $groupCode;
-        $messages = $message->get();
+        $message = new Message($groupCode);
 
-        return $messages;
-    }
-
-    function selectMessagesFromDatabase()
-    {
-        return dbHandler::query("SELECT ".MESSAGE.", ".INITIALS.", ".COLOR.", ".GROUPS_GROUPCODE." FROM ".MESSAGES);
+        return $message->get();
     }
 
     function getGoalPositionsFromDatabase($groupCode)
@@ -80,16 +73,14 @@
 
     function getStartGoalPositionsRowIDs($groupCode)
     {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
+        $goal = new Goal($groupCode);
 
         return $goal->getStartGoalPositionsRowIDs();
     }
 
     function getGoalIndexes($groupCode)
     {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
+        $goal = new Goal($groupCode);
         
         return $goal->getIndexes();
     }
@@ -122,7 +113,7 @@
 
     function getGoalsID($groupCode)
     {
-        $goal = new Goal();
-        $goal->groupCode = $groupCode;
+        $goal = new Goal($groupCode);
+
         return $goal->getIDs();
     }

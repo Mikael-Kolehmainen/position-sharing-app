@@ -23,9 +23,9 @@ class Goal
     /** @var string */
     public $groupCode;
 
-    public function __construct()
+    public function __construct($groupCode)
     {
-        
+        $this->groupCode = $groupCode;
     }
 
     public function getStartGoalPositionsRowIDs()

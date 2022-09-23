@@ -1,18 +1,16 @@
 <?php
     require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
+    require './../db/Group.php';
 
     session_start();
 
     if (isset($_POST['create-group'])) {
         $groupCode = createGroupCode();
 
-        if (insertGroupToDatabase($groupCode)) {
-            saveMarkerToSession();
-            redirectUserToGroupMap($groupCode);
-        } else {
-            redirectUserToCreateGroupForm();
-        }
+        insertGroupToDatabase($groupCode);
+        saveMarkerToSession();
+        redirectUserToGroupMap($groupCode);
     } else if (isset($_POST['search-group'])) {
         $groupCode = filter_input(INPUT_POST, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
@@ -48,7 +46,9 @@
 
     function insertGroupToDatabase($groupCode)
     {
-        return dbHandler::query("INSERT INTO groups (".GROUPCODE.") VALUES ('$groupCode')");
+        $group = new Group($groupCode);
+
+        return $group->save();
     }
 
     function saveMarkerToSession() 
@@ -78,28 +78,14 @@
         header("LOCATION: ./../map-system/active.php?".GROUPCODE."=$groupCode");
     }
 
-    function redirectUserToCreateGroupForm()
-    {
-        echo "
-                <script>
-                    alert('Something went wrong with inserting the group to the database.');
-                    window.location.href = './../group-system/create-form.php';
-                </script>
-            ";
-    }
-
     function findGroupInDatabase($groupCode)
     {
         $result = selectGroups();
         $foundGroupCode = false;
 
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-                $row = mysqli_fetch_assoc($result);
-
-                if ($groupCode == $row[GROUPCODE]) {
-                    $foundGroupCode = true;
-                }
+        for ($i = 0; $i < $result; $i++) {
+            if ($groupCode == $result[$i][GROUPCODE]) {
+                $foundGroupCode = true;
             }
         }
 
@@ -108,7 +94,9 @@
 
     function selectGroups()
     {
-        return dbHandler::query("SELECT id, ".GROUPCODE." FROM groups");
+        $group = new Group("");
+
+        return $group->get();
     }
 
     function redirectUserToSearchGroupForm()

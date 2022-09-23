@@ -23,9 +23,9 @@ class Message
     /** @var string */
     public $groupCode;
 
-    public function __construct()
+    public function __construct($groupCode)
     {
-
+        $this->groupCode = $groupCode;
     }
 
     public function get()
@@ -36,6 +36,14 @@ class Message
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function remove(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('DELTE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
+        $stmt->execute();
     }
 
     public function save(): void

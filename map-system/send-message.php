@@ -22,10 +22,9 @@
 
     function insertMessageToDatabase($messageText, $initials, $color, $groupCode)
     {
-        $message = new Message();
+        $message = new Message($groupCode);
         $message->message = $messageText;
         $message->initials = $initials;
         $message->color = $color;
-        $message->groupCode = $groupCode;
         $message->save();
     }
