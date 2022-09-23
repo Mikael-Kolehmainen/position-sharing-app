@@ -15,16 +15,15 @@ function showDraggableGoal() {
 }
 // CREATE FUNCTION
 function createGoalLine(returnStyleSheet = false, isDraggable = true) {
-    // REMOVE & CLEAR PREVIOUS GOALLINE
     map.removeLayer(goalLayerGroup);
 
-    let classNameGoalMarkers, classNameStartMarkers, initial;
+    let classNameGoalMarkers, classNameStartMarkers, initials;
     let usersData = dataGlobal.usersdata;
     let initialsArr = [];
 
     if (idsOfGoals.length == 0) {
         for (let i = 0; i < dataGlobal.goalsdata.length; i++) {
-            idsOfGoals = dataGlobal.goalsdata[i].goal_id;
+            idsOfGoals.push(dataGlobal.goalsdata[i].goal_id.goalIndex);
         }
     }
 
@@ -58,9 +57,9 @@ function createGoalLine(returnStyleSheet = false, isDraggable = true) {
             classNameGoalMarkers = 'user-goal-marker-' + i;
             styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
             // INITIALS
-            initial = '\"' + initialsArr[i] + '\"';
-            styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initial + '; }';
-            styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initial + '; }';
+            initials = '\"' + initialsArr[i] + '\"';
+            styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initials + '; }';
+            styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initials + '; }';
             start_marker_arr[i]._icon.classList.add(classNameStartMarkers);
             goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
             // ASSIGN EVENTHANDLERS TO MARKERS

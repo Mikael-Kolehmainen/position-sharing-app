@@ -37,7 +37,7 @@
                 $row = mysqli_fetch_assoc($result);
 
                 if ($groupCode == $row[GROUPCODE]) {
-                    createGroupCode();
+                    $groupCode = createGroupCode();
                 }
             }
         }
@@ -69,7 +69,7 @@
         $result = selectGroups();
         $foundGroupCode = false;
 
-        for ($i = 0; $i < $result; $i++) {
+        for ($i = 0; $i < count($result); $i++) {
             if ($groupCode == $result[$i][GROUPCODE]) {
                 $foundGroupCode = true;
             }

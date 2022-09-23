@@ -2,7 +2,6 @@
 let idsOfGoals = [];
 
 function createPopup() {
-    // We put the rows to the table
     // Structure of row
     /*
         <tr>
@@ -20,7 +19,6 @@ function createPopup() {
     */
     const usersTable = document.getElementById('users-table');
 
-    // Clear previous rows
     removeChilds(usersTable);
 
     idsOfGoals = [];
