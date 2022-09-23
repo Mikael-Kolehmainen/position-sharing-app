@@ -1,7 +1,3 @@
-
-// *doesn't work with multiple goals because the id stays the same, possible solution: an array that saves the history of ids
-// then remove latest id on removeWaypoint()
-
 function removeWaypoint() {
     if (all_waypoints.length != 0
         && goalIDs.length != 0) {

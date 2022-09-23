@@ -8,7 +8,7 @@ window.addEventListener('beforeunload', function(e) {
     };
     if (sent == false) {
         const groupCode = new URLSearchParams(window.location.search).get('groupcode');
-        xmlhttp.open("GET", "remove-member.php?groupcode=" + groupCode, true);
+        xmlhttp.open("GET", "remove-user.php?groupcode=" + groupCode, true);
         xmlhttp.send();
     }
 });

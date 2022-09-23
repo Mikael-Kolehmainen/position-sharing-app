@@ -17,7 +17,7 @@ function removeDraggableGoal() {
 // REMOVE GOAL ONCLICK
 function removeActiveGoal() {
     let xmlhttp = new XMLHttpRequest();
-    let url = 'remove-data.php?groupcode=' + groupCode;
+    let url = 'remove-goal.php?groupcode=' + groupCode;
     
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {
