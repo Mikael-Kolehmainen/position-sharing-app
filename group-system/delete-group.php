@@ -10,9 +10,8 @@
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-        deleteGroupFromDatabase($groupCode);
-        deleteGroupGoalFromDatabase($groupCode);
-        deleteGroupMessagesFromDatabase($groupCode);
+        removeGroup($groupCode);
+        removeGroupMessages($groupCode);
         $goalsID = getGoalsID($groupCode);
         removeGoalPositions(getStartGoalPositionsIDs($groupCode), getWaypointPositionsIDs($goalsID));
         removeGoalWaypoints($goalsID);
@@ -21,22 +20,16 @@
         header("LOCATION: ./../index.php");
     }
 
-    function deleteGroupFromDatabase($groupCode)
+    function removeGroup($groupCode)
     {
         $group = new Group($groupCode);
         $group->remove();
     }
 
-    function deleteGroupGoalFromDatabase($groupCode)
-    {
-        $goal = new Goal($groupCode);
-        $goal->remove();
-    }
-
-    function deleteGroupMessagesFromDatabase($groupCode)
+    function removeGroupMessages($groupCode)
     {
         $message = new Message($groupCode);
-        $message-remove();
+        $message->remove();
     }
 
     function getGoalsID($groupCode)

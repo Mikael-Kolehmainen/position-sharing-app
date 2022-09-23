@@ -32,13 +32,9 @@
         $groupCode = getRandomString(3);
 
         $result = selectGroups();
-        if (mysqli_num_rows($result) > 0) {
-            for ($i = 0; $i < mysqli_num_rows($result); $i++) {
-                $row = mysqli_fetch_assoc($result);
-
-                if ($groupCode == $row[GROUPCODE]) {
-                    $groupCode = createGroupCode();
-                }
+        for ($i = 0; $i < count($result); $i++) {
+            if ($groupCode == $result[$i][GROUPCODE]) {
+                $groupCode = createGroupCode();
             }
         }
         

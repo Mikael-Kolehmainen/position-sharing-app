@@ -41,7 +41,7 @@ class Message
     public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('DELTE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
     }
