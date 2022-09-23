@@ -8,7 +8,7 @@
     session_start();
 
     if (isset($_GET[GOALAMOUNT]) && isset($_GET[GROUPCODE])) {
-        $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_DEFAULT);
+        $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_VALIDATE_INT);
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         insertGoalsToDatabase($amountOfGoals, $groupCode);
@@ -26,7 +26,7 @@
             $goalPositionRowID = insertPositionToDatabase($goalPosition->latitude, $goalPosition->longitude);
 
             $goalIDKey = 'goalid'.$userIndex;
-            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_DEFAULT);
+            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_VALIDATE_INT);
             $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode);
         
             $waypointIndex = 0;
@@ -48,8 +48,8 @@
 
     function getPositionFromURL($latKey, $lngKey)
     {
-        $latValue = filter_input(INPUT_GET, $latKey, FILTER_DEFAULT);
-        $lngValue = filter_input(INPUT_GET, $lngKey, FILTER_DEFAULT);
+        $latValue = filter_input(INPUT_GET, $latKey, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $lngValue = filter_input(INPUT_GET, $lngKey, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
         $position = new Position($latValue, $lngValue);
 

@@ -6,8 +6,8 @@ require './../required-files/constants.php';
 
 if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
     session_start();
-    $newLat = filter_input(INPUT_GET, 'lat', FILTER_DEFAULT);
-    $newLng = filter_input(INPUT_GET, 'lng', FILTER_DEFAULT);
+    $newLat = filter_input(INPUT_GET, 'lat', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $newLng = filter_input(INPUT_GET, 'lng', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
     if (isset($_SESSION[UNIQUEID])) {
         $uniqueID = $_SESSION[UNIQUEID];
