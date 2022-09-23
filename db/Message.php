@@ -48,13 +48,6 @@ class Message
 
     public function save(): void
     {
-        if (empty($this->id)) {
-            $this->insert();
-        }
-    }
-
-    private function insert(): void
-    {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
         $stmt->bindParam(1, $this->message);

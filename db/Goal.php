@@ -68,13 +68,6 @@ class Goal
 
     public function save(): void
     {
-        if (empty($this->id)) {
-            $this->insert();
-        }
-    }
-
-    private function insert(): void
-    {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
         $stmt->bindParam(1, $this->startPositionID);

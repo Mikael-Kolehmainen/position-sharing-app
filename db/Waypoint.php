@@ -40,13 +40,6 @@ class Waypoint
 
     public function save()
     {
-        if (empty($this->id)) {
-            $this->insert();
-        }
-    }
-
-    private function insert()
-    {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_GOALS_ID . ', ' . self::FIELD_POSITIONS_ID . ') VALUES (?, ?)');
         $stmt->bindParam(1, $this->goalsID);
