@@ -5,7 +5,7 @@ function dragStartHandler(e) {
     marker.polylineLatlng = {};
     e.target.parentLine.forEach((line)=>{
         let latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
-            latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
+        latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
         for (let i = 0; i < latlngPoly.length; i++) {       // Iterate the polyline's latlngs
             if (latlngMarker.equals(latlngPoly[i])) {       // Compare marker's latlng ot the each polylines 
                 marker.polylineLatlng[L.stamp(line)] = i;            // If equals store key in marker instance
@@ -32,7 +32,7 @@ function dragHandler(e) {
     let marker = e.target;
     e.target.parentLine.forEach((line)=>{
         let latlngPoly = line.getLatLngs(),         // Get the polyline's latlngs
-          latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
+        latlngMarker = marker.getLatLng();                             // Get the marker's current latlng
         latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker); // Replace the old latlng with the new
         line.setLatLngs(latlngPoly);           // Update the polyline with the new latlngs
     })

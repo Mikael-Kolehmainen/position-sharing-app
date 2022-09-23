@@ -1,5 +1,4 @@
 function updateWaypointLines(id) {
-    // remove previous lines
     map.removeLayer(draggableRouteLayerGroup);
     draggableRouteLayerGroup.eachLayer(function(layer) {
         if (id == layer.options.id) {
@@ -54,6 +53,6 @@ function updateWaypointLines(id) {
         start_marker_arr[id].parentLine = [polyline];
         goal_marker_arr[id].parentLine = [polyline];
     }
-    // add new lines to map
+
     map.addLayer(draggableRouteLayerGroup);
 }
