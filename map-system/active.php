@@ -2,6 +2,7 @@
     require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
     require './../db/Group.php';
+    require './../db/User.php';
 
     session_start();
 
@@ -53,24 +54,9 @@
 
     function saveMarkerToSession() 
     {
-        $initials = filterPost(INITIALS);
-        $color = filterPost(COLOR);
-
-        if ($color == "") {
-            $color = "#FF0000";
-        }
+        $user = new User();
         
-        $initials = strtoupper($initials);
-
-        session_start();
-
-        $_SESSION[INITIALS] = $initials;
-        $_SESSION[COLOR] = $color;
-    }
-
-    function filterPost($postname)
-    {
-        return filter_input(INPUT_POST, $postname, FILTER_DEFAULT);
+        $user->saveMarkerToSession();
     }
 
     function redirectUserToGroupMap($groupCode)

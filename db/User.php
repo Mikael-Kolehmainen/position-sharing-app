@@ -56,6 +56,23 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function saveMarkerToSession()
+    {
+        $initials = filter_input(INPUT_POST, self::FIELD_INITIALS, FILTER_DEFAULT);;
+        $color = filter_input(INPUT_POST, self::FIELD_COLOR, FILTER_DEFAULT);;
+
+        if ($color == "") {
+            $color = "#FF0000";
+        }
+        
+        $initials = strtoupper($initials);
+
+        session_start();
+
+        $_SESSION[INITIALS] = $initials;
+        $_SESSION[COLOR] = $color;
+    }
+
     public function getUniqueIDs()
     {
         $pdo = dbHandler::getPdbConnection();
