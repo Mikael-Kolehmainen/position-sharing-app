@@ -9,8 +9,8 @@
     if (isset($_POST['create-group'])) {
         $group = new Group();
         $groupCode = $group->groupCode;
-
-        insertGroupToDatabase($groupCode);
+        
+        $group->save();
         saveMarkerToSession();
         redirectUserToGroupMap($groupCode);
     } else if (isset($_POST['search-group'])) {
@@ -24,13 +24,6 @@
         }
     } else if (!isset($_GET[GROUPCODE]) || !isset($_SESSION[INITIALS]) || !isset($_SESSION[COLOR])) {
         redirectUserToSearchGroupForm();
-    }
-    
-    function insertGroupToDatabase($groupCode)
-    {
-        $group = new Group($groupCode);
-
-        return $group->save();
     }
 
     function saveMarkerToSession() 
@@ -56,7 +49,7 @@
     {
         echo "
                 <script>
-                    alert('Couldn\'t find a group with the given code');
+                    alert('Couldn\'t find a group with the given code or you need to create a marker.');
                     window.location.href = './../group-system/search-form.php';
                 </script>
             ";
