@@ -12,13 +12,15 @@
         
         $group->save();
         saveMarkerToSession();
-        redirectUserToGroupMap($groupCode);
+        $group->redirectUserToGroupMap();
     } else if (isset($_POST['search-group'])) {
         $groupCode = filter_input(INPUT_POST, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (findGroupInDatabase($groupCode)) {
             saveMarkerToSession();
-            redirectUserToGroupMap($groupCode);
+
+            $group = new Group($groupCode);
+            $group->redirectUserToGroupMap();
         } else {
             redirectUserToSearchGroupForm();
         }
@@ -31,11 +33,6 @@
         $user = new User();
         
         $user->saveMarkerToSession();
-    }
-
-    function redirectUserToGroupMap($groupCode)
-    {
-        header("LOCATION: ./../map-system/active.php?".GROUPCODE."=$groupCode");
     }
 
     function findGroupInDatabase($groupCode)

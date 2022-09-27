@@ -47,6 +47,11 @@ class Group
         return $stmt->rowCount();
     }
 
+    public function redirectUserToGroupMap()
+    {
+        header("LOCATION: ./../map-system/active.php?".self::FIELD_GROUP_CODE."=".$this->groupCode);
+    }
+
     private function createGroupCode(): void
     {
         require './../required-files/random-string.php';
