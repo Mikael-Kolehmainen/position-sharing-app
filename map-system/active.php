@@ -7,7 +7,8 @@
     session_start();
 
     if (isset($_POST['create-group'])) {
-        $groupCode = createGroupCode();
+        $group = new Group();
+        $groupCode = $group->groupCode;
 
         insertGroupToDatabase($groupCode);
         saveMarkerToSession();
@@ -23,22 +24,6 @@
         }
     } else if (!isset($_GET[GROUPCODE]) || !isset($_SESSION[INITIALS]) || !isset($_SESSION[COLOR])) {
         redirectUserToSearchGroupForm();
-    }
-
-    function createGroupCode()
-    {
-        require './../required-files/random-string.php';
-
-        $groupCode = getRandomString(3);
-
-        $result = selectGroups();
-        for ($i = 0; $i < count($result); $i++) {
-            if ($groupCode == $result[$i][GROUPCODE]) {
-                $groupCode = createGroupCode();
-            }
-        }
-        
-        return $groupCode;
     }
 
     function insertGroupToDatabase($groupCode)

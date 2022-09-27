@@ -11,9 +11,13 @@ class Group
     /** @var string */
     public $groupCode;
 
-    public function __construct($groupCode)
+    public function __construct($groupCode = "empty")
     {
-        $this->groupCode = $groupCode;
+        if ($groupCode == "empty") {
+            $this->groupCode = createGroupCode();
+        } else {
+            $this->groupCode = $groupCode;
+        }
     }
 
     public function remove()
@@ -40,5 +44,21 @@ class Group
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function createGroupCode()
+    {
+        require './../required-files/random-string.php';
+
+        $groupCode = getRandomString(3);
+
+        $result = $this->get();
+        for ($i = 0; $i < count($result); $i++) {
+            if ($groupCode == $result[$i][FIELD_GROUP_CODE]) {
+                $groupCode = createGroupCode();
+            }
+        }
+        
+        return $groupCode;
     }
 }
