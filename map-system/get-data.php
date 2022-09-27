@@ -32,8 +32,6 @@
 
         $userMarkerDetails = $user->getMarkerDetails();
 
-        $userPositions = array();
-
         for ($i = 0; $i < count($userMarkerDetails); $i++) {
             $position = new Position();
             $position->id = $userMarkerDetails[$i]["positions_id"];
@@ -52,12 +50,14 @@
 
     function getGoalPositionsFromDatabase($groupCode)
     {
-        $startGoalPositionsRowIDs = getStartGoalPositionsRowIDs($groupCode);
+        $goal = new Goal($groupCode);
+
+        $startGoalPositionsRowIDs = $goal->getStartGoalPositionsRowIDs();
 
         $goalsData = array();
         if (count($startGoalPositionsRowIDs) > 0) {
             for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-                $goalsData[$i]["goal_id"] = getGoalIndexes($groupCode)[$i];
+                $goalsData[$i]["goal_id"] = $goal->getIndexes()[$i];
 
                 $goalsData[$i]["start_position"] = getPosition($startGoalPositionsRowIDs[$i], "start_positions_id");
                 $goalsData[$i]["goal_position"] = getPosition($startGoalPositionsRowIDs[$i], "goal_positions_id");
@@ -69,20 +69,6 @@
         }
 
         return $goalsData;
-    }
-
-    function getStartGoalPositionsRowIDs($groupCode)
-    {
-        $goal = new Goal($groupCode);
-
-        return $goal->getStartGoalPositionsRowIDs();
-    }
-
-    function getGoalIndexes($groupCode)
-    {
-        $goal = new Goal($groupCode);
-        
-        return $goal->getIndexes();
     }
 
     function getPosition($rowID, $positionName)
