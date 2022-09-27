@@ -25,7 +25,7 @@
     } else if (!isset($_GET[GROUPCODE]) || !isset($_SESSION[INITIALS]) || !isset($_SESSION[COLOR])) {
         redirectUserToSearchGroupForm();
     }
-
+    
     function insertGroupToDatabase($groupCode)
     {
         $group = new Group($groupCode);
@@ -47,23 +47,9 @@
 
     function findGroupInDatabase($groupCode)
     {
-        $result = selectGroups();
-        $foundGroupCode = false;
+        $group = new Group($groupCode);
 
-        for ($i = 0; $i < count($result); $i++) {
-            if ($groupCode == $result[$i][GROUPCODE]) {
-                $foundGroupCode = true;
-            }
-        }
-
-        return $foundGroupCode;
-    }
-
-    function selectGroups()
-    {
-        $group = new Group("");
-
-        return $group->get();
+        return $group->getRowCount();
     }
 
     function redirectUserToSearchGroupForm()
@@ -134,7 +120,7 @@
                         <div class='messages' id='messages'>
                             
                         </div>
-                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET['groupcode']; ?>' class='textbox'>
+                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
                             <input type='submit' value='' id='send-btn'>
                         </form>
@@ -166,7 +152,7 @@
                     <a class='btn' onclick='openMenu("delete-popup", "delete-btn", "inline-block");'>
                         <p>No</p>
                     </a>
-                    <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET['groupcode']; ?>'>
+                    <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>'>
                         <p>Yes</p>
                     </a>
                 </div>

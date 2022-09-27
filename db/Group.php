@@ -14,13 +14,13 @@ class Group
     public function __construct($groupCode = "empty")
     {
         if ($groupCode == "empty") {
-            $this->groupCode = createGroupCode();
+            $this->createGroupCode();
         } else {
             $this->groupCode = $groupCode;
         }
     }
 
-    public function remove()
+    public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
@@ -28,7 +28,7 @@ class Group
         $stmt->execute();
     }
 
-    public function save()
+    public function save(): void
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_GROUP_CODE . ') VALUES (?)');
@@ -37,28 +37,24 @@ class Group
         $this->id = $pdo->lastInsertId();
     }
 
-    public function get()
+    public function getRowCount()
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GROUP_CODE . ' FROM ' . self::TABLE_NAME);
+        $stmt = $pdo->prepare('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->rowCount();
     }
 
-    private function createGroupCode()
+    private function createGroupCode(): void
     {
         require './../required-files/random-string.php';
 
-        $groupCode = getRandomString(3);
+        $this->groupCode = getRandomString(3);
 
-        $result = $this->get();
-        for ($i = 0; $i < count($result); $i++) {
-            if ($groupCode == $result[$i][FIELD_GROUP_CODE]) {
-                $groupCode = createGroupCode();
-            }
+        if ($this->getRowCount()) {
+            $this->groupCode = createGroupCode();
         }
-        
-        return $groupCode;
     }
 }
