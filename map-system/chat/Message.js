@@ -1,7 +1,11 @@
-function updateChat(messagesData) {
-    removeChilds(document.getElementById('messages'));
-
-    // Create structure of message
+class Message 
+{
+    constructor(message, initials)
+    {
+        this.message = message;
+        this.initials = initials;
+    }
+    
     /*
         <div class='message'>
             <div class='profile'>
@@ -10,8 +14,8 @@ function updateChat(messagesData) {
             <p class='text'>Hello, this is a placeholder message.</p>
         </div>
     */
-    styleSheetContent = "";
-    for (let i = 0; i < messagesData.length; i++) {
+    createMessage()
+    {
         const message = document.createElement("div");
         message.classList.add('message');
         const profile = document.createElement("div");
@@ -23,15 +27,10 @@ function updateChat(messagesData) {
         messageText.classList.add('text');
         message.appendChild(messageText);
 
-        messageText.innerHTML = messagesData[i].message;
-        initialsText.innerHTML = messagesData[i].initials;
+        messageText.innerHTML = this.message;
+        initialsText.innerHTML = this.initials;
 
         const messages = document.getElementById("messages");
         messages.appendChild(message);
-
-        classNameOtherUsers = 'other-profile-icon-' + i;
-        profile.classList.add(classNameOtherUsers);
-        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + messagesData[i].color + '; }';
     }
-    createStyle(styleSheetContent, 'js-style');
 }

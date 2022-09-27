@@ -5,7 +5,7 @@
     require './../db/User.php';
     require './../db/Goal.php';
     require './../db/Waypoint.php';
-    require './../db/Message.php';
+    require './chat/Message.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);

@@ -1,13 +1,13 @@
 <?php
-    require './../required-files/dbHandler.php';
-    require './../required-files/constants.php';
-    require './../db/Message.php';
+    require './../../required-files/dbHandler.php';
+    require './../../required-files/constants.php';
+    require './Message.php';
 
     if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST[MESSAGE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         sendMessage($groupCode);
-        header("LOCATION: active.php?".GROUPCODE."=$groupCode");
+        header("LOCATION: ../active.php?".GROUPCODE."=$groupCode");
     }
 
     function sendMessage($groupCode)

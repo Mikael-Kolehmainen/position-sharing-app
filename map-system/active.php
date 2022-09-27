@@ -64,12 +64,14 @@
         <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
         <script src='./../js/open.js' defer></script>
         <script src='./../js/remove-children.js' defer></script>
+        <script src='./../js/Style.js' defer></script>
         <script src='./../js/remove-style.js' defer></script>
         <script src='./../js/create-style.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' defer></script>
         <script src='./beforeunload.js' defer></script>
-        <script src='./chat.js' defer></script>
+        <script src='./chat/Message.js' defer></script>
+        <script src='./chat/chat.js' defer></script>
         <script src='./percentage-moved.js' defer></script>
         <script src='./drag-events.js' defer></script>
         <script src='./waypoint-lines.js' defer></script>
@@ -110,7 +112,7 @@
                         <div class='messages' id='messages'>
                             
                         </div>
-                        <form method='POST' action='send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
+                        <form method='POST' action='chat/send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
                             <input type='submit' value='' id='send-btn'>
                         </form>
