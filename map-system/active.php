@@ -72,7 +72,6 @@
         <script src='./beforeunload.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
-        <script src='./user/User.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/percentage-moved.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
@@ -80,9 +79,8 @@
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
         <script src='./goal/waypoint/remove-waypoint.js' defer></script>
         <script src='./goal/remove-goal.js' defer></script>
-        <script src='./goal/create-goal.js' defer></script>
         <script src='./goal/distance.js' defer></script>
-        <script src='./goal/goal-popup.js' defer></script>
+        <script src='./goal/onclick-events.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
     </head>
@@ -122,7 +120,7 @@
                     <a class='btn small' onclick='openMenu("delete-btn", "delete-popup", "block");' id='delete-btn'>
                         <p>Delete group</p>
                     </a>
-                    <a class='btn round' onclick='openMenu("goal-btn", "goal-popup", "block");createPopup();' id='goal-btn' style='display: inline-block;'>
+                    <a class='btn round' onclick='openMenu("goal-btn", "goal-popup", "block");' id='goal-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
@@ -133,7 +131,7 @@
                             <p>Distance</p>
                             <input type='number' class='btn number-input' id='distance-number' onchange='applyDistance()' min='0' max='99' placeholder='99'>
                         </div>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn"]);sendGoalData();'>
+                        <a class='btn' id='send-goal-data' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn"]);'>
                             <i class='fa-solid fa-check'></i>
                         </a>
                         <a class='btn small' onclick='removeWaypoint();'>

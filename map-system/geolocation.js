@@ -26,7 +26,6 @@ let userIcon = L.divIcon ({
 let current_position;
 let counter = 0;
 let dataGlobal;
-let styleSheetContent =  "";
 
 let goal_marker_arr = [];
 let goal_marker_pos = [];
@@ -41,22 +40,27 @@ let goal_waypoints = [];
 let user_markers = [];
 let userPopupContent = [];
 
+// used in create-goal.js
+let idsOfGoals = [];
+
 function onLocationFound(e) 
 {
     map.removeLayer(refreshedLayerGroup);
 
-    // change to LatLng object
-    current_position = L.marker(e.latlng);
+    current_position = e.latlng;
 
     sendDataToPHP("send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode, function()
     {
         getDataFromPHP("get-data.php?groupcode=" + groupCode, function(data)
         {
-            removeStyles('js-style');
+            const userMarkerStyle = new Style('user-marker-style');
+            userMarkerStyle.removeStyle();
+
             user_markers = [];
             dataGlobal = data;
             usersData = data.usersdata;
             let classNameOtherUsers;
+            let markerStyleSheetContent = "";
             for (let i = 0; i < usersData.length; i++) {
                 marker = L.marker(L.latLng(usersData[i].position), {icon: userIcon});
                 refreshedLayerGroup.addLayer(marker);
@@ -65,13 +69,14 @@ function onLocationFound(e)
 
                 // GIVES COLOR & INITIALS TO OTHER MARKERS
                 classNameOtherUsers = 'user-marker-' + i;
-                styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
+                markerStyleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
                 // INITIALS
-                styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';
+                markerStyleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';
 
                 marker._icon.classList.add(classNameOtherUsers);
             }
-            createStyle(styleSheetContent, 'js-style');
+            userMarkerStyle.styleSheetContent = markerStyleSheetContent;
+            userMarkerStyle.createStyle();
 
             const chat = new Chat(data.messagesdata);
             chat.updateChat();
@@ -99,7 +104,8 @@ function onLocationFound(e)
                         goal_marker_pos[i] = "no goal";
                     }
                 }
-                createGoalLine(false, false);
+                const goal = new Goal();
+                goal.createGoalLine(false, false);
 
                 // SHOW ACTIVE GOAL DISCLAIMER
                 let disclaimer = document.getElementById('active-goal-disclaimer');
@@ -308,16 +314,21 @@ function onLocationFound(e)
                 disclaimer.style.display = 'none';
             }
             // CREATE STYLESHEET FOR GOAL MENU
+            const goalMenuStyle = new Style('goal-menu-style');
+            goalMenuStyle.removeStyle();
+
+            let goalMenuStyleSheetContent = "";
+
             for (let i = 0; i < usersData.length; i++) {
                 const className = 'goal-menu-user-marker-' + i;
-                styleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
+                goalMenuStyleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
             }
-                createStyle(styleSheetContent, 'js-style');    
+
+            goalMenuStyle.styleSheetContent = goalMenuStyleSheetContent;
+            goalMenuStyle.createStyle();
         });
     });
 
-    
-    
     refreshedLayerGroup.addTo(map);
 }
 
