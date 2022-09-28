@@ -49,10 +49,10 @@ class Goal
         for (let i = 0; i < goal_marker_pos.length; i++) {
             if (goal_marker_pos[i] != "no goal") {
                 // CREATE START POINTS
-                start_marker_arr[i] =  new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
+                start_marker_arr[i] =  new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: userIcon});
                 goalLayerGroup.addLayer(start_marker_arr[i]);
                 // CREATE GOALS
-                goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: otherUsersIcon});
+                goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: userIcon});
                 goalLayerGroup.addLayer(goal_marker_arr[i]);
                 map.addLayer(goalLayerGroup);
                 // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)

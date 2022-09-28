@@ -22,12 +22,6 @@ let userIcon = L.divIcon ({
     className: 'user-marker',
     popupAnchor: [0, -20]
 });
-let otherUsersIcon = L.divIcon ({
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 25],
-    className: 'other-user-marker',
-    popupAnchor: [0, -20]
-});
 
 let current_position;
 let counter = 0;
@@ -47,13 +41,12 @@ let goal_waypoints = [];
 let user_markers = [];
 let userPopupContent = [];
 
-let showWaterEnabled = false;
-
 function onLocationFound(e) 
 {
     map.removeLayer(refreshedLayerGroup);
 
-    current_position = L.marker(e.latlng, {icon: userIcon});
+    // change to LatLng object
+    current_position = L.marker(e.latlng);
 
     sendDataToPHP("send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode, function()
     {
@@ -65,13 +58,13 @@ function onLocationFound(e)
             usersData = data.usersdata;
             let classNameOtherUsers;
             for (let i = 0; i < usersData.length; i++) {
-                marker = L.marker(L.latLng(usersData[i].position), {icon: otherUsersIcon});
+                marker = L.marker(L.latLng(usersData[i].position), {icon: userIcon});
                 refreshedLayerGroup.addLayer(marker);
                 user_markers.push(marker);
                 let initials = '\"' + usersData[i].initials + '\"';
 
                 // GIVES COLOR & INITIALS TO OTHER MARKERS
-                classNameOtherUsers = 'other-user-marker-' + i;
+                classNameOtherUsers = 'user-marker-' + i;
                 styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
                 // INITIALS
                 styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';

@@ -5,11 +5,11 @@ document.getElementById("water-switch").addEventListener("click", function()
 
 function showWaterEntities() 
 {
-    if (showWaterEnabled) {
-        map.removeLayer(waterLayerGroup);
-        showWaterEnabled = false;
-    } else {
+    if (typeof showWaterEnabled == "undefined" || !showWaterEnabled) {
         waterLayerGroup.addTo(map);
         showWaterEnabled = true;
+    } else {
+        map.removeLayer(waterLayerGroup);
+        showWaterEnabled = false;
     }
 }
