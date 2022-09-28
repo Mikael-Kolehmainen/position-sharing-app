@@ -72,16 +72,18 @@
         <script src='./beforeunload.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
-        <script src='./percentage-moved.js' defer></script>
-        <script src='./drag-events.js' defer></script>
-        <script src='./waypoint-lines.js' defer></script>
-        <script src='./add-waypoint.js' defer></script>
+        <script src='./user/User.js' defer></script>
+        <script src='./goal/Goal.js' defer></script>
+        <script src='./goal/percentage-moved.js' defer></script>
+        <script src='./goal/drag-events.js' defer></script>
+        <script src='./goal/waypoint/waypoint-lines.js' defer></script>
+        <script src='./goal/waypoint/add-waypoint.js' defer></script>
+        <script src='./goal/waypoint/remove-waypoint.js' defer></script>
+        <script src='./goal/remove-goal.js' defer></script>
+        <script src='./goal/create-goal.js' defer></script>
+        <script src='./goal/distance.js' defer></script>
+        <script src='./goal/goal-popup.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
-        <script src='./remove-goal.js' defer></script>
-        <script src='./create-goal.js' defer></script>
-        <script src='./distance.js' defer></script>
-        <script src='./remove-waypoint.js' defer></script>
-        <script src='./goal-popup.js' defer></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -155,7 +157,7 @@
                     <a class='btn' onclick='openMenu("goal-popup", "goal-btn", "block");'>
                         <p>No</p>
                     </a>
-                    <a class='btn' onclick='openMenu("goal-popup", "goal-options", "block", ["message-btn", "delete-btn"]);showDraggableGoal();'>
+                    <a class='btn' id='show-draggable-goal' onclick='openMenu("goal-popup", "goal-options", "block", ["message-btn", "delete-btn"]);'>
                         <p>Yes</p>
                     </a>
                 </div>

@@ -54,7 +54,6 @@ function onLocationFound(e)
     map.removeLayer(refreshedLayerGroup);
 
     current_position = L.marker(e.latlng, {icon: userIcon});
-    refreshedLayerGroup.addLayer(current_position);
 
     sendDataToPHP("send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode, function()
     {
@@ -70,22 +69,14 @@ function onLocationFound(e)
                 refreshedLayerGroup.addLayer(marker);
                 user_markers.push(marker);
                 let initials = '\"' + usersData[i].initials + '\"';
-                if (marker.getLatLng().equals(current_position.getLatLng())) {
-                    // REMOVES USERS OWN MARKER WHICH IS ALREADY ON THE MAP
-                    goalLayerGroup.removeLayer(marker);
-                    // GIVES COLOR & INITIALS TO USERS MARKER
-                    const stylesheet = document.styleSheets[0];
-                    stylesheet.cssRules[1].style.setProperty('content', initials);
-                    stylesheet.cssRules[0].style.setProperty('background-color', usersData[i].color);
-                } else {
-                    // GIVES COLOR & INITIALS TO OTHER MARKERS
-                    classNameOtherUsers = 'other-user-marker-' + i;
-                    styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
-                    // INITIALS
-                    styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';
 
-                    marker._icon.classList.add(classNameOtherUsers);
-                }
+                // GIVES COLOR & INITIALS TO OTHER MARKERS
+                classNameOtherUsers = 'other-user-marker-' + i;
+                styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
+                // INITIALS
+                styleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';
+
+                marker._icon.classList.add(classNameOtherUsers);
             }
             createStyle(styleSheetContent, 'js-style');
 

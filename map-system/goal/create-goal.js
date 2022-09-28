@@ -1,18 +1,9 @@
-// CREATE GOAL BTN ONCLICK FUNCTION
-function showDraggableGoal() {
-    removeStyles('js-style-goals');
-    
-    let latlngValue = 0.002;
-    // CREATE THE POSITIONS
-    for (let i = 0; i < idsOfGoals.length; i++) {
-        goal_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue);
-        start_marker_pos[i] = new L.LatLng(current_position.getLatLng().lat + latlngValue, current_position.getLatLng().lng + latlngValue + 0.002);
-        latlngValue = latlngValue + 0.002;
-    }
-    styleSheetContent = createGoalLine(true);
-    createStyle(styleSheetContent, 'js-style-goals');
-    goalIsBeingPlanned = true;
-}
+document.getElementById("show-draggable-goal").addEventListener("click", function() 
+{
+    const goal = new Goal();
+    goal.showDraggableGoal();
+});
+
 // CREATE FUNCTION
 function createGoalLine(returnStyleSheet = false, isDraggable = true) {
     map.removeLayer(goalLayerGroup);
