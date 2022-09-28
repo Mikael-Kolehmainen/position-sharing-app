@@ -89,7 +89,8 @@ function onLocationFound(e)
             }
             createStyle(styleSheetContent, 'js-style');
 
-            updateChat(data.messagesdata);
+            const chat = new Chat(data.messagesdata);
+            chat.updateChat();
             
             // GOALS
             const goalsData = data.goalsdata;

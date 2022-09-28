@@ -71,7 +71,7 @@
         <script src='./geolocation.js' defer></script>
         <script src='./beforeunload.js' defer></script>
         <script src='./chat/Message.js' defer></script>
-        <script src='./chat/chat.js' defer></script>
+        <script src='./chat/Chat.js' defer></script>
         <script src='./percentage-moved.js' defer></script>
         <script src='./drag-events.js' defer></script>
         <script src='./waypoint-lines.js' defer></script>
