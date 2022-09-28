@@ -1,9 +1,9 @@
 <?php
-    require './../required-files/dbHandler.php';
-    require './../required-files/constants.php';
-    require './../db/Position.php';
-    require './../db/Goal.php';
-    require './../db/Waypoint.php';
+    require './../../required-files/dbHandler.php';
+    require './../../required-files/constants.php';
+    require './../../db/Position.php';
+    require './../../db/Goal.php';
+    require './../../db/Waypoint.php';
 
     session_start();
 

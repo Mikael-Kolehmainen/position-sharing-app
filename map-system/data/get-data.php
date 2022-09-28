@@ -1,11 +1,11 @@
 <?php
-    require './../required-files/dbHandler.php';
-    require './../required-files/constants.php';
-    require './../db/Position.php';
-    require './../db/User.php';
-    require './../db/Goal.php';
-    require './../db/Waypoint.php';
-    require './chat/Message.php';
+    require './../../required-files/dbHandler.php';
+    require './../../required-files/constants.php';
+    require './../../db/Position.php';
+    require './../../db/User.php';
+    require './../../db/Goal.php';
+    require './../../db/Waypoint.php';
+    require './../chat/Message.php';
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);

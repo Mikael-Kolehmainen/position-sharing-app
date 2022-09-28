@@ -72,6 +72,7 @@
         <script src='./beforeunload.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
+        <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/percentage-moved.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>

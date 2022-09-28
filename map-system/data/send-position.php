@@ -1,8 +1,8 @@
 <?php
-require './../required-files/dbHandler.php';
-require './../db/Position.php';
-require './../db/User.php';
-require './../required-files/constants.php';
+require './../../required-files/dbHandler.php';
+require './../../db/Position.php';
+require './../../db/User.php';
+require './../../required-files/constants.php';
 
 if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
     session_start();
@@ -65,7 +65,7 @@ function insertUserToDatabase($groupCode, $positionsRowID, $uniqueID, $initials,
 
 function getUniqueID() 
 {
-    require './../required-files/random-string.php';
+    require './../../required-files/random-string.php';
 
     $uniqueID = getRandomString(10);
     $uniqueIDs = getUsersUniqueIDsFromDatabase();

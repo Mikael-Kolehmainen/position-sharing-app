@@ -104,7 +104,7 @@ class Goal
     sendDataToPHP()
     {
         let xmlhttp = new XMLHttpRequest();
-        let url = 'send-goals.php?groupcode=' + groupCode;
+        let url = 'goal/send-goals.php?groupcode=' + groupCode;
         let startlat, startlng, goallat, goallng;
         for (let i = 0; i < goal_marker_pos.length; i++) {
             goallat = goal_marker_pos[i].lat;
@@ -227,7 +227,7 @@ class Goal
     remove()
     {
         let xmlhttp = new XMLHttpRequest();
-        let url = 'remove-goal.php?groupcode=' + groupCode;
+        let url = 'goal/remove-goal.php?groupcode=' + groupCode;
         
         xmlhttp.open("GET", url, true);
         xmlhttp.onreadystatechange = function() {
