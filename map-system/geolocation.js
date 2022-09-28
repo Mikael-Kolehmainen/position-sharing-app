@@ -114,7 +114,7 @@ function gotData(data)
     
     // GOALS
     const goalsData = data.goalsdata;
-    const goal = new Goal();
+    const goal = new Goal(data.goalsdata, data.usersdata);
 
     if (goalsData[0] != "empty") {
         // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
@@ -336,3 +336,4 @@ function gotData(data)
             }
         }
     }
+}

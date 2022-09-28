@@ -3,9 +3,10 @@ class Goal
     #STYLE_CLASS_NAME = "start-goal-style";
     #DISTANCE_BETWEEN_MARKERS = 0.002;
 
-    constructor()
+    constructor(goalsData = "", usersData = "")
     {
-
+        this.goalsData = dataGlobal.goalsdata;
+        this.usersData = dataGlobal.usersdata;
     }
 
     showDraggable()
@@ -31,13 +32,13 @@ class Goal
         map.removeLayer(goalLayerGroup);
 
         let classNameGoalMarkers, classNameStartMarkers, initials;
-        let usersData = dataGlobal.usersdata;
+        let usersData = this.usersData;
         let initialsArr = [];
         let styleSheetContent = "";
 
         if (idsOfGoals.length == 0) {
-            for (let i = 0; i < dataGlobal.goalsdata.length; i++) {
-                idsOfGoals.push(dataGlobal.goalsdata[i].goal_id.goalIndex);
+            for (let i = 0; i < this.goalsData.length; i++) {
+                idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
             }
         }
 
