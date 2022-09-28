@@ -313,22 +313,9 @@ function onLocationFound(e)
                 let disclaimer = document.getElementById('active-goal-disclaimer');
                 disclaimer.style.display = 'none';
             }
-            // CREATE STYLESHEET FOR GOAL MENU
-            const goalMenuStyle = new Style('goal-menu-style');
-            goalMenuStyle.removeStyle();
-
-            let goalMenuStyleSheetContent = "";
-
-            for (let i = 0; i < usersData.length; i++) {
-                const className = 'goal-menu-user-marker-' + i;
-                goalMenuStyleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
-            }
-
-            goalMenuStyle.styleSheetContent = goalMenuStyleSheetContent;
-            goalMenuStyle.createStyle();
         });
     });
-
+    
     refreshedLayerGroup.addTo(map);
 }
 
