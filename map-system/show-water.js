@@ -1,5 +1,10 @@
-// ONCLICK FOR WATER SWITCH
-function showWaterEntities() {
+document.getElementById("water-checkbox").addEventListener("click", function() 
+{
+    showWaterEntities();
+});
+
+function showWaterEntities() 
+{
     if (showWaterEnabled) {
         map.removeLayer(waterLayerGroup);
         showWaterEnabled = false;

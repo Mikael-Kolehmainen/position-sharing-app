@@ -95,7 +95,7 @@
                     <p>There's an active goal</p>
                 </div>
                 <label class='switch'>
-                    <input type='checkbox' id='water-checkbox' onclick='showWaterEntities();'>
+                    <input type='checkbox' id='water-checkbox'>
                     <span class='slider'></span>
                 </label>
                 <div id='map'></div>
