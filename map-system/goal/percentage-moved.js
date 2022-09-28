@@ -1,4 +1,5 @@
-function calculatePercentage(start_marker_pos, goal_marker_pos, latlngs, user_markers) {
+function calculatePercentage(start_marker_pos, goal_marker_pos, latlngs, user_markers)
+{
     let userlatlng;
     let goallatlng;
     if (start_marker_pos.lat < goal_marker_pos.lat) {

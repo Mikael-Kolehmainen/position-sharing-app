@@ -7,12 +7,24 @@ document.getElementById("send-goal-data").addEventListener("click", function()
 document.getElementById("goal-btn").addEventListener("click", function() 
 {
     const goal = new Goal();
-    goal.clearPreviousGoalPopup();
-    goal.createGoalPopup();
+    goal.clearPreviousPopup();
+    goal.createPopup();
 });
 
 document.getElementById("show-draggable-goal").addEventListener("click", function() 
 {
     const goal = new Goal();
-    goal.showDraggableGoal();
+    goal.showDraggable();
+});
+
+document.getElementById("remove-draggable-goal").addEventListener("click", function() 
+{
+    const goal = new Goal();
+    goal.remove();
+});
+
+document.getElementById("active-goal-disclaimer").addEventListener("click", function() 
+{
+    const goal = new Goal();
+    goal.remove();
 });

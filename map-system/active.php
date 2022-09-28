@@ -78,7 +78,6 @@
         <script src='./goal/waypoint/waypoint-lines.js' defer></script>
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
         <script src='./goal/waypoint/remove-waypoint.js' defer></script>
-        <script src='./goal/remove-goal.js' defer></script>
         <script src='./goal/distance.js' defer></script>
         <script src='./goal/onclick-events.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
@@ -91,7 +90,7 @@
                     <p>Group code:</p>
                     <p><?php echo $_GET[GROUPCODE]; ?></p>
                 </div>
-                <div class='disclaimer' id='active-goal-disclaimer' style='display: none;' onclick='removeActiveGoal();'>
+                <div class='disclaimer' id='active-goal-disclaimer' style='display: none;'>
                     <p>There's an active goal</p>
                 </div>
                 <label class='switch'>
@@ -124,7 +123,7 @@
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
-                        <a class='btn' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn"]);removeDraggableGoal();'>
+                        <a class='btn' id='remove-draggable-goal' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn"]);'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
                         <div class='distance'>

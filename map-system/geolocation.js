@@ -6,9 +6,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let refreshedLayerGroup = L.layerGroup();
-let goalLayerGroup = L.layerGroup();
-let draggableRouteLayerGroup = L.layerGroup();
-let goalWaypointsLayerGroup = L.layerGroup();
 let waterLayerGroup = L.layerGroup();
 waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
@@ -27,21 +24,22 @@ let current_position;
 let counter = 0;
 let dataGlobal;
 
-let goal_marker_arr = [];
-let goal_marker_pos = [];
-let goalRouteIsDrawn = false;
-let goalIsBeingPlanned = false;
-
 let start_marker_arr = [];
 let start_marker_pos = [];
-
-let goal_waypoints = [];
 
 let user_markers = [];
 let userPopupContent = [];
 
-// used in create-goal.js
 let idsOfGoals = [];
+let goal_marker_arr = [];
+let goal_marker_pos = [];
+let goalRouteIsDrawn = false;
+let goalIsBeingPlanned = false;
+let goal_waypoints = [];
+
+let goalLayerGroup = L.layerGroup();
+let draggableRouteLayerGroup = L.layerGroup();
+let goalWaypointsLayerGroup = L.layerGroup();
 
 function onLocationFound(e) 
 {
@@ -83,6 +81,8 @@ function onLocationFound(e)
             
             // GOALS
             const goalsData = data.goalsdata;
+            const goal = new Goal();
+
             if (goalsData[0] != "empty") {
                 // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
                 while (goalsData.length < usersData.length) {
@@ -104,7 +104,6 @@ function onLocationFound(e)
                         goal_marker_pos[i] = "no goal";
                     }
                 }
-                const goal = new Goal();
                 goal.createGoalLine(false, false);
 
                 // SHOW ACTIVE GOAL DISCLAIMER
@@ -303,19 +302,10 @@ function onLocationFound(e)
                         userPopupContent[i] += "\n(Slow down)";
                     }
                 }
-            } else if (!goalIsBeingPlanned) {
-                // REMOVE GOALS FROM MAP
-                map.removeLayer(goalLayerGroup);
-                goalLayerGroup.eachLayer(function(layer) {
-                    goalLayerGroup.removeLayer(layer);
-                });
-                // HIDE ACTIVE GOAL DISCLAIMER
-                let disclaimer = document.getElementById('active-goal-disclaimer');
-                disclaimer.style.display = 'none';
             }
         });
     });
-    
+
     refreshedLayerGroup.addTo(map);
 }
 
