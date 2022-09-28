@@ -1,9 +1,10 @@
 class Message 
 {
-    constructor(message, initials)
+    constructor(message, initials, elementClassName)
     {
         this.message = message;
         this.initials = initials;
+        this.elementClassName = elementClassName;
     }
     
     /*
@@ -14,17 +15,17 @@ class Message
             <p class='text'>Hello, this is a placeholder message.</p>
         </div>
     */
-    createMessage()
+    createMessageElement()
     {
         const message = document.createElement("div");
-        message.classList.add('message');
+        message.classList.add("message");
         const profile = document.createElement("div");
-        profile.classList.add('profile');
+        profile.classList.add("profile");
         message.appendChild(profile);
         const initialsText = document.createElement("p");
         profile.appendChild(initialsText);
         const messageText = document.createElement("p");
-        messageText.classList.add('text');
+        messageText.classList.add("text");
         message.appendChild(messageText);
 
         messageText.innerHTML = this.message;
@@ -32,5 +33,12 @@ class Message
 
         const messages = document.getElementById("messages");
         messages.appendChild(message);
+
+        profile.classList.add(this.elementClassName);
+    }
+
+    static clearMessages()
+    {
+        removeChilds(document.getElementById("messages"));
     }
 }

@@ -1,19 +1,20 @@
-function updateChat(messagesData) {
-    // Call function from Style.js class that removes stylesheet
+function updateChat(messagesData) 
+{
+    const style = new Style('message-style');
+    style.removeStyle();
 
-    // Put this function to Message.js class
-    removeChilds(document.getElementById('messages'));
+    Message.clearMessages();
 
-    styleSheetContent = "";
+    let styleSheetContent = "";
     for (let i = 0; i < messagesData.length; i++) {
-        const message = new Message(messagesData[i].message, messagesData[i].initials);
-        message.createMessage();
+        const messageElementClassName = 'message-profile-icon-' + i;
 
-        classNameOtherUsers = 'other-profile-icon-' + i;
-        profile.classList.add(classNameOtherUsers);
-        styleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + messagesData[i].color + '; }';
+        const message = new Message(messagesData[i].message, messagesData[i].initials, messageElementClassName);
+        message.createMessageElement();
+
+        styleSheetContent += '.' + messageElementClassName + ' { background-color: ' + messagesData[i].color + '; }';
     }
 
-    // Create Style.js class then call method
-    createStyle(styleSheetContent, 'js-style');
+    style.styleSheetContent = styleSheetContent;
+    style.createStyle();
 }
