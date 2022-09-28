@@ -76,7 +76,7 @@
         <script src='./drag-events.js' defer></script>
         <script src='./waypoint-lines.js' defer></script>
         <script src='./add-waypoint.js' defer></script>
-        <script src='./show-water.js' defer></script>
+        <script src='./water-switch/show-water.js' defer></script>
         <script src='./remove-goal.js' defer></script>
         <script src='./create-goal.js' defer></script>
         <script src='./distance.js' defer></script>
@@ -95,7 +95,7 @@
                     <p>There's an active goal</p>
                 </div>
                 <label class='switch'>
-                    <input type='checkbox' id='water-checkbox'>
+                    <input type='checkbox' id='water-switch'>
                     <span class='slider'></span>
                 </label>
                 <div id='map'></div>

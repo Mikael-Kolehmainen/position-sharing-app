@@ -1,4 +1,4 @@
-document.getElementById("water-checkbox").addEventListener("click", function() 
+document.getElementById("water-switch").addEventListener("click", function() 
 {
     showWaterEntities();
 });

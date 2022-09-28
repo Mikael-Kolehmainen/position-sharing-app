@@ -4,7 +4,7 @@ class Message
     #PROFILE_CLASS_NAME = "profile";
     #MESSAGES_ID = "messages";
 
-    constructor(message, initials, elementClassName)
+    constructor(message = "", initials = "", elementClassName = "")
     {
         this.message = message;
         this.initials = initials;
@@ -41,7 +41,7 @@ class Message
         profile.classList.add(this.elementClassName);
     }
 
-    static clearPreviousMessages()
+    clearPreviousMessages()
     {
         removeChilds(document.getElementById(this.#MESSAGES_ID));
     }

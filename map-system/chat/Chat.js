@@ -13,7 +13,8 @@ class Chat
         const style = new Style(this.#STYLE_CLASS_NAME);
         style.removeStyle();
 
-        Message.clearPreviousMessages();
+        const message = new Message();
+        message.clearPreviousMessages();
 
         let styleSheetContent = "";
         for (let i = 0; i < this.messagesData.length; i++) {
