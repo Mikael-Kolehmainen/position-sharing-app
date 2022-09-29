@@ -5,6 +5,9 @@ document.getElementById("water-switch").addEventListener("click", function()
 
 function showWaterEntities() 
 {
+    let waterLayerGroup = L.layerGroup();
+    waterLayerGroup.addLayer(L.geoJSON(vaasa));
+
     if (typeof showWaterEnabled == "undefined" || !showWaterEnabled) {
         waterLayerGroup.addTo(map);
         showWaterEnabled = true;

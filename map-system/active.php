@@ -70,6 +70,7 @@
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' defer></script>
         <script src='./beforeunload.js' defer></script>
+        <script src='./user/User.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
         <script src='./data/Data.js' defer></script>

@@ -6,8 +6,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let refreshedLayerGroup = L.layerGroup();
-let waterLayerGroup = L.layerGroup();
-waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
@@ -39,12 +37,15 @@ let goalLayerGroup = L.layerGroup();
 let draggableRouteLayerGroup = L.layerGroup();
 let goalWaypointsLayerGroup = L.layerGroup();
 
-let goal, chat;
+let goal, chat, user;
 
-window.onload = function()
+document.addEventListener("DOMContentLoaded", objects);
+
+function objects()
 {
     goal = new Goal();
     chat = new Chat();
+    user = new User();
 }
 
 function onLocationFound(e) 
@@ -58,29 +59,10 @@ function onLocationFound(e)
         const getData = new Data("data/get-data.php?groupcode=" + groupCode);
 
         getData.getFromPHP(function(data) {
-            const userMarkerStyle = new Style('user-marker-style');
-            userMarkerStyle.removeStyle();
 
             user_markers = [];
-            usersData = data.usersdata;
-            let classNameOtherUsers;
-            let markerStyleSheetContent = "";
-            for (let i = 0; i < usersData.length; i++) {
-                marker = L.marker(L.latLng(usersData[i].position), {icon: userIcon});
-                refreshedLayerGroup.addLayer(marker);
-                user_markers.push(marker);
-                let initials = '\"' + usersData[i].initials + '\"';
-
-                // GIVES COLOR & INITIALS TO OTHER MARKERS
-                classNameOtherUsers = 'user-marker-' + i;
-                markerStyleSheetContent += '.' + classNameOtherUsers + '{ background-color: ' + usersData[i].color + '; }';
-                // INITIALS
-                markerStyleSheetContent += '.' + classNameOtherUsers + '::before { content: ' + initials + '; }';
-
-                marker._icon.classList.add(classNameOtherUsers);
-            }
-            userMarkerStyle.styleSheetContent = markerStyleSheetContent;
-            userMarkerStyle.createStyle();
+            user.usersData = data.usersdata;
+            user.addMarkersToMap();
 
             chat.messagesData = data.messagesdata;
             chat.updateChat();
@@ -93,7 +75,7 @@ function onLocationFound(e)
 
             if (goalsData[0] != "empty") {
                 // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
-                while (goalsData.length < usersData.length) {
+                while (goalsData.length < data.usersdata.length) {
                     goalsData.push("no goal");
                 }
                 for (let i = 0; i < goalsData.length; i++) {

@@ -190,14 +190,14 @@ class Goal
 
         let popupStyleSheetContent = "";
 
-        for (let i = 0; i < usersData.length; i++) {
+        for (let i = 0; i < this.usersData.length; i++) {
             const userRow = document.createElement("tr");
             const userCell_1 = document.createElement("td");
             const userCell_2 = document.createElement("td");
             
             const userProfile = document.createElement("div");
             const initialsText = document.createElement("p");
-            initialsText.innerHTML = usersData[i].initials;
+            initialsText.innerHTML = this.usersData[i].initials;
             userProfile.classList.add('profile');
             
             const checkbox = document.createElement("input");
@@ -214,7 +214,7 @@ class Goal
 
             const className = 'goal-menu-user-marker-' + i;
             userProfile.classList.add(className);
-            popupStyleSheetContent += '.' + className + '{ background-color: ' + usersData[i].color + '; }';
+            popupStyleSheetContent += '.' + className + '{ background-color: ' + this.usersData[i].color + '; }';
         }
 
         popupStyle.styleSheetContent = popupStyleSheetContent;
