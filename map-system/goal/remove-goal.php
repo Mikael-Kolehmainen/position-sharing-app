@@ -7,17 +7,11 @@
 
     if (isset($_GET[GROUPCODE])) {
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
-        $goalsID = getGoalsID($groupCode);
-        removeGoalPositions(getStartGoalPositionsIDs($groupCode), getWaypointPositionsIDs($goalsID));
-        removeGoalWaypoints($goalsID);
-        removeGoal($groupCode);
-    }
-
-    function getGoalsID($groupCode)
-    {
         $goal = new Goal($groupCode);
-        
-        return $goal->getIDs();
+        $goalsID = $goal->getIDs();
+        removeGoalPositions($goal->getStartGoalPositionsRowIDs(), getWaypointPositionsIDs($goalsID));
+        removeGoalWaypoints($goalsID);
+        $goal->remove();
     }
 
     function removeGoalPositions($startGoalPositionsIDs, $waypointPositionsIDs)
@@ -32,36 +26,32 @@
         }
 
         for ($i = 0; $i < count($waypointPositionsIDs); $i++) {
-            $position->id = $waypointPositionsIDs[$i][POSITIONS_ID];
-            $position->remove();
+            for ($j = 0; $j < count($waypointPositionsIDs[$i]); $j++) {
+                $position->id = $waypointPositionsIDs[$i][$j][POSITIONS_ID];
+                $position->remove();
+            }
         }
-    }
-
-    function getStartGoalPositionsIDs($groupCode)
-    {
-        $goal = new Goal($groupCode);
-
-        return $goal->getStartGoalPositionsRowIDs();
     }
 
     function getWaypointPositionsIDs($goalsID)
     {
         $waypoint = new Waypoint();
-        $waypoint->goalsID = $goalsID[0][ID];
+        $positionRowIDs = array();
 
-        return $waypoint->getPositionsRowIDs();
+        for ($i = 0; $i < count($goalsID); $i++) {
+            $waypoint->goalsID = $goalsID[$i][ID];
+            array_push($positionRowIDs, $waypoint->getPositionsRowIDs());
+        }
+
+        return $positionRowIDs;
     }
 
     function removeGoalWaypoints($goalsID)
     {
         $waypoint = new Waypoint();
-        $waypoint->goalsID = $goalsID[0][ID];
-        $waypoint->remove();
-    }
-
-    function removeGoal($groupCode)
-    {
-        $goal = new Goal($groupCode);
-
-        $goal->remove();
+        
+        for ($i = 0; $i < count($goalsID); $i++) {
+            $waypoint->goalsID = $goalsID[$i][ID];
+            $waypoint->remove();
+        }
     }
