@@ -1,9 +1,3 @@
-<!-- Gjort idag -->
-
-<!-- TO-DO -->
-    
-<!-- BUGS -->
-
 <!DOCTYPE html>
 <html>
     <head>

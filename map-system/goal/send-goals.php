@@ -19,19 +19,19 @@
     function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
         for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++) {
-            $startPosition = getPositionFromURL('startlat'.$userIndex, 'startlng'.$userIndex);
-            $goalPosition = getPositionFromURL('goallat'.$userIndex, 'goallng'.$userIndex);
+            $startPosition = getPositionFromURL(STARTLAT.$userIndex, STARTLNG.$userIndex);
+            $goalPosition = getPositionFromURL(GOALLAT.$userIndex, GOALLNG.$userIndex);
 
             $startPositionRowID = insertPositionToDatabase($startPosition->latitude, $startPosition->longitude);
             $goalPositionRowID = insertPositionToDatabase($goalPosition->latitude, $goalPosition->longitude);
 
-            $goalIDKey = 'goalid'.$userIndex;
+            $goalIDKey = GOALID.$userIndex;
             $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_VALIDATE_INT);
             $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode);
         
             $waypointIndex = 0;
-            $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lat';
-            $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lng';
+            $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-'.LAT;
+            $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-'.LNG;
 
             while (isset($_GET[$waypointLatKey]) && isset($_GET[$waypointLngKey])) {
                 $waypointPosition = getPositionFromURL($waypointLatKey, $waypointLngKey);
@@ -40,8 +40,8 @@
                 insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
 
                 $waypointIndex = $waypointIndex + 1;
-                $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lat';
-                $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-lng';
+                $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-'.LAT;
+                $waypointLngKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-'.LNG;
             }
         }
     }

@@ -18,7 +18,7 @@
     function getData($groupCode)
     {
         $data = array();
-        $data['usersdata'] = getUsersDetailsFromDatabase($groupCode);
+        $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
         $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
         $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
 
@@ -34,8 +34,8 @@
 
         for ($i = 0; $i < count($userMarkerDetails); $i++) {
             $position = new Position();
-            $position->id = $userMarkerDetails[$i]["positions_id"];
-            $userMarkerDetails[$i]["position"] = $position->getLatLng();
+            $position->id = $userMarkerDetails[$i][POSITIONS_ID];
+            $userMarkerDetails[$i][POSITION] = $position->getLatLng();
         }
 
         return $userMarkerDetails;
@@ -57,15 +57,15 @@
         $goalsData = array();
         if (count($startGoalPositionsRowIDs) > 0) {
             for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-                $goalsData[$i]["goal_id"] = $goal->getIndexes()[$i];
+                $goalsData[$i][GOAL_ID] = $goal->getIndexes()[$i];
 
-                $goalsData[$i]["start_position"] = getPosition($startGoalPositionsRowIDs[$i], "start_positions_id");
-                $goalsData[$i]["goal_position"] = getPosition($startGoalPositionsRowIDs[$i], "goal_positions_id");
+                $goalsData[$i][START_POSITION] = getPosition($startGoalPositionsRowIDs[$i], START_POSITIONS_ID);
+                $goalsData[$i][GOAL_POSITION] = getPosition($startGoalPositionsRowIDs[$i], GOAL_POSITIONS_ID);
     
-                $goalsData[$i]["waypoints"] = getWaypointPositions($i, $groupCode);
+                $goalsData[$i][WAYPOINTS] = getWaypointPositions($i, $groupCode);
             }
         } else {
-            $goalsData[0] = "empty";
+            $goalsData[0] = CONSTANT_EMPTY;
         }
 
         return $goalsData;
@@ -85,12 +85,12 @@
         $position = new Position();
         $goalsID = getGoalsID($groupCode);
 
-        $waypoint->goalsID = $goalsID[$loopIndex]["id"];
+        $waypoint->goalsID = $goalsID[$loopIndex][ID];
 
         $waypoints = array();
 
         for ($i = 0; $i < count($waypoint->getPositionsRowIDs()); $i++) {
-            $position->id = $waypoint->getPositionsRowIDs()[$i]["positions_id"];
+            $position->id = $waypoint->getPositionsRowIDs()[$i][POSITIONS_ID];
             $waypoints[$i] = $position->getLatLng();
         }
 

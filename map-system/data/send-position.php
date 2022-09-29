@@ -1,13 +1,13 @@
 <?php
 require './../../required-files/dbHandler.php';
+require './../../required-files/constants.php';
 require './../../db/Position.php';
 require './../../db/User.php';
-require './../../required-files/constants.php';
 
-if (isset($_GET['lat']) && isset($_GET['lng']) && isset($_GET[GROUPCODE])) {
+if (isset($_GET[LAT]) && isset($_GET[LNG]) && isset($_GET[GROUPCODE])) {
     session_start();
-    $newLat = filter_input(INPUT_GET, 'lat', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    $newLng = filter_input(INPUT_GET, 'lng', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $newLat = filter_input(INPUT_GET, LAT, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $newLng = filter_input(INPUT_GET, LNG, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
     if (isset($_SESSION[UNIQUEID])) {
         $uniqueID = $_SESSION[UNIQUEID];
@@ -71,7 +71,7 @@ function getUniqueID()
     $uniqueIDs = getUsersUniqueIDsFromDatabase();
 
     for ($i = 0; $i < count($uniqueIDs); $i++) {
-        if ($uniqueID == $uniqueIDs[$i]['uniqueID']) {
+        if ($uniqueID == $uniqueIDs[$i][UNIQUEID]) {
             $uniqueID = getUniqueID();
         }
     }

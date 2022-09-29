@@ -25,14 +25,14 @@
         $position = new Position();
 
         for ($i = 0; $i < count($startGoalPositionsIDs); $i++) {
-            $position->id = $startGoalPositionsIDs[$i]['start_positions_id'];
+            $position->id = $startGoalPositionsIDs[$i][START_POSITIONS_ID];
             $position->remove();
-            $position->id = $startGoalPositionsIDs[$i]['goal_positions_id'];
+            $position->id = $startGoalPositionsIDs[$i][GOAL_POSITIONS_ID];
             $position->remove();
         }
 
         for ($i = 0; $i < count($waypointPositionsIDs); $i++) {
-            $position->id = $waypointPositionsIDs[$i]['positions_id'];
+            $position->id = $waypointPositionsIDs[$i][POSITIONS_ID];
             $position->remove();
         }
     }
@@ -47,7 +47,7 @@
     function getWaypointPositionsIDs($goalsID)
     {
         $waypoint = new Waypoint();
-        $waypoint->goalsID = $goalsID[0]['id'];
+        $waypoint->goalsID = $goalsID[0][ID];
 
         return $waypoint->getPositionsRowIDs();
     }
@@ -55,7 +55,7 @@
     function removeGoalWaypoints($goalsID)
     {
         $waypoint = new Waypoint();
-        $waypoint->goalsID = $goalsID[0]['id'];
+        $waypoint->goalsID = $goalsID[0][ID];
         $waypoint->remove();
     }
 

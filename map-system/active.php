@@ -6,14 +6,14 @@
 
     session_start();
 
-    if (isset($_POST['create-group'])) {
+    if (isset($_POST[CREATE_GROUP])) {
         $group = new Group();
         $groupCode = $group->groupCode;
         
         $group->save();
         saveMarkerToSession();
         $group->redirectUserToGroupMap();
-    } else if (isset($_POST['search-group'])) {
+    } else if (isset($_POST[SEARCH_GROUP])) {
         $groupCode = filter_input(INPUT_POST, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         if (findGroupInDatabase($groupCode)) {
