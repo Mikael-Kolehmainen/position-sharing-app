@@ -1,5 +1,8 @@
 class User
 {
+    #STYLE_CLASS_NAME = "user-marker-style";
+    #MARKER_CLASS_NAME = "user-marker-";
+
     constructor(usersData)
     {
         this.usersData = usersData;
@@ -8,19 +11,19 @@ class User
 
     addMarkersToMap()
     {
-        let className, marker;
+        let marker, markerClassName;
         this.markerStyleSheetContent = "";
         for (let i = 0; i < this.usersData.length; i++) {
             marker = L.marker(L.latLng(this.usersData[i].position), {icon: userIcon});
             refreshedLayerGroup.addLayer(marker);
             user_markers.push(marker);
 
-            className = 'user-marker-' + i;
-            this.markerStyleSheetContent += '.' + className + '{ background-color: ' + this.usersData[i].color + '; }';
+            markerClassName = this.#MARKER_CLASS_NAME + i;
+            this.markerStyleSheetContent += '.' + markerClassName + '{ background-color: ' + this.usersData[i].color + '; }';
 
-            this.markerStyleSheetContent += '.' + className + '::before { content: ' + '\"' + this.usersData[i].initials + '\"' + '; }';
+            this.markerStyleSheetContent += '.' + markerClassName + '::before { content: ' + '\"' + this.usersData[i].initials + '\"' + '; }';
 
-            marker._icon.classList.add(className);
+            marker._icon.classList.add(markerClassName);
         }
 
         this.#updateMarkerStyle();
@@ -28,7 +31,7 @@ class User
 
     #updateMarkerStyle()
     {
-        const userMarkerStyle = new Style('user-marker-style');
+        const userMarkerStyle = new Style(this.#STYLE_CLASS_NAME);
         userMarkerStyle.removeStyle();
 
         userMarkerStyle.styleSheetContent = this.markerStyleSheetContent;

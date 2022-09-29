@@ -1,32 +1,41 @@
 class Chat
 {
-    #STYLE_CLASS_NAME = "message-style";
+    #STYLE_CLASS_NAME = "message-messageStyle";
     #MESSAGE_CLASS_NAME = "message-profile-icon-"
 
     constructor(messagesData)
     {
         this.messagesData = messagesData;
+        this.messageStyleSheetContent = "";
     }
 
     updateChat()
     {
-        const style = new Style(this.#STYLE_CLASS_NAME);
-        style.removeStyle();
-
         const message = new Message();
         message.clearPreviousMessages();
 
-        let styleSheetContent = "";
+        let messageClassName;
+        this.messageStyleSheetContent = "";
         for (let i = 0; i < this.messagesData.length; i++) {
-            const messageElementClassName = this.#MESSAGE_CLASS_NAME + i;
+            messageClassName = this.#MESSAGE_CLASS_NAME + i;
 
-            const message = new Message(this.messagesData[i].message, this.messagesData[i].initials, messageElementClassName);
+            message.message = this.messagesData[i].message;
+            message.initials = this.messagesData[i].initials;
+            message.elementClassName = messageClassName;
             message.createMessageElement();
 
-            styleSheetContent += '.' + messageElementClassName + ' { background-color: ' + this.messagesData[i].color + '; }';
+            this.messageStyleSheetContent += '.' + messageClassName + ' { background-color: ' + this.messagesData[i].color + '; }';
         }
 
-        style.styleSheetContent = styleSheetContent;
-        style.createStyle();
+        this.#updateMarkerStyle();
+    }
+
+    #updateMarkerStyle()
+    {
+        const messageStyle = new Style(this.#STYLE_CLASS_NAME);
+        messageStyle.removeStyle();
+
+        messageStyle.styleSheetContent = this.messageStyleSheetContent;
+        messageStyle.createStyle();
     }
 }
