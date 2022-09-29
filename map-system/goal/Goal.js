@@ -3,10 +3,11 @@ class Goal
     #STYLE_CLASS_NAME = "start-goal-style";
     #DISTANCE_BETWEEN_MARKERS = 0.002;
 
-    constructor(goalsData = "", usersData = "")
+    constructor(goalsData, usersData, current_position)
     {
-        this.goalsData = dataGlobal.goalsdata;
-        this.usersData = dataGlobal.usersdata;
+        this.goalsData = goalsData;
+        this.usersData = usersData;
+        this.current_position = current_position;
     }
 
     showDraggable()
@@ -14,8 +15,8 @@ class Goal
         let latlngValue = this.#DISTANCE_BETWEEN_MARKERS;
 
         for (let i = 0; i < idsOfGoals.length; i++) {
-            goal_marker_pos[i] = new L.LatLng(current_position.lat + latlngValue, current_position.lng + latlngValue);
-            start_marker_pos[i] = new L.LatLng(current_position.lat + latlngValue, current_position.lng + latlngValue + this.#DISTANCE_BETWEEN_MARKERS);
+            goal_marker_pos[i] = new L.LatLng(this.current_position.lat + latlngValue, this.current_position.lng + latlngValue);
+            start_marker_pos[i] = new L.LatLng(this.current_position.lat + latlngValue, this.current_position.lng + latlngValue + this.#DISTANCE_BETWEEN_MARKERS);
             latlngValue = latlngValue + this.#DISTANCE_BETWEEN_MARKERS;
         }
         
