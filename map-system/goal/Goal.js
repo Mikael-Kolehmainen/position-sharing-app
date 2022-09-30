@@ -64,7 +64,6 @@ class Goal
                 }
 
                 styleSheetContent += this.#createMarkerStyleSheetContent(i);
-                this.#bindPopupToUsers(i);
             }
         }
 
@@ -211,6 +210,8 @@ class Goal
             this.#createStartGoalMarkers(i);
             styleSheetContent += this.#createMarkerStyleSheetContent(i);
             
+            this.#bindPopupToUsers(i);
+
             latlngs = [];
         }
         goalRouteIsDrawn = true;
