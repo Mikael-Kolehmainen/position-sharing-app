@@ -8,6 +8,8 @@ class Goal
         this.goalsData = goalsData;
         this.usersData = usersData;
         this.current_position = current_position;
+
+        this.percentages = [];
     }
 
     showDraggable()
@@ -48,7 +50,7 @@ class Goal
         }
 
         for (let i = 0; i < goal_marker_pos.length; i++) {
-            if (goal_marker_pos[i] != "no goal") {
+            if (typeof goal_marker_pos[i] != "undefined") {
                 // CREATE START POINTS
                 start_marker_arr[i] =  new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: userIcon});
                 goalLayerGroup.addLayer(start_marker_arr[i]);
@@ -141,9 +143,6 @@ class Goal
             }
         }
         xmlhttp.send();
-        // HIDE CREATE GOAL BTN
-        let goalBtn = document.getElementById('goal-btn');
-        goalBtn.style.display = 'none';
         // REMOVE DRAGGABLE ROUTE
         map.removeLayer(draggableRouteLayerGroup);
         draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
@@ -156,32 +155,27 @@ class Goal
 
     saveDataFromPHPToVariables()
     {
-        // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
         while (this.goalsData.length < this.usersData.length) {
-            this.goalsData.push("no goal");
+            this.goalsData.push("user has no goal");
         }
         for (let i = 0; i < this.goalsData.length; i++) {
-            if (this.goalsData[i] != "no goal") {
-                // SAVE START POSITIONS TO VARIABLE
+            if (this.goalsData[i] != "user has no goal") {
                 start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
-                // SAVE WAYPOINT POSITIONS TO VARIABLE
+
                 goal_waypoints[i] = [];
                 for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
                     goal_waypoints[i][j] = new L.marker(this.goalsData[i].waypoints[j]);
                 }
-                // SAVE GOAL POSITIONS TO VARIABLE
+
                 goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
-            } else {
-                start_marker_pos[i] = "no goal";
-                goal_marker_pos[i] = "no goal";
             }
         }
-        goal.createGoalLine(false);
+    }
 
-        // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
+    drawPolyline()
+    {
         let latlngs = [];
         userPopupContent = [];
-        let percentages = [];
         for (let i = 0; i < user_markers.length; i++) {
             latlngs.push(start_marker_pos[i]);
             if (typeof goal_waypoints[i] != "undefined") {
@@ -189,27 +183,34 @@ class Goal
                     latlngs.push(goal_waypoints[i][j].getLatLng());
                 }
             }
-            latlngs.push(goal_marker_arr[i].getLatLng());
+            latlngs.push(goal_marker_pos[i]);
 
             let polylineRoute = L.polyline(latlngs, {color: 'red'});
             goalLayerGroup.addLayer(polylineRoute);
             goalLayerGroup.addTo(map);
             
-            // GET PERCENTAGE OF DISTANCE MOVED
-            let percentage = calculatePercentage(start_marker_pos[i], goal_marker_pos[i], latlngs, user_markers[i]);
-
-            percentages.push(percentage);
-
-            // ADD PERCENTAGE TO POPUP CONTENT
-            userPopupContent.push(percentage + "%");
-
             latlngs = [];
         }
         goalRouteIsDrawn = true;
-        // TELL USER TO SLOW DOWN IF 10% FURTHER THAN OTHERS
-        let smallestPercentage = Math.min(...percentages);
-        for (let i = 0; i < percentages.length; i++) {
-            if (smallestPercentage + 10 < percentages[i]) {
+    }
+
+    calculatePercentagesOfRouteTravelled()
+    {
+        let percentage;
+
+        for (let i = 0; i < start_marker_pos.length; i++) {
+            percentage = Math.round((1 - user_markers[i].getLatLng().distanceTo(goal_marker_pos[i]) / start_marker_pos[i].distanceTo(goal_marker_pos[i])) * 100);
+
+            this.percentages.push(percentage);
+        }
+    }
+
+    updatePercentagePopups()
+    {
+        let smallestPercentage = Math.min(...this.percentages);
+        for (let i = 0; i < this.percentages.length; i++) {
+            userPopupContent[i] = this.percentages[i] + "%";
+            if (smallestPercentage + 10 < this.percentages[i]) {
                 userPopupContent[i] += "\n(Slow down)";
             }
         }

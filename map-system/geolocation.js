@@ -71,6 +71,10 @@ function onLocationFound(e)
 
             if (data.goalsdata[0] != "empty") {
                 goal.saveDataFromPHPToVariables();
+                goal.createGoalLine(false);
+                goal.drawPolyline();
+                goal.calculatePercentagesOfRouteTravelled();
+                goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
                 ElementDisplay.change('goal-btn', 'none');                
             }

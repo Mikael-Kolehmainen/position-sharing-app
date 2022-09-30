@@ -1,6 +1,7 @@
 document.getElementById("send-goal-data").addEventListener("click", function()
 {
     goal.sendDataToPHP();
+    ElementDisplay.change('goal-btn', 'none');
 });
 
 document.getElementById("goal-btn").addEventListener("click", function() 
