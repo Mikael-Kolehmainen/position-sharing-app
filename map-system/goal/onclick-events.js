@@ -12,7 +12,8 @@ document.getElementById("goal-btn").addEventListener("click", function()
 
 document.getElementById("show-draggable-goal").addEventListener("click", function() 
 {
-    goal.showDraggable();
+    goal.calculatePositionsOfStartGoalMarkers();
+    goal.drawDraggablePolyline(true);
 });
 
 document.getElementById("remove-draggable-goal").addEventListener("click", function() 

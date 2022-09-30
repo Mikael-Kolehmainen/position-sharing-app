@@ -12,7 +12,7 @@ class Goal
         this.percentages = [];
     }
 
-    showDraggable()
+    calculatePositionsOfStartGoalMarkers()
     {
         let latlngValue = this.#DISTANCE_BETWEEN_MARKERS;
 
@@ -21,22 +21,17 @@ class Goal
             start_marker_pos[i] = new L.LatLng(this.current_position.lat + latlngValue, this.current_position.lng + latlngValue + this.#DISTANCE_BETWEEN_MARKERS);
             latlngValue = latlngValue + this.#DISTANCE_BETWEEN_MARKERS;
         }
-        
-        this.createGoalLine(true);
 
         goalIsBeingPlanned = true;
     }
 
-    createGoalLine(isDraggable = true)
+    drawDraggablePolyline(isDraggable = true)
     {
         const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
         startGoalStyle.removeStyle();
 
         map.removeLayer(goalLayerGroup);
 
-        let classNameGoalMarkers, classNameStartMarkers, initials;
-        let usersData = this.usersData;
-        let initialsArr = [];
         let styleSheetContent = "";
 
         if (idsOfGoals.length == 0) {
@@ -45,19 +40,9 @@ class Goal
             }
         }
 
-        for (let i = 0; i < idsOfGoals.length; i++) {
-            initialsArr.push(usersData[idsOfGoals[i]].initials);
-        }
-
         for (let i = 0; i < goal_marker_pos.length; i++) {
             if (typeof goal_marker_pos[i] != "undefined") {
-                // CREATE START POINTS
-                start_marker_arr[i] =  new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: userIcon});
-                goalLayerGroup.addLayer(start_marker_arr[i]);
-                // CREATE GOALS
-                goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: userIcon});
-                goalLayerGroup.addLayer(goal_marker_arr[i]);
-                map.addLayer(goalLayerGroup);
+                this.#createStartGoalMarkers(i, true);
                 // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)
                 if (isDraggable) {
                     let polyline = [];
@@ -67,35 +52,60 @@ class Goal
                     goal_marker_arr[i].parentLine = polyline;
                     polyline[0].on('click', addWaypointToRoute);
                     map.addLayer(draggableRouteLayerGroup);
-                }
-                // START POINTS CSS
-                classNameStartMarkers = 'user-start-marker-' + i;
-                styleSheetContent += '.' + classNameStartMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
-                // GOALS CSS
-                classNameGoalMarkers = 'user-goal-marker-' + i;
-                styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
-                // INITIALS
-                initials = '\"' + initialsArr[i] + '\"';
-                styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initials + '; }';
-                styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initials + '; }';
-                start_marker_arr[i]._icon.classList.add(classNameStartMarkers);
-                goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
-                // ASSIGN EVENTHANDLERS TO MARKERS
-                start_marker_arr[i]
-                        .on('dragstart', dragStartHandler)
-                        .on('drag', dragHandler)
-                        .on('dragend', dragEndHandler);
-                goal_marker_arr[i]
-                        .on('dragstart', dragStartHandler)
-                        .on('drag', dragHandler)
-                        .on('dragend', dragEndHandler);
 
+                    start_marker_arr[i]
+                        .on('dragstart', dragStartHandler)
+                        .on('drag', dragHandler)
+                        .on('dragend', dragEndHandler);
+                    goal_marker_arr[i]
+                        .on('dragstart', dragStartHandler)
+                        .on('drag', dragHandler)
+                        .on('dragend', dragEndHandler);
+                }
+
+                styleSheetContent += this.#createMarkerStyleSheetContent(i);
                 this.#bindPopupToUsers(i);
             }
         }
 
         startGoalStyle.styleSheetContent = styleSheetContent;
         startGoalStyle.createStyle();
+    }
+
+    #createStartGoalMarkers(i, isDraggable)
+    {
+        start_marker_arr[i] = new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: userIcon});
+        goalLayerGroup.addLayer(start_marker_arr[i]);
+        
+        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: userIcon});
+        goalLayerGroup.addLayer(goal_marker_arr[i]);
+        map.addLayer(goalLayerGroup);
+    }
+
+    #createMarkerStyleSheetContent(i)
+    {
+        let initialsArr = [];
+
+        for (let j = 0; j < idsOfGoals.length; j++) {
+            initialsArr.push(this.usersData[idsOfGoals[j]].initials);
+        }
+
+        let classNameStartMarkers, classNameGoalMarkers, styleSheetContent = "";
+
+        classNameStartMarkers = 'user-start-marker-' + i;
+        styleSheetContent += '.' + classNameStartMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
+
+        classNameGoalMarkers = 'user-goal-marker-' + i;
+        styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
+
+        let initials = '\"' + initialsArr[i] + '\"';
+        styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initials + '; }';
+        styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initials + '; }';
+
+        start_marker_arr[i]._icon.classList.add(classNameStartMarkers);
+        goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+
+        return styleSheetContent;
     }
 
     #bindPopupToUsers(i)
@@ -174,8 +184,17 @@ class Goal
 
     drawPolyline()
     {
+        const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
+        startGoalStyle.removeStyle();
+
+        if (idsOfGoals.length == 0) {
+            for (let i = 0; i < this.goalsData.length; i++) {
+                idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
+            }
+        }
+
         let latlngs = [];
-        userPopupContent = [];
+        let styleSheetContent = "";
         for (let i = 0; i < user_markers.length; i++) {
             latlngs.push(start_marker_pos[i]);
             if (typeof goal_waypoints[i] != "undefined") {
@@ -188,10 +207,16 @@ class Goal
             let polylineRoute = L.polyline(latlngs, {color: 'red'});
             goalLayerGroup.addLayer(polylineRoute);
             goalLayerGroup.addTo(map);
+
+            this.#createStartGoalMarkers(i);
+            styleSheetContent += this.#createMarkerStyleSheetContent(i);
             
             latlngs = [];
         }
         goalRouteIsDrawn = true;
+
+        startGoalStyle.styleSheetContent = styleSheetContent;
+        startGoalStyle.createStyle();
     }
 
     calculatePercentagesOfRouteTravelled()
@@ -207,6 +232,8 @@ class Goal
 
     updatePercentagePopups()
     {
+        userPopupContent = [];
+
         let smallestPercentage = Math.min(...this.percentages);
         for (let i = 0; i < this.percentages.length; i++) {
             userPopupContent[i] = this.percentages[i] + "%";

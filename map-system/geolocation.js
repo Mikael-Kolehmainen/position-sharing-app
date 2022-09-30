@@ -71,7 +71,6 @@ function onLocationFound(e)
 
             if (data.goalsdata[0] != "empty") {
                 goal.saveDataFromPHPToVariables();
-                goal.createGoalLine(false);
                 goal.drawPolyline();
                 goal.calculatePercentagesOfRouteTravelled();
                 goal.updatePercentagePopups();
