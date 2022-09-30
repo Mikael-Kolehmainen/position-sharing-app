@@ -4,7 +4,7 @@ class Message
     #PROFILE_CLASS_NAME = "profile";
     #MESSAGES_ID = "messages";
 
-    constructor(message = "", initials = "", elementClassName = "")
+    constructor(message, initials, elementClassName)
     {
         this.message = message;
         this.initials = initials;

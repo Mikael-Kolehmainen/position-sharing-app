@@ -154,6 +154,67 @@ class Goal
         goalIsBeingPlanned = false;
     }
 
+    saveDataFromPHPToVariables()
+    {
+        // IF USER DOESN'T HAVE A GOAL, GIVE A NO GOAL VALUE
+        while (this.goalsData.length < this.usersData.length) {
+            this.goalsData.push("no goal");
+        }
+        for (let i = 0; i < this.goalsData.length; i++) {
+            if (this.goalsData[i] != "no goal") {
+                // SAVE START POSITIONS TO VARIABLE
+                start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
+                // SAVE WAYPOINT POSITIONS TO VARIABLE
+                goal_waypoints[i] = [];
+                for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
+                    goal_waypoints[i][j] = new L.marker(this.goalsData[i].waypoints[j]);
+                }
+                // SAVE GOAL POSITIONS TO VARIABLE
+                goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
+            } else {
+                start_marker_pos[i] = "no goal";
+                goal_marker_pos[i] = "no goal";
+            }
+        }
+        goal.createGoalLine(false);
+
+        // SHOW THE FASTEST ROUTE TO THE ACTIVE GOAL
+        let latlngs = [];
+        userPopupContent = [];
+        let percentages = [];
+        for (let i = 0; i < user_markers.length; i++) {
+            latlngs.push(start_marker_pos[i]);
+            if (typeof goal_waypoints[i] != "undefined") {
+                for (let j = 0; j < goal_waypoints[i].length; j++) {
+                    latlngs.push(goal_waypoints[i][j].getLatLng());
+                }
+            }
+            latlngs.push(goal_marker_arr[i].getLatLng());
+
+            let polylineRoute = L.polyline(latlngs, {color: 'red'});
+            goalLayerGroup.addLayer(polylineRoute);
+            goalLayerGroup.addTo(map);
+            
+            // GET PERCENTAGE OF DISTANCE MOVED
+            let percentage = calculatePercentage(start_marker_pos[i], goal_marker_pos[i], latlngs, user_markers[i]);
+
+            percentages.push(percentage);
+
+            // ADD PERCENTAGE TO POPUP CONTENT
+            userPopupContent.push(percentage + "%");
+
+            latlngs = [];
+        }
+        goalRouteIsDrawn = true;
+        // TELL USER TO SLOW DOWN IF 10% FURTHER THAN OTHERS
+        let smallestPercentage = Math.min(...percentages);
+        for (let i = 0; i < percentages.length; i++) {
+            if (smallestPercentage + 10 < percentages[i]) {
+                userPopupContent[i] += "\n(Slow down)";
+            }
+        }
+    }
+
     createPopup()
     {
         const popupStyle = new Style('popup-style');

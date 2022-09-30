@@ -64,9 +64,8 @@
         <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
         <script src='./../js/open.js' defer></script>
         <script src='./../js/remove-children.js' defer></script>
+        <script src='./../js/ElementDisplay.js' defer></script>
         <script src='./../js/Style.js' defer></script>
-        <script src='./../js/remove-style.js' defer></script>
-        <script src='./../js/create-style.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' defer></script>
         <script src='./beforeunload.js' defer></script>
