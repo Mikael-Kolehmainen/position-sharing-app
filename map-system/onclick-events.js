@@ -82,7 +82,7 @@ function removeDraggableGoalClicked()
 
 function removeWaypointClicked()
 {
-    removeWaypoint();
+    waypoint.remove();
 }
 
 function activeGoalDisclaimerClicked()

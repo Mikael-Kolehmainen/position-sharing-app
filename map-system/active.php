@@ -78,7 +78,6 @@
         <script src='./goal/drag-events.js' defer></script>
         <script src='./goal/waypoint/waypoint-lines.js' defer></script>
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
-        <script src='./goal/waypoint/remove-waypoint.js' defer></script>
         <script src='./goal/distance.js' defer></script>
         <script src='./goal/waypoint/Waypoint.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>

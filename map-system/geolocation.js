@@ -35,11 +35,15 @@ let goalRouteIsDrawn = false;
 let goalIsBeingPlanned = false;
 let goal_waypoints = [];
 
+// we use these in remove-waypoint.js and create-goal.js
+let all_waypoints = [];
+let goalIDs = [];
+
 let goalLayerGroup = L.layerGroup();
 let draggableRouteLayerGroup = L.layerGroup();
 let goalWaypointsLayerGroup = L.layerGroup();
 
-let goal, chat, user;
+let goal, chat, user, waypoint;
 
 document.addEventListener("DOMContentLoaded", objects);
 
@@ -48,6 +52,7 @@ function objects()
     goal = new Goal();
     chat = new Chat();
     user = new User();
+    waypoint = new Waypoint();
 }
 
 function onLocationFound(e) 
