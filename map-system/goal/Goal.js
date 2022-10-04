@@ -25,14 +25,10 @@ class Goal
         goalIsBeingPlanned = true;
     }
 
-    drawDraggablePolyline(isDraggable = true)
+    drawPolyline(isDraggable)
     {
         const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
         startGoalStyle.removeStyle();
-
-        map.removeLayer(goalLayerGroup);
-
-        let styleSheetContent = "";
 
         if (idsOfGoals.length == 0) {
             for (let i = 0; i < this.goalsData.length; i++) {
@@ -40,12 +36,21 @@ class Goal
             }
         }
 
+        let styleSheetContent = "";
+        let latlngs = [];
+
         for (let i = 0; i < goal_marker_pos.length; i++) {
             if (typeof goal_marker_pos[i] != "undefined") {
-                this.#createStartGoalMarkers(i, true);
+                this.#createStartGoalMarkers(i, isDraggable);
+                latlngs.push(start_marker_pos[i]);
+                if (typeof goal_waypoints[i] != "undefined") {
+                    for (let j = 0; j < goal_waypoints[i].length; j++) {
+                        latlngs.push(goal_waypoints[i][j].getLatLng());
+                    }
+                }
+                latlngs.push(goal_marker_pos[i]);
+                let polyline = [new L.Polyline(latlngs, {weight: 5, id: i})];
                 if (isDraggable) {
-                    let polyline = [];
-                    polyline.push(new L.Polyline([start_marker_pos[i], goal_marker_pos[i]], {weight: 5, id: i}));
                     draggableRouteLayerGroup.addLayer(polyline[0]);
                     start_marker_arr[i].parentLine = polyline;
                     goal_marker_arr[i].parentLine = polyline;
@@ -62,7 +67,13 @@ class Goal
                         .on('dragend', dragEndHandler);
                 }
 
+                goalLayerGroup.addLayer(polyline[0]);
+
                 styleSheetContent += this.#createMarkerStyleSheetContent(i);
+
+                this.#bindPopupToUsers(i);
+
+                latlngs = [];
             }
         }
 
@@ -178,45 +189,6 @@ class Goal
                 goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
             }
         }
-    }
-
-    drawPolyline()
-    {
-        const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
-        startGoalStyle.removeStyle();
-
-        if (idsOfGoals.length == 0) {
-            for (let i = 0; i < this.goalsData.length; i++) {
-                idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
-            }
-        }
-
-        let latlngs = [];
-        let styleSheetContent = "";
-        for (let i = 0; i < user_markers.length; i++) {
-            latlngs.push(start_marker_pos[i]);
-            if (typeof goal_waypoints[i] != "undefined") {
-                for (let j = 0; j < goal_waypoints[i].length; j++) {
-                    latlngs.push(goal_waypoints[i][j].getLatLng());
-                }
-            }
-            latlngs.push(goal_marker_pos[i]);
-
-            let polylineRoute = L.polyline(latlngs, {color: 'red'});
-            goalLayerGroup.addLayer(polylineRoute);
-            goalLayerGroup.addTo(map);
-
-            this.#createStartGoalMarkers(i);
-            styleSheetContent += this.#createMarkerStyleSheetContent(i);
-            
-            this.#bindPopupToUsers(i);
-
-            latlngs = [];
-        }
-        goalRouteIsDrawn = true;
-
-        startGoalStyle.styleSheetContent = styleSheetContent;
-        startGoalStyle.createStyle();
     }
 
     calculatePercentagesOfRouteTravelled()

@@ -70,7 +70,7 @@ function rejectAddGoalClicked()
 function showDraggableGoalClicked()
 {
     goal.calculatePositionsOfStartGoalMarkers();
-    goal.drawDraggablePolyline(true);
+    goal.drawPolyline(true);
     openMenu("goal-popup", "goal-options", "block", ["open-chat-btn", "delete-group-btn"]);
 }
 

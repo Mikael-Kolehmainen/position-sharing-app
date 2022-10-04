@@ -76,7 +76,6 @@
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
-        <script src='./goal/waypoint/waypoint-lines.js' defer></script>
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
         <script src='./goal/distance.js' defer></script>
         <script src='./goal/waypoint/Waypoint.js' defer></script>
