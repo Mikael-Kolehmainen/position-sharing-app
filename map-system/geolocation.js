@@ -20,8 +20,6 @@ let userIcon = L.divIcon ({
     popupAnchor: [0, -20]
 });
 
-let counter = 0;
-
 let start_marker_arr = [];
 let start_marker_pos = [];
 
@@ -98,15 +96,6 @@ function onLocationError(e)
 map.on('locationfound', onLocationFound);
 map.on('locationerror', onLocationError);
 
-function locate()
-{
-    if (counter == 0) {
-        map.locate({setView: true, enableHighAccuracy: true});
-        counter = 1;
-    } else if (counter == 1) {
-        map.locate({setView: false, enableHighAccuracy: true});
-    }
-}
+map.locate({setView: true, enableHighAccuracy: true});
 
-locate();
-setInterval(locate, 3000);
+setInterval("map.locate({setView: false, enableHighAccuracy: true})", 3000);
