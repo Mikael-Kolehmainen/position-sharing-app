@@ -6,6 +6,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let refreshedLayerGroup = L.layerGroup();
+let waterLayerGroup = L.layerGroup();
+waterLayerGroup.addLayer(L.geoJSON(vaasa));
 
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
@@ -75,7 +77,7 @@ function onLocationFound(e)
                 goal.calculatePercentagesOfRouteTravelled();
                 goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
-                ElementDisplay.change('goal-btn', 'none');                
+                ElementDisplay.change('add-goal-btn', 'none');                
             }
         });
     });

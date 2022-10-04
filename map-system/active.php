@@ -72,6 +72,7 @@
         <script src='./user/User.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
+        <script src='./onclick-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
@@ -79,7 +80,7 @@
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
         <script src='./goal/waypoint/remove-waypoint.js' defer></script>
         <script src='./goal/distance.js' defer></script>
-        <script src='./goal/onclick-events.js' defer></script>
+        <script src='./goal/waypoint/Waypoint.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
     </head>
@@ -90,21 +91,21 @@
                     <p>Group code:</p>
                     <p><?php echo $_GET[GROUPCODE]; ?></p>
                 </div>
-                <div class='disclaimer' id='active-goal-disclaimer' style='display: none;'>
+                <div class='disclaimer onclick' id='active-goal-disclaimer' style='display: none;'>
                     <p>There's an active goal</p>
                 </div>
                 <label class='switch'>
-                    <input type='checkbox' id='water-switch'>
+                    <input type='checkbox' class='onclick' id='water-switch'>
                     <span class='slider'></span>
                 </label>
                 <div id='map'></div>
                 <div class='bottom'>
-                    <a class='btn round' id='message-btn' style='display: inline-block;' onclick='openMenu("message-btn", "chat", "block", ["goal-btn", "delete-btn"])'>
+                    <a class='btn round onclick' id='open-chat-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-message'></i>
                     </a>
                     <div class='chat' style='display: none;' id='chat'>
                         <div class='btn-container'>
-                            <a class='btn round' onclick='openMenu("chat", "message-btn", "inline-block", ["goal-btn", "delete-btn"])'>
+                            <a class='btn round onclick' id='close-chat-btn'>
                                 <i class='fa-solid fa-xmark'></i>
                             </a>
                         </div>
@@ -116,31 +117,31 @@
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>
-                    <a class='btn small' onclick='openMenu("delete-btn", "delete-popup", "block");' id='delete-btn'>
+                    <a class='btn small onclick' id='delete-group-btn'>
                         <p>Delete group</p>
                     </a>
-                    <a class='btn round' onclick='openMenu("goal-btn", "goal-popup", "block");' id='goal-btn' style='display: inline-block;'>
+                    <a class='btn round onclick' id='add-goal-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-location-dot'></i>
                     </a>
                     <div class='options' style='display: none;' id='goal-options'>
-                        <a class='btn' id='remove-draggable-goal' onclick='openMenu("goal-options", "goal-btn", "inline-block", ["message-btn", "delete-btn"]);'>
+                        <a class='btn onclick' id='remove-draggable-goal'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
                         <div class='distance'>
                             <p>Distance</p>
                             <input type='number' class='btn number-input' id='distance-number' onchange='applyDistance()' min='0' max='99' placeholder='99'>
                         </div>
-                        <a class='btn' id='send-goal-data' onclick='openMenu("goal-options", "goal-btn", "block", ["message-btn", "delete-btn"]);'>
+                        <a class='btn onclick' id='confirm-goal-btn'>
                             <i class='fa-solid fa-check'></i>
                         </a>
-                        <a class='btn small' onclick='removeWaypoint();'>
+                        <a class='btn small onclick' id='remove-waypoint'>
                             <p>Remove waypoint</p>
                         </a>
                     </div>
                 </div>
                 <div class='popup' id='delete-popup' style='display: none;'>
                     <p>Are you sure you want to delete this group?</p>
-                    <a class='btn' onclick='openMenu("delete-popup", "delete-btn", "inline-block");'>
+                    <a class='btn onclick' id='reject-group-delete-btn'>
                         <p>No</p>
                     </a>
                     <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>'>
@@ -151,10 +152,10 @@
                     <p>Choose which users get a goal?</p>
                     <table id='users-table'>
                     </table>
-                    <a class='btn' onclick='openMenu("goal-popup", "goal-btn", "block");'>
+                    <a class='btn onclick' id='reject-add-goal-btn'>
                         <p>No</p>
                     </a>
-                    <a class='btn' id='show-draggable-goal' onclick='openMenu("goal-popup", "goal-options", "block", ["message-btn", "delete-btn"]);'>
+                    <a class='btn onclick' id='show-draggable-goal'>
                         <p>Yes</p>
                     </a>
                 </div>

@@ -43,7 +43,6 @@ class Goal
         for (let i = 0; i < goal_marker_pos.length; i++) {
             if (typeof goal_marker_pos[i] != "undefined") {
                 this.#createStartGoalMarkers(i, true);
-                // CREATE LINE BETWEEN START & GOAL (ONLY SHOW WHILE GOAL IS BEING PLANNED)
                 if (isDraggable) {
                     let polyline = [];
                     polyline.push(new L.Polyline([start_marker_pos[i], goal_marker_pos[i]], {weight: 5, id: i}));
@@ -332,8 +331,8 @@ class Goal
         let disclaimer = document.getElementById("active-goal-disclaimer");
         disclaimer.style.display = "none";
 
-        let goalBtn = document.getElementById('goal-btn');
-        goalBtn.style.display = 'block';
+        let goalBtn = document.getElementById("add-goal-btn");
+        goalBtn.style.display = "block";
 
         map.removeLayer(goalLayerGroup);
         goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
@@ -353,7 +352,7 @@ class Goal
         goal_marker_arr = [];
         goal_marker_pos = [];
 
-        document.getElementById('active-goal-disclaimer').style.display = "none";
+        document.getElementById("active-goal-disclaimer").style.display = "none";
     }
 }
 
