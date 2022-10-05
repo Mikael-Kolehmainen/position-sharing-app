@@ -5,36 +5,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
 }).addTo(map);
 
-let refreshedLayerGroup = L.layerGroup();
-let waterLayerGroup = L.layerGroup();
-waterLayerGroup.addLayer(L.geoJSON(vaasa));
-
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
-let usersData;
-
-let start_marker_arr = [];
-let start_marker_pos = [];
-
-let user_markers = [];
-
-let idsOfGoals = [];
-let goal_marker_arr = [];
-let goal_marker_pos = [];
-let goal_waypoints = [];
-
-// used in onclick-events.js
-let goalIsBeingPlanned = false;
-
-// we use these in remove-waypoint.js and create-goal.js
-let all_waypoints = [];
-let goalIDs = [];
-
-let goalLayerGroup = L.layerGroup();
-let draggableRouteLayerGroup = L.layerGroup();
-let goalWaypointsLayerGroup = L.layerGroup();
-
-let goal, chat, user, waypoint;
+let goal, chat, user, waypoint, layerManagement;
 
 document.addEventListener("DOMContentLoaded", objects);
 
@@ -44,11 +17,12 @@ function objects()
     chat = new Chat();
     user = new User();
     waypoint = new Waypoint();
+    layerManagement = new LayerManagement();
 }
 
 function onLocationFound(e) 
 {
-    map.removeLayer(refreshedLayerGroup);
+    map.removeLayer(layerManagement.refreshedLayerGroup);
 
     const sendData = new Data("data/send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode);
     sendData.sendToPHP(function() 
@@ -56,7 +30,7 @@ function onLocationFound(e)
         const getData = new Data("data/get-data.php?groupcode=" + groupCode);
         getData.getFromPHP(function(data) {
 
-            user_markers = [];
+            user.user_markers = [];
             user.usersData = data.usersdata;
             user.addMarkersToMap();
 
@@ -67,10 +41,10 @@ function onLocationFound(e)
             goal.usersData = data.usersdata;
             goal.current_position = e.latlng;
 
-            if (data.goalsdata[0] == "empty" && !goalIsBeingPlanned) {
-                LayerManagement.removeAndClearLayers([goalLayerGroup, draggableRouteLayerGroup, goalWaypointsLayerGroup]);
+            if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
+                LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
-            } else if (!goalIsBeingPlanned) {
+            } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
                 goal.drawPolyline(false);
                 goal.calculatePercentagesOfRouteTravelled();
@@ -81,7 +55,7 @@ function onLocationFound(e)
         });
     });
 
-    refreshedLayerGroup.addTo(map);
+    layerManagement.refreshedLayerGroup.addTo(map);
 }
 
 function onLocationError(e) 

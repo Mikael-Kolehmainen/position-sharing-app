@@ -50,7 +50,7 @@ function waterSwitchClicked()
 
 function confirmGoalClicked()
 {
-    goalIsBeingPlanned = false;
+    goal.goalIsBeingPlanned = false;
     goal.sendDataToPHP();
     openMenu("goal-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn"]);
 }
@@ -69,7 +69,7 @@ function rejectAddGoalClicked()
 
 function showDraggableGoalClicked()
 {
-    goalIsBeingPlanned = true;
+    goal.goalIsBeingPlanned = true;
     goal.calculatePositionsOfStartGoalMarkers();
     goal.drawPolyline(true);
     openMenu("goal-popup", "goal-options", "block", ["open-chat-btn", "delete-group-btn"]);

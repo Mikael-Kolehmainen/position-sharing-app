@@ -6,8 +6,9 @@ class User
     constructor(usersData)
     {
         this.usersData = usersData;
+        
         this.markerStyleSheetContent = "";
-
+        this.user_markers = [];
         this.userIcon = L.divIcon ({
             iconSize: [25, 25],
             iconAnchor: [12.5, 25],
@@ -22,8 +23,8 @@ class User
         this.markerStyleSheetContent = "";
         for (let i = 0; i < this.usersData.length; i++) {
             marker = L.marker(L.latLng(this.usersData[i].position), {icon: this.userIcon});
-            refreshedLayerGroup.addLayer(marker);
-            user_markers.push(marker);
+            layerManagement.refreshedLayerGroup.addLayer(marker);
+            this.user_markers.push(marker);
 
             markerClassName = this.#MARKER_CLASS_NAME + i;
             this.markerStyleSheetContent += '.' + markerClassName + '{ background-color: ' + this.usersData[i].color + '; }';

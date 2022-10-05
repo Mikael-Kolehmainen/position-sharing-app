@@ -17,14 +17,14 @@ function dragHandler(e)
 {
     let markerClassNames = this._icon.className;
     let markerClasses = markerClassNames.split(" ");
-    for (let i = 0; i < goal_marker_pos.length; i++) {
+    for (let i = 0; i < goal.goal_marker_pos.length; i++) {
         if (markerClasses.includes("user-goal-marker-"+i)) {
-            goal_marker_pos[i] = this.getLatLng();
-            goal_marker_arr[i].setLatLng(this.getLatLng());
+            goal.goal_marker_pos[i] = this.getLatLng();
+            goal.goal_marker_arr[i].setLatLng(this.getLatLng());
         }
         if (markerClasses.includes("user-start-marker-"+i)) {
-            start_marker_pos[i] = this.getLatLng();
-            start_marker_arr[i].setLatLng(this.getLatLng());
+            goal.start_marker_pos[i] = this.getLatLng();
+            goal.start_marker_arr[i].setLatLng(this.getLatLng());
         }
     }
     let marker = e.target;

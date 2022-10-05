@@ -2,6 +2,7 @@
 <html>
     <head>
         <?php require './required-files/head.php'; ?>
+        <link href='./styles/css/main.css' rel='stylesheet' type='text/css'>
         <link rel='icon' type='image/svg' href='media/'>
         <title>Home</title>
     </head>
