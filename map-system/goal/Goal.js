@@ -21,8 +21,6 @@ class Goal
             start_marker_pos[i] = new L.LatLng(this.current_position.lat + latlngValue, this.current_position.lng + latlngValue + this.#DISTANCE_BETWEEN_MARKERS);
             latlngValue = latlngValue + this.#DISTANCE_BETWEEN_MARKERS;
         }
-
-        goalIsBeingPlanned = true;
     }
 
     drawPolyline(isDraggable)
@@ -32,7 +30,9 @@ class Goal
 
         if (idsOfGoals.length == 0) {
             for (let i = 0; i < this.goalsData.length; i++) {
-                idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
+                if (this.goalsData[i] != "user has no goal") {
+                    idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
+                }
             }
         }
 
@@ -168,8 +168,6 @@ class Goal
         // REMOVE WAYPOINT MARKERS
         map.removeLayer(goalWaypointsLayerGroup);
         goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
-        
-        goalIsBeingPlanned = false;
     }
 
     saveDataFromPHPToVariables()
@@ -313,7 +311,6 @@ class Goal
         map.removeLayer(goalWaypointsLayerGroup);
         goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
         userPopupContent = [];
-        goalRouteIsDrawn = false;
         map.removeLayer(goalLayerGroup);
         goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
         goal_waypoints = [];

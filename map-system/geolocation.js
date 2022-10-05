@@ -29,9 +29,10 @@ let userPopupContent = [];
 let idsOfGoals = [];
 let goal_marker_arr = [];
 let goal_marker_pos = [];
-let goalRouteIsDrawn = false;
-let goalIsBeingPlanned = false;
 let goal_waypoints = [];
+
+// used in onclick-events.js
+let goalIsBeingPlanned = false;
 
 // we use these in remove-waypoint.js and create-goal.js
 let all_waypoints = [];
@@ -74,13 +75,15 @@ function onLocationFound(e)
             goal.usersData = data.usersdata;
             goal.current_position = e.latlng;
 
-            if (data.goalsdata[0] != "empty") {
+            if (data.goalsdata[0] == "empty" && !goalIsBeingPlanned) {
+                goal.remove();
+            } else {
                 goal.saveDataFromPHPToVariables();
                 goal.drawPolyline(false);
                 goal.calculatePercentagesOfRouteTravelled();
                 goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
-                ElementDisplay.change('add-goal-btn', 'none');                
+                ElementDisplay.change('add-goal-btn', 'none');               
             }
         });
     });
