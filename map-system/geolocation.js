@@ -76,7 +76,8 @@ function onLocationFound(e)
             goal.current_position = e.latlng;
 
             if (data.goalsdata[0] == "empty" && !goalIsBeingPlanned) {
-                goal.remove();
+                goal.clearLayers();
+                ElementDisplay.change('active-goal-disclaimer', 'none');
             } else {
                 goal.saveDataFromPHPToVariables();
                 goal.drawPolyline(false);

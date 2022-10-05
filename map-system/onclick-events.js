@@ -89,6 +89,8 @@ function removeWaypointClicked()
 function activeGoalDisclaimerClicked()
 {
     goal.remove();
+    ElementDisplay.change('active-goal-disclaimer', 'none');
+    ElementDisplay.change('add-goal-btn', 'block');
 }
 
 function openChatClicked()

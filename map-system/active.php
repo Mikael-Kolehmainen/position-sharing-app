@@ -64,6 +64,7 @@
         <script src='./../js/remove-children.js' defer></script>
         <script src='./../js/ElementDisplay.js' defer></script>
         <script src='./../js/Style.js' defer></script>
+        <script src='./../js/LayerManagement.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./geolocation.js' defer></script>
         <script src='./beforeunload.js' defer></script>

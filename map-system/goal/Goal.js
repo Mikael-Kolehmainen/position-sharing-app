@@ -298,21 +298,7 @@ class Goal
         }
         xmlhttp.send();
 
-        let disclaimer = document.getElementById("active-goal-disclaimer");
-        disclaimer.style.display = "none";
-
-        let goalBtn = document.getElementById("add-goal-btn");
-        goalBtn.style.display = "block";
-
-        map.removeLayer(goalLayerGroup);
-        goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
-        map.removeLayer(draggableRouteLayerGroup);
-        draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
-        map.removeLayer(goalWaypointsLayerGroup);
-        goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
         userPopupContent = [];
-        map.removeLayer(goalLayerGroup);
-        goalLayerGroup.eachLayer(function(layer) {goalLayerGroup.removeLayer(layer)});
         goal_waypoints = [];
         all_waypoints = [];
         goalIDs = [];
@@ -321,7 +307,12 @@ class Goal
         goal_marker_arr = [];
         goal_marker_pos = [];
 
-        document.getElementById("active-goal-disclaimer").style.display = "none";
+        this.clearLayers();
+    }
+
+    clearLayers()
+    {
+        LayerManagement.removeAndClearLayers([goalLayerGroup, draggableRouteLayerGroup, goalWaypointsLayerGroup]);
     }
 }
 
