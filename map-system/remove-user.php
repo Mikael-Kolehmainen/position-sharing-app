@@ -1,8 +1,6 @@
 <?php
-    require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
-    require './../db/User.php';
-    require './../db/Position.php';
+    require './../autoloader.php';
 
     if (isset($_GET[GROUPCODE])) {
         session_start();

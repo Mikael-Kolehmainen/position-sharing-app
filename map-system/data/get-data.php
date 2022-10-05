@@ -1,105 +1,100 @@
 <?php
-    require './../../required-files/dbHandler.php';
-    require './../../required-files/constants.php';
-    require './../../db/Position.php';
-    require './../../db/User.php';
-    require './../../db/Goal.php';
-    require './../../db/Waypoint.php';
-    require './../chat/Message.php';
+require './../../required-files/constants.php';
+require './../../autoloader.php';
 
-    if (isset($_GET[GROUPCODE])) {
-        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+if (isset($_GET[GROUPCODE])) {
+    $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-        $data = getData($groupCode);
+    $data = getData($groupCode);
 
-        echo json_encode($data);
-    }
+    echo json_encode($data);
+}
 
-    function getData($groupCode)
-    {
-        $data = array();
-        $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
-        $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
-        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+function getData($groupCode)
+{
+    $data = array();
+    $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
+    $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
+    $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
 
-        return $data;
-    }
+    return $data;
+}
 
-    function getUsersDetailsFromDatabase($groupCode)
-    {
-        $user = new User();
-        $user->groupCode = $groupCode;
+function getUsersDetailsFromDatabase($groupCode)
+{
+    $user = new User();
+    $user->groupCode = $groupCode;
 
-        $userMarkerDetails = $user->getMarkerDetails();
+    $userMarkerDetails = $user->getMarkerDetails();
 
-        for ($i = 0; $i < count($userMarkerDetails); $i++) {
-            $position = new Position();
-            $position->id = $userMarkerDetails[$i][POSITIONS_ID];
-            $userMarkerDetails[$i][POSITION] = $position->getLatLng();
-        }
-
-        return $userMarkerDetails;
-    }
-
-    function getMessagesFromDatabase($groupCode)
-    {
-        $message = new Message($groupCode);
-
-        return $message->get();
-    }
-
-    function getGoalPositionsFromDatabase($groupCode)
-    {
-        $goal = new Goal($groupCode);
-
-        $startGoalPositionsRowIDs = $goal->getStartGoalPositionsRowIDs();
-
-        $goalsData = array();
-        if (count($startGoalPositionsRowIDs) > 0) {
-            for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-                $goalsData[$i][GOAL_ID] = $goal->getIndexes()[$i];
-
-                $goalsData[$i][START_POSITION] = getPosition($startGoalPositionsRowIDs[$i], START_POSITIONS_ID);
-                $goalsData[$i][GOAL_POSITION] = getPosition($startGoalPositionsRowIDs[$i], GOAL_POSITIONS_ID);
-    
-                $goalsData[$i][WAYPOINTS] = getWaypointPositions($i, $groupCode);
-            }
-        } else {
-            $goalsData[0] = CONSTANT_EMPTY;
-        }
-
-        return $goalsData;
-    }
-
-    function getPosition($rowID, $positionName)
-    {
+    for ($i = 0; $i < count($userMarkerDetails); $i++) {
         $position = new Position();
-        $position->id = $rowID[$positionName];
-
-        return $position->getLatLng();
+        $position->id = $userMarkerDetails[$i][POSITIONS_ID];
+        $userMarkerDetails[$i][POSITION] = $position->getLatLng();
     }
 
-    function getWaypointPositions($loopIndex, $groupCode)
-    {
-        $waypoint = new Waypoint();
-        $position = new Position();
-        $goalsID = getGoalsID($groupCode);
+    return $userMarkerDetails;
+}
 
-        $waypoint->goalsID = $goalsID[$loopIndex][ID];
+function getMessagesFromDatabase($groupCode)
+{
+    $message = new Message($groupCode);
 
-        $waypoints = array();
+    return $message->get();
+}
 
-        for ($i = 0; $i < count($waypoint->getPositionsRowIDs()); $i++) {
-            $position->id = $waypoint->getPositionsRowIDs()[$i][POSITIONS_ID];
-            $waypoints[$i] = $position->getLatLng();
+function getGoalPositionsFromDatabase($groupCode)
+{
+    $goal = new Goal($groupCode);
+
+    $startGoalPositionsRowIDs = $goal->getStartGoalPositionsRowIDs();
+
+    $goalsData = array();
+    if (count($startGoalPositionsRowIDs) > 0) {
+        for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
+            $goalsData[$i][GOAL_ID] = $goal->getIndexes()[$i];
+
+            $goalsData[$i][START_POSITION] = getPosition($startGoalPositionsRowIDs[$i], START_POSITIONS_ID);
+            $goalsData[$i][GOAL_POSITION] = getPosition($startGoalPositionsRowIDs[$i], GOAL_POSITIONS_ID);
+
+            $goalsData[$i][WAYPOINTS] = getWaypointPositions($i, $groupCode);
         }
-
-        return $waypoints;
+    } else {
+        $goalsData[0] = CONSTANT_EMPTY;
     }
 
-    function getGoalsID($groupCode)
-    {
-        $goal = new Goal($groupCode);
+    return $goalsData;
+}
 
-        return $goal->getIDs();
+function getPosition($rowID, $positionName)
+{
+    $position = new Position();
+    $position->id = $rowID[$positionName];
+
+    return $position->getLatLng();
+}
+
+function getWaypointPositions($loopIndex, $groupCode)
+{
+    $waypoint = new Waypoint();
+    $position = new Position();
+    $goalsID = getGoalsID($groupCode);
+
+    $waypoint->goalsID = $goalsID[$loopIndex][ID];
+
+    $waypoints = array();
+
+    for ($i = 0; $i < count($waypoint->getPositionsRowIDs()); $i++) {
+        $position->id = $waypoint->getPositionsRowIDs()[$i][POSITIONS_ID];
+        $waypoints[$i] = $position->getLatLng();
     }
+
+    return $waypoints;
+}
+
+function getGoalsID($groupCode)
+{
+    $goal = new Goal($groupCode);
+
+    return $goal->getIDs();
+}

@@ -1,8 +1,6 @@
 <?php
-    require './../required-files/dbHandler.php';
     require './../required-files/constants.php';
-    require './../db/Group.php';
-    require './../db/User.php';
+    require './../autoloader.php';
 
     session_start();
 
