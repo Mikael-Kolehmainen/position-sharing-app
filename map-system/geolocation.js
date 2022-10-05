@@ -13,18 +13,10 @@ const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 
 let usersData;
 
-let userIcon = L.divIcon ({
-    iconSize: [25, 25],
-    iconAnchor: [12.5, 25],
-    className: 'user-marker',
-    popupAnchor: [0, -20]
-});
-
 let start_marker_arr = [];
 let start_marker_pos = [];
 
 let user_markers = [];
-let userPopupContent = [];
 
 let idsOfGoals = [];
 let goal_marker_arr = [];
@@ -76,9 +68,9 @@ function onLocationFound(e)
             goal.current_position = e.latlng;
 
             if (data.goalsdata[0] == "empty" && !goalIsBeingPlanned) {
-                goal.clearLayers();
+                LayerManagement.removeAndClearLayers([goalLayerGroup, draggableRouteLayerGroup, goalWaypointsLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
-            } else {
+            } else if (!goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
                 goal.drawPolyline(false);
                 goal.calculatePercentagesOfRouteTravelled();

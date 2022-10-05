@@ -200,12 +200,12 @@
     height: 100%;
     width: 100%;
     z-index: -99; }
-    .active-page section article #map .user-marker, .active-page section article #map .other-user-marker {
+    .active-page section article #map .user-marker, .active-page section article #map .goal-marker {
       position: relative;
       width: 25px;
       height: 25px;
       border-radius: 50%; }
-      .active-page section article #map .user-marker::before, .active-page section article #map .other-user-marker::before {
+      .active-page section article #map .user-marker::before, .active-page section article #map .goal-marker::before {
         position: absolute;
         top: 50%;
         left: 50%;

@@ -7,6 +7,13 @@ class User
     {
         this.usersData = usersData;
         this.markerStyleSheetContent = "";
+
+        this.userIcon = L.divIcon ({
+            iconSize: [25, 25],
+            iconAnchor: [12.5, 25],
+            className: "user-marker",
+            popupAnchor: [0, -20]
+        });
     }
 
     addMarkersToMap()
@@ -14,7 +21,7 @@ class User
         let marker, markerClassName;
         this.markerStyleSheetContent = "";
         for (let i = 0; i < this.usersData.length; i++) {
-            marker = L.marker(L.latLng(this.usersData[i].position), {icon: userIcon});
+            marker = L.marker(L.latLng(this.usersData[i].position), {icon: this.userIcon});
             refreshedLayerGroup.addLayer(marker);
             user_markers.push(marker);
 

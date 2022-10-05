@@ -15,7 +15,6 @@ function dragStartHandler(e)
 
 function dragHandler(e) 
 {
-    // We get the index and what type of marker by looking at the classname 'user-[type]-marker-[index]'
     let markerClassNames = this._icon.className;
     let markerClasses = markerClassNames.split(" ");
     for (let i = 0; i < goal_marker_pos.length; i++) {

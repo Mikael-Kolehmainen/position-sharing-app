@@ -10,6 +10,13 @@ class Goal
         this.current_position = current_position;
 
         this.percentages = [];
+        this.userPopupContent = [];
+        this.startGoalIcon = L.divIcon ({
+            iconSize: [25, 25],
+            iconAnchor: [12.5, 25],
+            popupAnchor: [0, -20],
+            className: "goal-marker"
+        });
     }
 
     calculatePositionsOfStartGoalMarkers()
@@ -83,10 +90,10 @@ class Goal
 
     #createStartGoalMarkers(i, isDraggable)
     {
-        start_marker_arr[i] = new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: userIcon});
+        start_marker_arr[i] = new L.Marker(start_marker_pos[i], {draggable: isDraggable, icon: this.startGoalIcon});
         goalLayerGroup.addLayer(start_marker_arr[i]);
         
-        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: userIcon});
+        goal_marker_arr[i] = new L.Marker(goal_marker_pos[i], {draggable: isDraggable, icon: this.startGoalIcon});
         goalLayerGroup.addLayer(goal_marker_arr[i]);
         map.addLayer(goalLayerGroup);
     }
@@ -119,8 +126,8 @@ class Goal
 
     #bindPopupToUsers(i)
     {
-        if (userPopupContent.length > 0) {
-            user_markers[i].bindPopup('<h3>'+userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+        if (this.userPopupContent.length > 0) {
+            user_markers[i].bindPopup('<h3>'+this.userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
         }
     }
 
@@ -162,12 +169,8 @@ class Goal
             }
         }
         xmlhttp.send();
-        // REMOVE DRAGGABLE ROUTE
-        map.removeLayer(draggableRouteLayerGroup);
-        draggableRouteLayerGroup.eachLayer(function(layer) {draggableRouteLayerGroup.removeLayer(layer)});
-        // REMOVE WAYPOINT MARKERS
-        map.removeLayer(goalWaypointsLayerGroup);
-        goalWaypointsLayerGroup.eachLayer(function(layer) {goalWaypointsLayerGroup.removeLayer(layer)});
+
+        LayerManagement.removeAndClearLayers([draggableRouteLayerGroup, goalWaypointsLayerGroup]);
     }
 
     saveDataFromPHPToVariables()
@@ -202,13 +205,13 @@ class Goal
 
     updatePercentagePopups()
     {
-        userPopupContent = [];
+        this.userPopupContent = [];
 
         let smallestPercentage = Math.min(...this.percentages);
         for (let i = 0; i < this.percentages.length; i++) {
-            userPopupContent[i] = this.percentages[i] + "%";
+            this.userPopupContent[i] = this.percentages[i] + "%";
             if (smallestPercentage + 10 < this.percentages[i]) {
-                userPopupContent[i] += "\n(Slow down)";
+                this.userPopupContent[i] += "\n(Slow down)";
             }
         }
     }
@@ -298,7 +301,7 @@ class Goal
         }
         xmlhttp.send();
 
-        userPopupContent = [];
+        this.userPopupContent = [];
         goal_waypoints = [];
         all_waypoints = [];
         goalIDs = [];
@@ -307,11 +310,6 @@ class Goal
         goal_marker_arr = [];
         goal_marker_pos = [];
 
-        this.clearLayers();
-    }
-
-    clearLayers()
-    {
         LayerManagement.removeAndClearLayers([goalLayerGroup, draggableRouteLayerGroup, goalWaypointsLayerGroup]);
     }
 }
