@@ -1,4 +1,5 @@
-window.addEventListener('beforeunload', function(e) {
+window.addEventListener('beforeunload', function() 
+{
     let xmlhttp = new XMLHttpRequest();
     let sent = false;
     xmlhttp.onreadystatechange = function() {
@@ -7,7 +8,6 @@ window.addEventListener('beforeunload', function(e) {
         }
     };
     if (sent == false) {
-        const groupCode = new URLSearchParams(window.location.search).get('groupcode');
         xmlhttp.open("GET", "remove-user.php?groupcode=" + groupCode, true);
         xmlhttp.send();
     }

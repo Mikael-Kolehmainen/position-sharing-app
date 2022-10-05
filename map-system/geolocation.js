@@ -1,24 +1,4 @@
-let map = L.map('map', {zoomControl: false});
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '© OpenStreetMap'
-}).addTo(map);
-
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
-
-let goal, chat, user, waypoint, layerManagement;
-
-document.addEventListener("DOMContentLoaded", objects);
-
-function objects()
-{
-    goal = new Goal();
-    chat = new Chat();
-    user = new User();
-    waypoint = new Waypoint();
-    layerManagement = new LayerManagement();
-}
 
 function onLocationFound(e) 
 {
@@ -62,10 +42,3 @@ function onLocationError(e)
 {
     alert(e.message);
 }
-
-map.on('locationfound', onLocationFound);
-map.on('locationerror', onLocationError);
-
-map.locate({setView: true, enableHighAccuracy: true});
-
-setInterval("map.locate({setView: false, enableHighAccuracy: true})", 3000);
