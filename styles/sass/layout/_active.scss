@@ -277,6 +277,16 @@
                 .leaflet-popup-close-button {
                     display: none;
                 }
+                .leaflet-control-zoom {
+                    margin: 0;
+                }
+                .leaflet-right {
+                    left: 85%;
+                    right: auto;
+                }
+                .leaflet-top {
+                    top: 7.5%;
+                }
             }
         }
     }

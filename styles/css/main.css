@@ -220,6 +220,13 @@
           text-align: center; }
     .active-page section article #map .leaflet-popup-close-button {
       display: none; }
+    .active-page section article #map .leaflet-control-zoom {
+      margin: 0; }
+    .active-page section article #map .leaflet-right {
+      left: 85%;
+      right: auto; }
+    .active-page section article #map .leaflet-top {
+      top: 7.5%; }
 
 /* width */
 ::-webkit-scrollbar {
