@@ -136,6 +136,9 @@
                             <p>Remove waypoint</p>
                         </a>
                     </div>
+                    <a class='btn round onclick center small-circle' id='check-map-legends-btn' style='display: inline-block;'>
+                        <i class='fa-solid fa-layer-group'></i>
+                    </a>
                 </div>
                 <div class='popup' id='delete-popup' style='display: none;'>
                     <p>Are you sure you want to delete this group?</p>
@@ -156,6 +159,54 @@
                     <a class='btn onclick' id='show-draggable-goal'>
                         <p>Yes</p>
                     </a>
+                </div>
+                <div class='popup' id='map-legends-popup' style='display: none;'>
+                    <div class='btn-container'>
+                        <a class='btn round onclick' id='close-map-legends-btn'>
+                            <i class='fa-solid fa-xmark'></i>
+                        </a>
+                    </div>
+                    <p>Map legends</p>
+                    <table>
+                        <tr>
+                            <td>
+                                <div class='user-marker map-legend'>
+                                    <p>initials</p>
+                                </div>
+                            </td>
+                            <td>
+                                User Marker
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class='start-marker map-legend'>
+                                    <p>initials</p>
+                                </div>
+                            </td>
+                            <td>
+                                Start Marker
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class='goal-marker map-legend'>
+                                    <p>initials</p>
+                                </div>
+                            </td>
+                            <td>
+                                Goal Marker
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class='route-polyline map-legend'></div>
+                            </td>
+                            <td>
+                                Route Line
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </article>
         </section>

@@ -91,6 +91,18 @@
                         background-color: white;
                         color: black;
                     }
+                    &.center {
+                        left: 50%;
+                    }
+                    &.small-circle {
+                        width: 50px;
+                        height: 50px;
+                        top: 8%;
+
+                        i {
+                            font-size: 24px;
+                        }
+                    }
                 }
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
@@ -170,7 +182,7 @@
                             left: 0;
                             top: 0;
                             transform: none;
-    
+                    
                             i {
                                 font-size: 26px;
                             }
@@ -203,7 +215,7 @@
                 width: 100%;
                 text-align: center;
                 max-height: 300px;
-                overflow-y: scroll;
+                overflow-y: auto;
                 margin-bottom: 5px;
                 
                 tr {
@@ -241,6 +253,90 @@
                     font-weight: bold;
                     color: white;
                     background-color: transparent;
+                }
+            }
+            #map-legends-popup {
+                .btn-container {
+                    width: 100%;
+                    max-width: 510px;
+                    margin: auto;
+                    margin-bottom: 10px;
+                    text-align: right;
+                    
+                    .btn {
+                        width: 30px;
+                        height: 30px;
+                        background-color: $secondary-color;
+                        margin: 0;
+                        margin-right: 10px;
+                        position: relative;
+                        left: 0;
+                        top: 0;
+                        transform: none;
+                
+                        i {
+                            font-size: 26px;
+                        }
+                    }
+                }
+                .btn {
+                    border-radius: 50%;
+                    padding: 0;
+
+                    &:nth-child(1) {
+                        float: none;
+                    }
+                }
+                .map-legend {
+                    width: 50px;
+                    height: 50px;
+                    background-color: black;
+                    position: relative;
+
+                    p {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+
+                    &.user-marker {
+                        background-color: $primary-color;
+                        border-radius: 50%;
+                    }
+                    &.start-marker {
+                        background-color: lightgreen;
+                    }
+                    &.goal-marker {
+                        background-color: red;
+                    }
+                    &.route-polyline {
+                        background-color: rgb(51, 136, 255);
+                        height: 7.5px;
+                        transform: rotate(-45deg);
+                    }
+                }
+                table {
+                    display: table;
+
+                    tr {
+                        width: 100%;
+                        height: 50px;
+                    
+                        td {
+                            width: 60%;
+                            vertical-align: middle;
+
+                            &:first-of-type {
+                                width: 30%;
+                            }
+                        }
+                        &:first-of-type {
+                            margin-bottom: 5px;
+                        }
+                    }
                 }
             }
             #map {

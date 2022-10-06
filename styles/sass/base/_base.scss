@@ -145,6 +145,32 @@ body {
     }
 }
 
+// BUTTON CONTAINER
+
+.btn-container {
+    width: 100%;
+    max-width: 510px;
+    margin: auto;
+    margin-bottom: 10px;
+    text-align: right;
+    
+    .btn {
+        width: 30px;
+        height: 30px;
+        background-color: $secondary-color;
+        margin: 0;
+        margin-right: 10px;
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+
+        i {
+            font-size: 26px;
+        }
+    }
+}
+
 // NUMBER INPUT
 
 .number-input {

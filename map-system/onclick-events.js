@@ -39,6 +39,12 @@ document.querySelectorAll(".onclick").forEach(element =>
             case "reject-group-delete-btn":
                 rejectGroupDeleteClicked();
                 break;
+            case "check-map-legends-btn":
+                checkMapLegendsClicked();
+                break;
+            case "close-map-legends-btn":
+                closeMapLegendsClicked();
+                break;
         }
     });
 });
@@ -95,12 +101,12 @@ function activeGoalDisclaimerClicked()
 
 function openChatClicked()
 {
-    openMenu("open-chat-btn", "chat", "block", ["add-goal-btn", "delete-group-btn"]);
+    openMenu("open-chat-btn", "chat", "block", ["add-goal-btn", "delete-group-btn", "check-map-legends-btn"]);
 }
 
 function closeChatClicked()
 {
-    openMenu("chat", "open-chat-btn", "inline-block", ["add-goal-btn", "delete-group-btn"])
+    openMenu("chat", "open-chat-btn", "inline-block", ["add-goal-btn", "delete-group-btn", "check-map-legends-btn"])
 }
 
 function deleteGroupClicked()
@@ -111,4 +117,14 @@ function deleteGroupClicked()
 function rejectGroupDeleteClicked()
 {
     openMenu("delete-popup", "delete-group-btn", "inline-block");
+}
+
+function checkMapLegendsClicked()
+{
+    openMenu("check-map-legends-btn", "map-legends-popup", "block");
+}
+
+function closeMapLegendsClicked()
+{
+    openMenu("map-legends-popup", "check-map-legends-btn", "block");
 }

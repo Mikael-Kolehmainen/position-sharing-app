@@ -81,6 +81,14 @@
         height: 50px;
         background-color: white;
         color: black; }
+      .active-page section article .bottom .btn.center {
+        left: 50%; }
+      .active-page section article .bottom .btn.small-circle {
+        width: 50px;
+        height: 50px;
+        top: 8%; }
+        .active-page section article .bottom .btn.small-circle i {
+          font-size: 24px; }
     .active-page section article .bottom .chat {
       background-color: rgba(0, 12, 102, 0.6);
       padding-top: 10px;
@@ -167,7 +175,7 @@
     width: 100%;
     text-align: center;
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-bottom: 5px; }
     .active-page section article table tr {
       display: block;
@@ -196,6 +204,64 @@
       font-weight: bold;
       color: white;
       background-color: transparent; }
+  .active-page section article #map-legends-popup .btn-container {
+    width: 100%;
+    max-width: 510px;
+    margin: auto;
+    margin-bottom: 10px;
+    text-align: right; }
+    .active-page section article #map-legends-popup .btn-container .btn {
+      width: 30px;
+      height: 30px;
+      background-color: #C3423F;
+      margin: 0;
+      margin-right: 10px;
+      position: relative;
+      left: 0;
+      top: 0;
+      transform: none; }
+      .active-page section article #map-legends-popup .btn-container .btn i {
+        font-size: 26px; }
+  .active-page section article #map-legends-popup .btn {
+    border-radius: 50%;
+    padding: 0; }
+    .active-page section article #map-legends-popup .btn:nth-child(1) {
+      float: none; }
+  .active-page section article #map-legends-popup .map-legend {
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    position: relative; }
+    .active-page section article #map-legends-popup .map-legend p {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: bold; }
+    .active-page section article #map-legends-popup .map-legend.user-marker {
+      background-color: #5BC0EB;
+      border-radius: 50%; }
+    .active-page section article #map-legends-popup .map-legend.start-marker {
+      background-color: lightgreen; }
+    .active-page section article #map-legends-popup .map-legend.goal-marker {
+      background-color: red; }
+    .active-page section article #map-legends-popup .map-legend.route-polyline {
+      background-color: #3388ff;
+      height: 7.5px;
+      transform: rotate(-45deg); }
+  .active-page section article #map-legends-popup table {
+    display: table; }
+    .active-page section article #map-legends-popup table tr {
+      width: 100%;
+      height: 50px; }
+      .active-page section article #map-legends-popup table tr td {
+        width: 60%;
+        vertical-align: middle; }
+        .active-page section article #map-legends-popup table tr td:first-of-type {
+          width: 30%; }
+      .active-page section article #map-legends-popup table tr:first-of-type {
+        margin-bottom: 5px; }
   .active-page section article #map {
     height: 100%;
     width: 100%;
@@ -339,6 +405,25 @@ body {
       text-align: center;
       font-size: 12px;
       font-weight: bold; }
+
+.btn-container {
+  width: 100%;
+  max-width: 510px;
+  margin: auto;
+  margin-bottom: 10px;
+  text-align: right; }
+  .btn-container .btn {
+    width: 30px;
+    height: 30px;
+    background-color: #C3423F;
+    margin: 0;
+    margin-right: 10px;
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none; }
+    .btn-container .btn i {
+      font-size: 26px; }
 
 .number-input {
   border: none;
