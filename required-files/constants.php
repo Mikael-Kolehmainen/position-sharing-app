@@ -12,7 +12,7 @@
     const GOAL_POSITION = "goal_position";
     const WAYPOINTS = "waypoints";
     const WAYPOINT = "waypoint";
-    const GOALID = "goalid";
+    const GOALINDEX = "goalindex";
     const GOAL_ID = "goal_id";
     const UNIQUEID = "uniqueID";
     const GOALAMOUNT = "goalamount";

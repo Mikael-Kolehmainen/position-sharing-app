@@ -23,7 +23,7 @@ class Goal
         this.goal_marker_arr = [];
         this.goal_marker_pos = [];
         this.goal_waypoints = [];
-        this.goalIDs = [];
+        this.goalIndexes = [];
         this.goalIsBeingPlanned = false;
     }
 
@@ -135,7 +135,7 @@ class Goal
     #bindPopupToUsers(i)
     {
         if (this.userPopupContent.length > 0) {
-            user.user_markers[i].bindPopup('<h3>'+this.userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
+            user.user_markers[this.idsOfGoals[i]].bindPopup('<h3>'+this.userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
         }
     }
 
@@ -155,19 +155,21 @@ class Goal
                     '&goallng' + i + '=' + goallng +
                     '&startlat' + i + '=' + startlat + 
                     '&startlng' + i + '=' + startlng + 
-                    '&goalid' + i + '=' + this.idsOfGoals[i];
+                    '&goalindex' + i + '=' + this.idsOfGoals[i];
+
+            console.log(this.idsOfGoals[i]);
         }
 
-        // We count how many of each id there's in this.goalIDs
+        // We count how many of each id there's in this.goalIndexes
         const IDcounts = {};
-        this.goalIDs.forEach(function (x) { IDcounts[x] = (IDcounts[x] || 0) + 1; });
+        this.goalIndexes.forEach(function (x) { IDcounts[x] = (IDcounts[x] || 0) + 1; });
 
         let all_waypoints = waypoint.all_waypoints;
         // We run the loop in reverse because I want to save the waypoints to the database in correct order
         for (let i = all_waypoints.length - 1; i >= 0; i--) {
-            url += '&waypoint' + this.goalIDs[i] + '-' + (IDcounts[this.goalIDs[i]]-1) + '-lat' + '=' + all_waypoints[i].getLatLng().lat;
-            url += '&waypoint' + this.goalIDs[i] + '-' + (IDcounts[this.goalIDs[i]]-1) + '-lng' + '=' + all_waypoints[i].getLatLng().lng;
-            IDcounts[this.goalIDs[i]] = IDcounts[this.goalIDs[i]] - 1;
+            url += '&waypoint' + this.goalIndexes[i] + '-' + (IDcounts[this.goalIndexes[i]]-1) + '-lat' + '=' + all_waypoints[i].getLatLng().lat;
+            url += '&waypoint' + this.goalIndexes[i] + '-' + (IDcounts[this.goalIndexes[i]]-1) + '-lng' + '=' + all_waypoints[i].getLatLng().lng;
+            IDcounts[this.goalIndexes[i]] = IDcounts[this.goalIndexes[i]] - 1;
         }
         url += '&groupcode=' + groupCode + '&goalamount=' + this.goal_marker_pos.length;
         xmlhttp.open("GET", url, true);
@@ -205,10 +207,79 @@ class Goal
         let percentage;
 
         for (let i = 0; i < this.start_marker_pos.length; i++) {
-            percentage = Math.round((1 - user.user_markers[i].getLatLng().distanceTo(this.goal_marker_pos[i]) / this.start_marker_pos[i].distanceTo(this.goal_marker_pos[i])) * 100);
+            let routeLength = this.#getRouteLength(i);
+
+            // what happens if goal doesn't have a waypoint
+            let userHasTravelledLength = this.#getUserHasTravelledLength(i);
+
+          //  percentage = Math.round((1 - user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_marker_pos[i]) / routeLength) * 100);
+            percentage = Math.round((userHasTravelledLength / routeLength) * 100);
 
             this.percentages.push(percentage);
         }
+
+        // TO-DO 
+        // calculate the entire length of route 
+        // calculate the length from user to the route then add the length of remaining route
+        // then divide the remaining length with the entire length to get percentage
+    }
+
+    #getRouteLength(i)
+    {
+        let routeLength = 0;
+
+        if (this.goal_waypoints[i].length > 1) {
+            for (let j = 0; j < this.goal_waypoints[i].length; j++) {
+                if (j == 0) {
+                    routeLength += this.start_marker_pos[i].distanceTo(this.goal_waypoints[i][j].getLatLng());
+                    routeLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j+1].getLatLng());
+                } else if (j == this.goal_waypoints[i].length - 1) {
+                    routeLength += this.goal_marker_pos[i].distanceTo(this.goal_waypoints[i][j].getLatLng());
+                } else {
+                    routeLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j+1].getLatLng());
+                }
+            }
+        } else if (this.goal_waypoints[i].length == 1) {
+            routeLength += this.start_marker_pos[i].distanceTo(this.goal_waypoints[i][0].getLatLng());
+            routeLength += this.goal_marker_pos[i].distanceTo(this.goal_waypoints[i][0].getLatLng());
+        } else {
+            routeLength += this.start_marker_pos[i].distanceTo(this.goal_marker_pos[i]);
+        }
+
+        return routeLength;
+    }
+
+    #getUserHasTravelledLength(i)
+    {
+        let userHasTravelledLength = 0;
+        if (this.goal_waypoints[i].length > 0) {
+            let closestWaypointToUserIndex = this.#getClosestWaypointToUserIndexInGoalWaypoints(i);
+            // TODO: run a for loop in reverse and add the distance together leading back to the start_marker_pos
+            for (let j = closestWaypointToUserIndex; j >= 0; j--) {
+                if (j == 0) {
+                    userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.start_marker_pos[i]);
+                } else {
+                    userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j-1].getLatLng());
+                }
+            }
+        } else {
+            userHasTravelledLength = user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_waypoints[i][j].getLatLng());
+        }
+
+        return userHasTravelledLength;
+    }
+
+    #getClosestWaypointToUserIndexInGoalWaypoints(i)
+    {
+        let distancesToUser = [];
+
+        for (let j = 0; j < this.goal_waypoints[i].length; j++) {
+            distancesToUser.push(user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_waypoints[i][j].getLatLng()));
+        }
+
+        let shortestDistance = Math.min(...distancesToUser);
+
+        return distancesToUser.indexOf(shortestDistance);
     }
 
     updatePercentagePopups()
@@ -222,6 +293,8 @@ class Goal
                 this.userPopupContent[i] += "\n(Slow down)";
             }
         }
+
+        this.percentages = [];
     }
 
     createPopup()
@@ -312,7 +385,7 @@ class Goal
         this.userPopupContent = [];
         this.goal_waypoints = [];
         waypoint.all_waypoints = [];
-        this.goalIDs = [];
+        this.goalIndexes = [];
         this.start_marker_arr = [];
         this.start_marker_pos = [];
         this.goal_marker_arr = [];

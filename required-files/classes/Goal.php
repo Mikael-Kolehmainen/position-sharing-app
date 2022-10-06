@@ -18,7 +18,7 @@ class Goal
     public $goalPositionID;
 
     /** @var int */
-    public $goalID;
+    public $goalIndex;
 
     /** @var string */
     public $groupCode;
@@ -72,7 +72,7 @@ class Goal
         $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
         $stmt->bindParam(1, $this->startPositionID);
         $stmt->bindParam(2, $this->goalPositionID);
-        $stmt->bindParam(3, $this->goalID);
+        $stmt->bindParam(3, $this->goalIndex);
         $stmt->bindParam(4, $this->groupCode);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();

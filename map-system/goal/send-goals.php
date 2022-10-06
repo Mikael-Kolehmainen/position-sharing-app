@@ -22,9 +22,9 @@
             $startPositionRowID = insertPositionToDatabase($startPosition->latitude, $startPosition->longitude);
             $goalPositionRowID = insertPositionToDatabase($goalPosition->latitude, $goalPosition->longitude);
 
-            $goalIDKey = GOALID.$userIndex;
-            $goalID = filter_input(INPUT_GET, $goalIDKey, FILTER_VALIDATE_INT);
-            $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode);
+            $goalIndexDKey = GOALINDEX.$userIndex;
+            $goalIndex = filter_input(INPUT_GET, $goalIndexDKey, FILTER_VALIDATE_INT);
+            $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalIndex, $groupCode);
         
             $waypointIndex = 0;
             $waypointLatKey = WAYPOINT.$userIndex.'-'.$waypointIndex.'-'.LAT;
@@ -62,12 +62,12 @@
         return $positionRowID;
     }
 
-    function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalID, $groupCode)
+    function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalIndex, $groupCode)
     {
         $goal = new Goal($groupCode);
         $goal->startPositionID = $startPositionRowID;
         $goal->goalPositionID = $goalPositionRowID;
-        $goal->goalID = $goalID;
+        $goal->goalIndex = $goalIndex;
         $goal->save();
 
         return $goal->id;

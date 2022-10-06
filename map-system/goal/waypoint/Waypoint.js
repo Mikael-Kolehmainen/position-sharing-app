@@ -11,7 +11,7 @@ class Waypoint
     add()
     {
         const id = this.id;
-        goal.goalIDs.push(id);
+        goal.goalIndexes.push(id);
         if (typeof goal.goal_waypoints[id] == "undefined") {
             goal.goal_waypoints[id] = [];
         }
@@ -38,8 +38,8 @@ class Waypoint
 
     remove()
     {
-        if (this.all_waypoints.length != 0 && goal.goalIDs.length != 0) {
-            const id = goal.goalIDs[goal.goalIDs.length - 1];
+        if (this.all_waypoints.length != 0 && goal.goalIndexes.length != 0) {
+            const id = goal.goalIndexes[goal.goalIndexes.length - 1];
             this.id = id;
 
             const waypointToBeRemoved = this.all_waypoints[this.all_waypoints.length - 1];
@@ -56,7 +56,7 @@ class Waypoint
 
             this.#updatePolylines();
 
-            goal.goalIDs.splice(goal.goalIDs.length - 1, 1);
+            goal.goalIndexes.splice(goal.goalIndexes.length - 1, 1);
         }
     }
 
