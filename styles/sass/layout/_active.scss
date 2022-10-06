@@ -291,7 +291,10 @@
                     width: 50px;
                     height: 50px;
                     background-color: black;
-                    position: relative;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
 
                     p {
                         position: absolute;
@@ -316,6 +319,7 @@
                         background-color: rgb(51, 136, 255);
                         height: 7.5px;
                         transform: rotate(-45deg);
+                        left: 7.5%;
                     }
                 }
                 table {
@@ -327,8 +331,17 @@
                     
                         td {
                             width: 60%;
-                            vertical-align: middle;
+                            position: relative;
+                            height: 50px;
 
+                            p {
+                                font-size: 16px;
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                white-space: nowrap;
+                            }
                             &:first-of-type {
                                 width: 30%;
                             }

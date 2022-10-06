@@ -175,7 +175,7 @@
                                 </div>
                             </td>
                             <td>
-                                User Marker
+                                <p>User Marker</p>
                             </td>
                         </tr>
                         <tr>
@@ -185,7 +185,7 @@
                                 </div>
                             </td>
                             <td>
-                                Start Marker
+                                <p>Start Marker</p>
                             </td>
                         </tr>
                         <tr>
@@ -195,7 +195,7 @@
                                 </div>
                             </td>
                             <td>
-                                Goal Marker
+                                <p>Goal Marker</p>
                             </td>
                         </tr>
                         <tr>
@@ -203,7 +203,7 @@
                                 <div class='route-polyline map-legend'></div>
                             </td>
                             <td>
-                                Route Line
+                                <p>Route Line</p>
                             </td>
                         </tr>
                     </table>

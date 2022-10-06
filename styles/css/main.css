@@ -231,7 +231,10 @@
     width: 50px;
     height: 50px;
     background-color: black;
-    position: relative; }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
     .active-page section article #map-legends-popup .map-legend p {
       position: absolute;
       top: 50%;
@@ -249,7 +252,8 @@
     .active-page section article #map-legends-popup .map-legend.route-polyline {
       background-color: #3388ff;
       height: 7.5px;
-      transform: rotate(-45deg); }
+      transform: rotate(-45deg);
+      left: 7.5%; }
   .active-page section article #map-legends-popup table {
     display: table; }
     .active-page section article #map-legends-popup table tr {
@@ -257,7 +261,15 @@
       height: 50px; }
       .active-page section article #map-legends-popup table tr td {
         width: 60%;
-        vertical-align: middle; }
+        position: relative;
+        height: 50px; }
+        .active-page section article #map-legends-popup table tr td p {
+          font-size: 16px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          white-space: nowrap; }
         .active-page section article #map-legends-popup table tr td:first-of-type {
           width: 30%; }
       .active-page section article #map-legends-popup table tr:first-of-type {
