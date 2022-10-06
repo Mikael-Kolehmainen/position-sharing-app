@@ -58,19 +58,19 @@ function confirmGoalClicked()
 {
     goal.goalIsBeingPlanned = false;
     goal.sendDataToPHP();
-    openMenu("goal-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn"]);
+    openMenu("goal-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
 }
 
 function addGoalClicked()
 {
     goal.clearPreviousPopup();
     goal.createPopup();
-    openMenu("add-goal-btn", "goal-popup", "block");
+    openMenu("add-goal-btn", "goal-popup", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
 }
 
 function rejectAddGoalClicked()
 {
-    openMenu("goal-popup", "add-goal-btn", "block");
+    openMenu("goal-popup", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
 }
 
 function showDraggableGoalClicked()
@@ -78,13 +78,13 @@ function showDraggableGoalClicked()
     goal.goalIsBeingPlanned = true;
     goal.calculatePositionsOfStartGoalMarkers();
     goal.drawPolyline(true);
-    openMenu("goal-popup", "goal-options", "block", ["open-chat-btn", "delete-group-btn"]);
+    openMenu("goal-popup", "goal-options", "block");
 }
 
 function removeDraggableGoalClicked()
 {
     goal.remove();
-    openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn"]);
+    openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
 }
 
 function removeWaypointClicked()
@@ -121,10 +121,10 @@ function rejectGroupDeleteClicked()
 
 function checkMapLegendsClicked()
 {
-    openMenu("check-map-legends-btn", "map-legends-popup", "block");
+    openMenu("check-map-legends-btn", "map-legends-popup", "block", ["open-chat-btn", "delete-group-btn", "add-goal-btn"]);
 }
 
 function closeMapLegendsClicked()
 {
-    openMenu("map-legends-popup", "check-map-legends-btn", "block");
+    openMenu("map-legends-popup", "check-map-legends-btn", "block", ["open-chat-btn", "delete-group-btn", "add-goal-btn"]);
 }
