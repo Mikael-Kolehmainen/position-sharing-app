@@ -208,20 +208,12 @@ class Goal
 
         for (let i = 0; i < this.start_marker_pos.length; i++) {
             let routeLength = this.#getRouteLength(i);
-
-            // what happens if goal doesn't have a waypoint
             let userHasTravelledLength = this.#getUserHasTravelledLength(i);
 
-          //  percentage = Math.round((1 - user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_marker_pos[i]) / routeLength) * 100);
             percentage = Math.round((userHasTravelledLength / routeLength) * 100);
 
             this.percentages.push(percentage);
         }
-
-        // TO-DO 
-        // calculate the entire length of route 
-        // calculate the length from user to the route then add the length of remaining route
-        // then divide the remaining length with the entire length to get percentage
     }
 
     #getRouteLength(i)
