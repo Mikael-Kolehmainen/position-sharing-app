@@ -73,6 +73,7 @@
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
         <script src='./onclick-events.js' defer></script>
+        <script src='./onchange-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
@@ -127,7 +128,11 @@
                         </a>
                         <div class='distance'>
                             <p>Distance</p>
-                            <input type='number' class='btn number-input' id='distance-number' onchange='applyDistance()' min='0' max='99' placeholder='99'>
+                            <input type='number' class='btn number-input onchange' id='distance-number-changer' min='0' max='99' placeholder='99'>
+                        </div>
+                        <div class='degrees'>
+                            <p>Degrees</p>
+                            <input type='number' class='btn number-input onchange' id='degrees-number-changer' min='0' max='360' placeholder='360'>
                         </div>
                         <a class='btn onclick' id='confirm-goal-btn'>
                             <i class='fa-solid fa-check'></i>

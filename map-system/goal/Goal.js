@@ -400,6 +400,16 @@ class Goal
             this.idsOfGoals.splice(indexOfId, 1);
         }
     }
+
+    applyDistanceBetweenGoals()
+    {
+
+    }
+
+    applyDegreesBetweenGoals()
+    {
+        
+    }
 }
 
 function getIdOfCheckbox(checkbox)

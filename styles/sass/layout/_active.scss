@@ -190,10 +190,10 @@
                     }
                 }
                 .options {
-                    .distance {
+                    .distance, .degrees {
                         position: absolute;
                         top: -5%;
-                        left: 50%;
+                        left: 40%;
                         transform: translate(-50%, -50%);
                         text-align: center;
 
@@ -207,6 +207,10 @@
                             color: black;
                             margin-bottom: 5px;
                         }
+                    }
+                    .degrees {
+                        top: -5%;
+                        left: 60%;
                     }
                 }
             }

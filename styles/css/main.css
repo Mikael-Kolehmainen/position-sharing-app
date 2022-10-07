@@ -156,20 +156,23 @@
           transform: none; }
           .active-page section article .bottom .chat .btn-container .btn i {
             font-size: 26px; }
-    .active-page section article .bottom .options .distance {
+    .active-page section article .bottom .options .distance, .active-page section article .bottom .options .degrees {
       position: absolute;
       top: -5%;
-      left: 50%;
+      left: 40%;
       transform: translate(-50%, -50%);
       text-align: center; }
-      .active-page section article .bottom .options .distance .btn {
+      .active-page section article .bottom .options .distance .btn, .active-page section article .bottom .options .degrees .btn {
         position: static;
         left: 0;
         top: 0;
         transform: none; }
-      .active-page section article .bottom .options .distance p {
+      .active-page section article .bottom .options .distance p, .active-page section article .bottom .options .degrees p {
         color: black;
         margin-bottom: 5px; }
+    .active-page section article .bottom .options .degrees {
+      top: -5%;
+      left: 60%; }
   .active-page section article table {
     display: block;
     width: 100%;
