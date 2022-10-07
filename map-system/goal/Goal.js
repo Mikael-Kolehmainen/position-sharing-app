@@ -254,16 +254,20 @@ class Goal
         let userHasTravelledLength = 0;
         if (this.goal_waypoints[i].length > 0) {
             let closestWaypointToUserIndex = this.#getClosestWaypointToUserIndexInGoalWaypoints(i);
-            // TODO: run a for loop in reverse and add the distance together leading back to the start_marker_pos
-            for (let j = closestWaypointToUserIndex; j >= 0; j--) {
-                if (j == 0) {
-                    userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.start_marker_pos[i]);
-                } else {
-                    userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j-1].getLatLng());
+            if (user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.start_marker_pos[i]) > this.goal_waypoints[i][closestWaypointToUserIndex].getLatLng().distanceTo(user.user_markers[this.idsOfGoals[i]].getLatLng())) {
+                for (let j = closestWaypointToUserIndex; j >= 0; j--) {
+                    if (j == 0) {
+                        userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.start_marker_pos[i]);
+                    } else {
+                        userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j-1].getLatLng());
+                    }
                 }
+            } else {
+                userHasTravelledLength = -user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.start_marker_pos[i]);
+                
             }
         } else {
-            userHasTravelledLength = user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_waypoints[i][j].getLatLng());
+            userHasTravelledLength = -user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_marker_pos[i]);
         }
 
         return userHasTravelledLength;
