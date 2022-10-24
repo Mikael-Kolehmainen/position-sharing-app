@@ -65,6 +65,7 @@
         <script src='./../js/Style.js' defer></script>
         <script src='./../js/LayerManagement.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
+        <script src='./../leaflet/leaflet.geometryutil.js'></script>
         <script src='./global-objects.js' defer></script>
         <script src='./geolocation.js' defer></script>
         <script src='./map.js' defer></script>
@@ -73,12 +74,10 @@
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
         <script src='./onclick-events.js' defer></script>
-        <script src='./onchange-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
         <script src='./goal/waypoint/add-waypoint.js' defer></script>
-        <script src='./goal/distance.js' defer></script>
         <script src='./goal/waypoint/Waypoint.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
@@ -126,19 +125,19 @@
                         <a class='btn onclick' id='remove-draggable-goal'>
                             <i class='fa-solid fa-xmark'></i>
                         </a>
-                        <div class='distance'>
-                            <p>Distance</p>
-                            <input type='number' class='btn number-input onchange' id='distance-number-changer' min='0' max='99' placeholder='99'>
-                        </div>
-                        <div class='degrees'>
-                            <p>Degrees</p>
-                            <input type='number' class='btn number-input onchange' id='degrees-number-changer' min='0' max='360' placeholder='360'>
-                        </div>
-                        <a class='btn onclick' id='confirm-goal-btn'>
+                        <a class='btn onclick' id='confirm-goal-positions-btn'>
                             <i class='fa-solid fa-check'></i>
                         </a>
                         <a class='btn small onclick' id='remove-waypoint'>
                             <p>Remove waypoint</p>
+                        </a>
+                    </div>
+                    <div class='options' style='display: none;' id='goal-route-options'>
+                        <a class='btn onclick' id='remove-draggable-goal'>
+                            <i class='fa-solid fa-xmark'></i>
+                        </a>
+                        <a class='btn onclick' id='confirm-route-btn'>
+                            <i class='fa-solid fa-check'></i>
                         </a>
                     </div>
                     <a class='btn round onclick center small-circle' id='check-map-legends-btn' style='display: inline-block;'>

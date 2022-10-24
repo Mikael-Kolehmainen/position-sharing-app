@@ -6,8 +6,11 @@ document.querySelectorAll(".onclick").forEach(element =>
             case "water-switch":
                 waterSwitchClicked();
                 break;
-            case "confirm-goal-btn":
-                confirmGoalClicked();
+            case "confirm-goal-positions-btn":
+                confirmGoalPositionsClicked();
+                break;
+            case "confirm-route-btn":
+                confirmRouteClicked();
                 break;
             case "add-goal-btn":
                 addGoalClicked();
@@ -54,11 +57,21 @@ function waterSwitchClicked()
     showWaterEntities();
 }
 
-function confirmGoalClicked()
+function confirmGoalPositionsClicked()
+{
+    // TO-DO: Disable the ability to move the start & goal positions
+    // TO-DO: Ability to draw the outermost routes
+
+    openMenu("goal-options", "goal-route-options", "block");
+}
+
+function confirmRouteClicked()
 {
     goal.goalIsBeingPlanned = false;
+    goal.saveOuterRouteSegments();
+    goal.saveInnerRouteSegments();
     goal.sendDataToPHP();
-    openMenu("goal-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
+    openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"])
 }
 
 function addGoalClicked()
@@ -76,6 +89,7 @@ function rejectAddGoalClicked()
 function showDraggableGoalClicked()
 {
     goal.goalIsBeingPlanned = true;
+    goal.goalRoutes = [];
     goal.calculatePositionsOfStartGoalMarkers();
     goal.drawPolyline(true);
     openMenu("goal-popup", "goal-options", "block");

@@ -25,6 +25,9 @@ class Goal
         this.goal_waypoints = [];
         this.goalIndexes = [];
         this.goalIsBeingPlanned = false;
+
+        this.goalRoutes = [];
+        this.outerRouteSegments = [[], []];
     }
 
     calculatePositionsOfStartGoalMarkers()
@@ -64,12 +67,12 @@ class Goal
                     }
                 }
                 latlngs.push(this.goal_marker_pos[i]);
-                let polyline = [new L.Polyline(latlngs, {weight: 5, id: i})];
+                this.goalRoutes.push(new L.Polyline(latlngs, {weight: 5, id: i}))
                 if (isDraggable) {
-                    layerManagement.draggableRouteLayerGroup.addLayer(polyline[0]);
-                    this.start_marker_arr[i].parentLine = polyline;
-                    this.goal_marker_arr[i].parentLine = polyline;
-                    polyline[0].on('click', addWaypointToRoute);
+        //            layerManagement.draggableRouteLayerGroup.addLayer(this.goalRoutes[i]);
+                    this.start_marker_arr[i].parentLine = [this.goalRoutes[i]];
+                    this.goal_marker_arr[i].parentLine = [this.goalRoutes[i]];
+                    this.goalRoutes[i].on('click', addWaypointToRoute);
                     map.addLayer(layerManagement.draggableRouteLayerGroup);
 
                     this.start_marker_arr[i]
@@ -82,7 +85,7 @@ class Goal
                         .on('dragend', dragEndHandler);
                 }
 
-                layerManagement.goalLayerGroup.addLayer(polyline[0]);
+        //        layerManagement.goalLayerGroup.addLayer(this.goalRoutes[i]);
 
                 styleSheetContent += this.#createMarkerStyleSheetContent(i);
 
@@ -401,14 +404,31 @@ class Goal
         }
     }
 
-    applyDistanceBetweenGoals()
+    saveOuterRouteSegments()
     {
-
+        for (let i = 0; i < 1; i = i + 0.01) {
+            this.outerRouteSegments[0].push(L.GeometryUtil.interpolateOnLine(map, this.goalRoutes[0].getLatLngs(), i).latLng);
+            this.outerRouteSegments[1].push(L.GeometryUtil.interpolateOnLine(map, this.goalRoutes[this.goalRoutes.length - 1].getLatLngs(), i).latLng);
+        }
     }
 
-    applyDegreesBetweenGoals()
+    saveInnerRouteSegments()
     {
-        
+        for (let i = 0; i < this.outerRouteSegments[0].length; i++) {
+            for (let j = 1; j <= this.goal_marker_arr.length - 2; j++) {
+                let ratio = this.#defineRatioOfInterpolation(j);
+                L.marker(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][i], this.outerRouteSegments[1][i]]), ratio).latLng).addTo(map);
+            }
+        }
+    }
+
+    #defineRatioOfInterpolation(i)
+    {
+        let increment;
+
+        increment = 1 / (this.goal_marker_arr.length - 1);
+
+        return increment * i;
     }
 }
 

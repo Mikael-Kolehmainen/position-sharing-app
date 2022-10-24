@@ -74,49 +74,41 @@ class Waypoint
         const polyLineOptions = {weight: 5, id: id};
         if (goal.goal_waypoints[id].length > 0) {
             for (let i = 0; i < goal.goal_waypoints[id].length; i++) {
-                let polyline = [];
-        
                 if (i == 0) {
-                    polyline.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.start_marker_pos[id]], polyLineOptions));
-                    polyline[0].on('click', addWaypointToRoute);
-                    layerManagement.draggableRouteLayerGroup.addLayer(polyline[0]);
-                    goal.start_marker_arr[id].parentLine = [polyline[0]];
+                    goal.goalRoutes.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.start_marker_pos[id]], polyLineOptions));
+                    goal.start_marker_arr[id].parentLine = [goal.goalRoutes[i]];
         
                     if (i == goal.goal_waypoints[id].length - 1) {
-                        polyline.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_marker_pos[id]], polyLineOptions));
-                        polyline[1].on('click', addWaypointToRoute);
-                        layerManagement.draggableRouteLayerGroup.addLayer(polyline[1]);
-                        goal.goal_waypoints[id][i].parentLine = polyline;
-                        goal.goal_marker_arr[id].parentLine = [polyline[1]];
+                        goal.goal_waypoints[id][i].parentLine = goal.goalRoutes[i];
+                        goal.goal_marker_arr[id].parentLine = [goal.goalRoutes[i]];
                     } else {
-                        goal.goal_waypoints[id][i].parentLine = [polyline[0]];
+                        goal.goal_waypoints[id][i].parentLine = [goal.goalRoutes[i]];
                     }
                 } else if (i == goal.goal_waypoints[id].length - 1) {
-                    polyline.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_marker_pos[id]], polyLineOptions));
-                    polyline.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_waypoints[id][i-1].getLatLng()], polyLineOptions));
-        
-                    for (let j = 0; j < polyline.length; j++) {
-                        polyline[j].on('click', addWaypointToRoute);
-                        layerManagement.draggableRouteLayerGroup.addLayer(polyline[j]);
-                    }
-                    goal.goal_waypoints[id][i].parentLine = polyline;
-                    goal.goal_waypoints[id][i-1].parentLine = [polyline[1], goal.goal_waypoints[id][i-1].parentLine[0]];
-                    goal.goal_marker_arr[id].parentLine = [polyline[0]];
+                    goal.goalRoutes.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_marker_pos[id]], polyLineOptions));
+                    goal.goalRoutes.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_waypoints[id][i-1].getLatLng()], polyLineOptions));
+
+                    goal.goal_waypoints[id][i].parentLine = goal.goalRoutes;
+                    goal.goal_waypoints[id][i-1].parentLine = [goal.goalRoutes[i], goal.goal_waypoints[id][i-1].parentLine[0]];
+                    goal.goal_marker_arr[id].parentLine = [goal.goalRoutes[i]];
                 }
                 if (i != 0 && i != goal.goal_waypoints[id].length - 1) {
-                    polyline.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_waypoints[id][i-1].getLatLng()], polyLineOptions));
-                    polyline[0].on('click', addWaypointToRoute);
-                    layerManagement.draggableRouteLayerGroup.addLayer(polyline[0]);
-                    goal.goal_waypoints[id][i].parentLine = [polyline[0]];
-                    goal.goal_waypoints[id][i-1].parentLine = [polyline[0], goal.goal_waypoints[id][i-1].parentLine[0]];
+                    goal.goalRoutes.push(new L.polyline([goal.goal_waypoints[id][i].getLatLng(), goal.goal_waypoints[id][i-1].getLatLng()], polyLineOptions));
+                    goal.goal_waypoints[id][i].parentLine = [goal.goalRoutes[i]];
+                    goal.goal_waypoints[id][i-1].parentLine = [goal.goalRoutes[i], goal.goal_waypoints[id][i-1].parentLine[0]];
                 }
             }
+            for (let i = 0; i < goal.goalRoutes.length; i++) {
+                goal.goalRoutes[i].on('click', addWaypointToRoute);
+                layerManagement.draggableRouteLayerGroup.addLayer(goal.goalRoutes[j]);
+            }
         } else {
-            let polyline = new L.polyline([goal.start_marker_arr[id].getLatLng(), goal.goal_marker_arr[id].getLatLng()], polyLineOptions);
-            polyline.on('click', addWaypointToRoute);
-            layerManagement.draggableRouteLayerGroup.addLayer(polyline);
-            goal.start_marker_arr[id].parentLine = [polyline];
-            goal.goal_marker_arr[id].parentLine = [polyline];
+            goal.goalRoutes = [];
+            goal.goalRoutes[0] = new L.polyline([goal.start_marker_arr[id].getLatLng(), goal.goal_marker_arr[id].getLatLng()], polyLineOptions);
+            goal.goalRoutes.on('click', addWaypointToRoute);
+            layerManagement.draggableRouteLayerGroup.addLayer(goal.goalRoutes[0]);
+            goal.start_marker_arr[id].parentLine = [goal.goalRoutes[0]];
+            goal.goal_marker_arr[id].parentLine = [goal.goalRoutes[0]];
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
