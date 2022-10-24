@@ -59,8 +59,9 @@ function waterSwitchClicked()
 
 function confirmGoalPositionsClicked()
 {
-    // TO-DO: Disable the ability to move the start & goal positions
+    goal.disableMarkerDraggability();
     // TO-DO: Ability to draw the outermost routes
+    goal.enableRouteDrawing();
 
     openMenu("goal-options", "goal-route-options", "block");
 }
@@ -99,6 +100,7 @@ function removeDraggableGoalClicked()
 {
     goal.remove();
     openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
+    openMenu("goal-route-options", "add-goal-btn", "inline-block");
 }
 
 function removeWaypointClicked()

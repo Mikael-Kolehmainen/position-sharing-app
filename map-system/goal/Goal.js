@@ -430,6 +430,19 @@ class Goal
 
         return increment * i;
     }
+
+    disableMarkerDraggability()
+    {
+        for (let i = 0; i < this.start_marker_arr.length; i++) {
+            this.start_marker_arr[i].dragging.disable();
+            this.goal_marker_arr[i].dragging.disable();
+        }
+    }
+
+    enableRouteDrawing()
+    {
+        
+    }
 }
 
 function getIdOfCheckbox(checkbox)
