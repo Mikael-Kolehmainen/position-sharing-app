@@ -66,7 +66,6 @@
         <script src='./../js/LayerManagement.js' defer></script>
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./../leaflet/leaflet.geometryutil.js'></script>
-        <script src='./../leaflet/leaflet.draw.js'></script>
         <script src='./global-objects.js' defer></script>
         <script src='./geolocation.js' defer></script>
         <script src='./map.js' defer></script>

@@ -60,8 +60,7 @@ function waterSwitchClicked()
 function confirmGoalPositionsClicked()
 {
     goal.disableMarkerDraggability();
-    // TO-DO: Ability to draw the outermost routes
-    goal.enableRouteDrawing();
+    goal.enableOuterRouteDrawing();
 
     openMenu("goal-options", "goal-route-options", "block");
 }
