@@ -4,16 +4,25 @@
 
     session_start();
 
-    if (isset($_GET[GOALAMOUNT]) && isset($_GET[GROUPCODE])) {
-        $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_VALIDATE_INT);
-        $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+    $message = new Message('qOv');
+    $message->message = $_POST["testValue"];
+    $message->initials = "";
+    $message->color = "";
+    $message->save();
 
-        insertGoalsToDatabase($amountOfGoals, $groupCode);
+    if (json_decode(stripslashes($_POST[GROUPCODE]))) {
+   //     $amountOfGoals = filter_input(INPUT_GET, GOALAMOUNT, FILTER_VALIDATE_INT);
+        $groupCode = filter_input(INPUT_POST, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $position = new Position(0, 0);
+        $position->save();
+        $positionRowID = $position->id;
+    
+    //    insertGoalsToDatabase($amountOfGoals, $groupCode);
     } else {
-        header("LOCATION: ./../index.php");
+        header("LOCATION: ./../../index.php");
     }
 
-    function insertGoalsToDatabase($amountOfGoals, $groupCode)
+/*    function insertGoalsToDatabase($amountOfGoals, $groupCode)
     {
         for ($userIndex = 0; $userIndex < $amountOfGoals; $userIndex++) {
             $startPosition = getPositionFromURL(STARTLAT.$userIndex, STARTLNG.$userIndex);
@@ -79,4 +88,4 @@
         $waypoint->goalsID = $goalRowID;
         $waypoint->positionsID = $positionRowID;
         $waypoint->save();
-    }
+    } */

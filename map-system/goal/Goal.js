@@ -26,11 +26,13 @@ class Goal
         this.goalIndexes = [];
         this.goalIsBeingPlanned = false;
 
-        this.outerRoutes = [[], []];
         this.outerRouteSegments = [[], []];
+        this.innerRouteSegments = [];
         this.outerRouteWaypoints = [[], []];
         this.routeLoopIndex = 0;
-        this.indexesOfOutermostRoutes;
+        this.indexesOfOutermostRoutes = [];
+
+        this.routes = [];
     }
 
     calculatePositionsOfStartGoalMarkers()
@@ -116,6 +118,47 @@ class Goal
         }
     }
 
+    // New
+    sendDataToPHP()
+    {
+        let xmlhttp = new XMLHttpRequest();
+        const url = 'goal/send-goals.php';
+
+        let postObj = [];
+        let goallat, goallng, startlat, startlng, route, goalindex, loopIndex;
+
+        for (let i = 0; i < this.goal_marker_pos.length; i++) {
+            if (typeof this.indexesOfOutermostRoutes[i] != "undefined") {
+                loopIndex = this.indexesOfOutermostRoutes[i];
+            } else {
+                loopIndex = i;
+            }
+            goallat = this.goal_marker_pos[loopIndex].lat;
+            goallng = this.goal_marker_pos[loopIndex].lng;
+
+            startlat = this.start_marker_pos[loopIndex].lat;
+            startlng = this.start_marker_pos[loopIndex].lng;
+
+            goalindex = this.idsOfGoals[loopIndex];
+            route = this.routes[loopIndex];
+
+            postObj.push({id : loopIndex, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routePoints : route, goalindex : goalindex, groupcode : groupCode});
+        }
+
+        let post = JSON.stringify(postObj);
+
+        xmlhttp.open('POST', url, true);
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // Change to application/JSON
+        xmlhttp.send("testValue=test");
+
+        xmlhttp.onload = function() 
+        {
+            if (xmlhttp.status === 200) {
+                console.log("Post successfully created.");
+            }
+        }
+    }
+/*
     sendDataToPHP()
     {
         let xmlhttp = new XMLHttpRequest();
@@ -159,6 +202,7 @@ class Goal
 
         LayerManagement.removeAndClearLayers([layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
     }
+    */
 
     saveDataFromPHPToVariables()
     {
@@ -363,6 +407,13 @@ class Goal
         this.start_marker_pos = [];
         this.goal_marker_arr = [];
         this.goal_marker_pos = [];
+        this.outerRouteSegments = [[], []];
+        this.innerRouteSegments = [];
+        this.outerRouteWaypoints = [[], []];
+        this.routeLoopIndex = 0;
+        this.indexesOfOutermostRoutes = [];
+
+        this.routes = [];
 
         LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
     }
@@ -381,17 +432,34 @@ class Goal
     saveOuterRouteSegments()
     {
         for (let i = 0; i < 1; i = i + 0.01) {
-            this.outerRouteSegments[0].push(L.GeometryUtil.interpolateOnLine(map, this.outerRoutes[0].getLatLngs(), i).latLng);
-            this.outerRouteSegments[1].push(L.GeometryUtil.interpolateOnLine(map, this.outerRoutes[this.goalRoutes.length - 1].getLatLngs(), i).latLng);
+            this.outerRouteSegments[0].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[0], i).latLng);
+            this.outerRouteSegments[1].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[1], i).latLng);
         }
     }
 
     saveInnerRouteSegments()
     {
-        for (let i = 0; i < this.outerRouteSegments[0].length; i++) {
-            for (let j = 1; j <= this.goal_marker_arr.length - 2; j++) {
-                let ratio = this.#defineRatioOfInterpolation(j);
-                L.marker(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][i], this.outerRouteSegments[1][i]]), ratio).latLng).addTo(map);
+        for (let i = 1; i <= this.goal_marker_arr.length - 2; i++) {
+            this.innerRouteSegments.push([]);
+            for (let j = 0; j < this.outerRouteSegments[0].length; j++) {
+                let ratio = this.#defineRatioOfInterpolation(i);
+                this.innerRouteSegments[i-1].push(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng);
+                L.marker(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng).addTo(map);
+            }
+        }
+    }
+
+    saveSegmentsAsRoutes()
+    {
+        for (let i = 0; i < this.goal_marker_arr.length; i++) {
+            if (i == 0) {
+                this.routes.push(this.outerRouteSegments[0]);
+            } else if (i == this.goal_marker_arr.length - 1) {
+                this.routes.push(this.outerRouteSegments[1]);
+            } else {
+                for (let j = 0; j < this.innerRouteSegments.length; j++) {
+                    this.routes.push(this.innerRouteSegments[j]);
+                }
             }
         }
     }
@@ -452,7 +520,6 @@ class Goal
     {
         goal.outerRouteWaypoints[goal.routeLoopIndex].push(mouseEvent.latlng);
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
-        goal.outerRoutes[goal.routeLoopIndex].push(polyline);
         layerManagement.goalLayerGroup.addLayer(polyline);
     }
 
@@ -460,15 +527,14 @@ class Goal
     {
         goal.outerRouteWaypoints[goal.routeLoopIndex].push(goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].getLatLng());
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
-        goal.outerRoutes[goal.routeLoopIndex].push(polyline);
         layerManagement.goalLayerGroup.addLayer(polyline);
 
         map.off('click', goal.#addOuterRouteWaypoint);
+        goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].off('click', goal.#attachOuterRouteToGoalMarker);
 
         goal.routeLoopIndex = goal.routeLoopIndex + 1;
 
         if (goal.routeLoopIndex < goal.indexesOfOutermostRoutes.length) {
-            console.log(goal.routeLoopIndex)
             goal.#addOnClickEvents();
         }
     }

@@ -70,6 +70,7 @@ function confirmRouteClicked()
     goal.goalIsBeingPlanned = false;
     goal.saveOuterRouteSegments();
     goal.saveInnerRouteSegments();
+    goal.saveSegmentsAsRoutes();
     goal.sendDataToPHP();
     openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"])
 }
