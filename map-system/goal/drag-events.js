@@ -1,6 +1,6 @@
 function dragStartHandler(e) 
 {
-    let marker = e.target;
+/*    let marker = e.target;
     marker.polylineLatlng = {};
     e.target.parentLine.forEach((line)=>{
         let latlngPoly = line.getLatLngs(),
@@ -10,7 +10,7 @@ function dragStartHandler(e)
                 marker.polylineLatlng[L.stamp(line)] = i;
             }
         }
-    })
+    }) */
 }
 
 function dragHandler(e) 
@@ -27,13 +27,13 @@ function dragHandler(e)
             goal.start_marker_arr[i].setLatLng(this.getLatLng());
         }
     }
-    let marker = e.target;
+/*    let marker = e.target;
     e.target.parentLine.forEach((line)=>{
         let latlngPoly = line.getLatLngs(),
         latlngMarker = marker.getLatLng();
         latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker);
         line.setLatLngs(latlngPoly);
-    })
+    }) */
 }
 
 function dragEndHandler(e) 

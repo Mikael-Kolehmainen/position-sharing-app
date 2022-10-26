@@ -58,7 +58,6 @@ function confirmGoalPositionsClicked()
 {
     goal.disableMarkerDraggability();
     goal.enableOuterRouteDrawing();
-
     openMenu("goal-options", "goal-route-options", "block");
 }
 
@@ -68,6 +67,8 @@ function confirmRouteClicked()
     goal.saveOuterRouteSegments();
     goal.saveInnerRouteSegments();
     goal.saveSegmentsAsRoutes();
+    goal.removeUserDrawnRoutes();
+    goal.drawAllRoutes();
     goal.sendDataToPHP();
     openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"])
 }

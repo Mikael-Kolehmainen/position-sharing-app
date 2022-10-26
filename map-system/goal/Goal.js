@@ -22,7 +22,6 @@ class Goal
         this.start_marker_pos = [];
         this.goal_marker_arr = [];
         this.goal_marker_pos = [];
-        this.goal_waypoints = [];
         this.goalIndexes = [];
         this.goalIsBeingPlanned = false;
 
@@ -78,11 +77,20 @@ class Goal
     #createStartGoalMarkers(i, isDraggable)
     {
         this.start_marker_arr[i] = new L.Marker(this.start_marker_pos[i], {draggable: isDraggable, icon: this.startGoalIcon});
-        layerManagement.goalLayerGroup.addLayer(this.start_marker_arr[i]);
+        this.start_marker_arr[i]
+            .on('dragstart', dragStartHandler)
+            .on('drag', dragHandler)
+            .on('dragend', dragEndHandler);
+        layerManagement.draggableRouteLayerGroup.addLayer(this.start_marker_arr[i]);
         
         this.goal_marker_arr[i] = new L.Marker(this.goal_marker_pos[i], {draggable: isDraggable, icon: this.startGoalIcon});
-        layerManagement.goalLayerGroup.addLayer(this.goal_marker_arr[i]);
-        map.addLayer(layerManagement.goalLayerGroup);
+        this.goal_marker_arr[i]
+            .on('dragstart', dragStartHandler)
+            .on('drag', dragHandler)
+            .on('dragend', dragEndHandler);
+        layerManagement.draggableRouteLayerGroup.addLayer(this.goal_marker_arr[i]);
+
+        map.addLayer(layerManagement.draggableRouteLayerGroup);
     }
 
     #createMarkerStyleSheetContent(i)
@@ -132,16 +140,18 @@ class Goal
             } else {
                 loopIndex = i;
             }
-            goallat = this.goal_marker_pos[loopIndex].lat;
-            goallng = this.goal_marker_pos[loopIndex].lng;
+            goallat = this.goal_marker_pos[this.idsOfGoals[i]].lat;
+            goallng = this.goal_marker_pos[this.idsOfGoals[i]].lng;
 
-            startlat = this.start_marker_pos[loopIndex].lat;
-            startlng = this.start_marker_pos[loopIndex].lng;
+            startlat = this.start_marker_pos[this.idsOfGoals[i]].lat;
+            startlng = this.start_marker_pos[this.idsOfGoals[i]].lng;
 
-            goalindex = this.idsOfGoals[loopIndex];
-            route = this.routes[loopIndex];
+            goalindex = this.idsOfGoals[this.idsOfGoals[i]];
+            console.log(this.idsOfGoals[this.idsOfGoals[i]]);
+            console.log(this.idsOfGoals);
+            route = this.routes[this.idsOfGoals[i]];
 
-            postObj.push({id : loopIndex, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
+            postObj.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
         }
 
         let post = JSON.stringify(postObj);
@@ -152,8 +162,7 @@ class Goal
 
         xmlhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(post);
-                console.log(this.response);
+                console.log("Successfully sent data.");
             }
         };
     }
@@ -165,109 +174,20 @@ class Goal
         }
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal") {
-                console.log(this.goalsData[i]);
-                console.log(this.goalsData.length);
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
-
-                this.goal_waypoints[i] = [];
-                for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
-                    this.goal_waypoints[i][j] = new L.marker(this.goalsData[i].waypoints[j]);
-                }
+                
+                this.routes[i] = this.goalsData[i].waypoints;
 
                 this.goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
             }
         }
-    }
 
-    calculatePercentagesOfRouteTravelled()
-    {
-        let percentage;
-
-        for (let i = 0; i < this.start_marker_pos.length; i++) {
-            let routeLength = this.#getRouteLength(i);
-            let userHasTravelledLength = this.#getUserHasTravelledLength(i);
-
-            percentage = Math.round((userHasTravelledLength / routeLength) * 100);
-
-            this.percentages.push(percentage);
-        }
-    }
-
-    #getRouteLength(i)
-    {
-        let routeLength = 0;
-
-        if (this.goal_waypoints[i].length > 1) {
-            for (let j = 0; j < this.goal_waypoints[i].length; j++) {
-                if (j == 0) {
-                    routeLength += this.start_marker_pos[i].distanceTo(this.goal_waypoints[i][j].getLatLng());
-                    routeLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j+1].getLatLng());
-                } else if (j == this.goal_waypoints[i].length - 1) {
-                    routeLength += this.goal_marker_pos[i].distanceTo(this.goal_waypoints[i][j].getLatLng());
-                } else {
-                    routeLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j+1].getLatLng());
-                }
-            }
-        } else if (this.goal_waypoints[i].length == 1) {
-            routeLength += this.start_marker_pos[i].distanceTo(this.goal_waypoints[i][0].getLatLng());
-            routeLength += this.goal_marker_pos[i].distanceTo(this.goal_waypoints[i][0].getLatLng());
-        } else {
-            routeLength += this.start_marker_pos[i].distanceTo(this.goal_marker_pos[i]);
-        }
-
-        return routeLength;
-    }
-
-    #getUserHasTravelledLength(i)
-    {
-        let userHasTravelledLength = 0;
-        if (this.goal_waypoints[i].length > 0) {
-            let closestWaypointToUserIndex = this.#getClosestWaypointToUserIndexInGoalWaypoints(i);
-            if (user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.start_marker_pos[i]) > this.goal_waypoints[i][closestWaypointToUserIndex].getLatLng().distanceTo(user.user_markers[this.idsOfGoals[i]].getLatLng())) {
-                for (let j = closestWaypointToUserIndex; j >= 0; j--) {
-                    if (j == 0) {
-                        userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.start_marker_pos[i]);
-                    } else {
-                        userHasTravelledLength += this.goal_waypoints[i][j].getLatLng().distanceTo(this.goal_waypoints[i][j-1].getLatLng());
-                    }
-                }
-            } else {
-                userHasTravelledLength = -user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.start_marker_pos[i]);
-                
-            }
-        } else {
-            userHasTravelledLength = -user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_marker_pos[i]);
-        }
-
-        return userHasTravelledLength;
-    }
-
-    #getClosestWaypointToUserIndexInGoalWaypoints(i)
-    {
-        let distancesToUser = [];
-
-        for (let j = 0; j < this.goal_waypoints[i].length; j++) {
-            distancesToUser.push(user.user_markers[this.idsOfGoals[i]].getLatLng().distanceTo(this.goal_waypoints[i][j].getLatLng()));
-        }
-
-        let shortestDistance = Math.min(...distancesToUser);
-
-        return distancesToUser.indexOf(shortestDistance);
+        this.drawAllRoutes();
     }
 
     updatePercentagePopups()
     {
-        this.userPopupContent = [];
-
-        let smallestPercentage = Math.min(...this.percentages);
-        for (let i = 0; i < this.percentages.length; i++) {
-            this.userPopupContent[i] = this.percentages[i] + "%";
-            if (smallestPercentage + 10 < this.percentages[i]) {
-                this.userPopupContent[i] += "\n(Slow down)";
-            }
-        }
-
-        this.percentages = [];
+        
     }
 
     createPopup()
@@ -342,38 +262,6 @@ class Goal
         removeChilds(document.getElementById('users-table'));
     }
 
-    remove()
-    {
-        let xmlhttp = new XMLHttpRequest();
-        let url = 'goal/remove-goal.php?groupcode=' + groupCode;
-        
-        xmlhttp.open("GET", url, true);
-        xmlhttp.onreadystatechange = function() {
-            if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
-                console.log("Successfully removed data.");
-            }
-        }
-        xmlhttp.send();
-
-        this.userPopupContent = [];
-        this.goal_waypoints = [];
-        this.goalIndexes = [];
-        this.start_marker_arr = [];
-        this.start_marker_pos = [];
-        this.goal_marker_arr = [];
-        this.goal_marker_pos = [];
-        this.outerRouteSegments = [[], []];
-        this.innerRouteSegments = [];
-        this.outerRouteWaypoints = [[], []];
-        this.routeLoopIndex = 0;
-        this.indexesOfOutermostRoutes = [];
-        this.goalsData = [];
-
-        this.routes = [];
-
-        LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
-    }
-
     updateIdsOfGoals(idOfGoal)
     {
         let indexOfId = this.idsOfGoals.indexOf(idOfGoal);
@@ -400,7 +288,6 @@ class Goal
             for (let j = 0; j < this.outerRouteSegments[0].length; j++) {
                 let ratio = this.#defineRatioOfInterpolation(i);
                 this.innerRouteSegments[i-1].push(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng);
-                L.marker(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng).addTo(map);
             }
         }
     }
@@ -429,6 +316,23 @@ class Goal
         return increment * i;
     }
 
+    drawAllRoutes()
+    {
+        map.addLayer(layerManagement.goalLayerGroup);
+
+        for (let i = 0; i < this.routes.length; i++) {
+            let polyline = new L.Polyline(this.routes[i], {weight: 5});
+
+            layerManagement.goalLayerGroup.addLayer(polyline);
+            console.log(polyline);
+        }
+    }
+
+    removeUserDrawnRoutes()
+    {
+        LayerManagement.removeAndClearLayers([layerManagement.draggableRouteLayerGroup]);
+    }
+
     disableMarkerDraggability()
     {
         for (let i = 0; i < this.start_marker_arr.length; i++) {
@@ -445,6 +349,7 @@ class Goal
             this.outerRouteWaypoints[i].push(this.start_marker_arr[this.indexesOfOutermostRoutes[i]].getLatLng());
         }
 
+        map.addLayer(layerManagement.draggableRouteLayerGroup);
         this.routeLoopIndex = 0;
         this.#addOnClickEvents();
     }
@@ -476,14 +381,14 @@ class Goal
     {
         goal.outerRouteWaypoints[goal.routeLoopIndex].push(mouseEvent.latlng);
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
-        layerManagement.goalLayerGroup.addLayer(polyline);
+        layerManagement.draggableRouteLayerGroup.addLayer(polyline);
     }
 
     #attachOuterRouteToGoalMarker()
     {
         goal.outerRouteWaypoints[goal.routeLoopIndex].push(goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].getLatLng());
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
-        layerManagement.goalLayerGroup.addLayer(polyline);
+        layerManagement.draggableRouteLayerGroup.addLayer(polyline);
 
         map.off('click', goal.#addOuterRouteWaypoint);
         goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].off('click', goal.#attachOuterRouteToGoalMarker);
@@ -493,6 +398,36 @@ class Goal
         if (goal.routeLoopIndex < goal.indexesOfOutermostRoutes.length) {
             goal.#addOnClickEvents();
         }
+    }
+
+    remove()
+    {
+        let xmlhttp = new XMLHttpRequest();
+        let url = 'goal/remove-goal.php?groupcode=' + groupCode;
+        
+        xmlhttp.open("GET", url, true);
+        xmlhttp.onreadystatechange = function() {
+            if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
+                console.log("Successfully removed data.");
+            }
+        }
+        xmlhttp.send();
+
+        this.userPopupContent = [];
+        this.goalIndexes = [];
+        this.start_marker_arr = [];
+        this.start_marker_pos = [];
+        this.goal_marker_arr = [];
+        this.goal_marker_pos = [];
+        this.outerRouteSegments = [[], []];
+        this.innerRouteSegments = [];
+        this.outerRouteWaypoints = [[], []];
+        this.routeLoopIndex = 0;
+        this.indexesOfOutermostRoutes = [];
+        this.goalsData = [];
+        this.routes = [];
+
+        LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
     }
 }
 
