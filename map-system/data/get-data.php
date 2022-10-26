@@ -52,7 +52,7 @@ function getGoalPositionsFromDatabase($groupCode)
     $goalsData = array();
     if (count($startGoalPositionsRowIDs) > 0) {
         for ($i = 0; $i < count($startGoalPositionsRowIDs); $i++) {
-            $goalsData[$i][GOAL_ID] = $goal->getIndexes()[$i];
+            $goalsData[$i] = $goal->getIndexes()[$i];
 
             $goalsData[$i][START_POSITION] = getPosition($startGoalPositionsRowIDs[$i], START_POSITIONS_ID);
             $goalsData[$i][GOAL_POSITION] = getPosition($startGoalPositionsRowIDs[$i], GOAL_POSITIONS_ID);

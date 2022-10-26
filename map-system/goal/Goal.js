@@ -53,7 +53,7 @@ class Goal
         if (this.idsOfGoals.length == 0) {
             for (let i = 0; i < this.goalsData.length; i++) {
                 if (this.goalsData[i] != "user has no goal") {
-                    this.idsOfGoals.push(this.goalsData[i].goal_id.goalIndex);
+                    this.idsOfGoals.push(this.goalsData[i].goalIndex);
                 }
             }
         }
@@ -132,23 +132,17 @@ class Goal
         const url = 'goal/send-goals.php';
 
         let postObj = [];
-        let goallat, goallng, startlat, startlng, route, goalindex, loopIndex;
+        let goallat, goallng, startlat, startlng, route, goalindex;
 
         for (let i = 0; i < this.goal_marker_pos.length; i++) {
-            if (typeof this.indexesOfOutermostRoutes[i] != "undefined") {
-                loopIndex = this.indexesOfOutermostRoutes[i];
-            } else {
-                loopIndex = i;
-            }
             goallat = this.goal_marker_pos[this.idsOfGoals[i]].lat;
             goallng = this.goal_marker_pos[this.idsOfGoals[i]].lng;
 
             startlat = this.start_marker_pos[this.idsOfGoals[i]].lat;
             startlng = this.start_marker_pos[this.idsOfGoals[i]].lng;
 
-            goalindex = this.idsOfGoals[this.idsOfGoals[i]];
-            console.log(this.idsOfGoals[this.idsOfGoals[i]]);
-            console.log(this.idsOfGoals);
+            goalindex = this.idsOfGoals[i];
+
             route = this.routes[this.idsOfGoals[i]];
 
             postObj.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
@@ -174,11 +168,11 @@ class Goal
         }
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal") {
-                this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
+                this.start_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
                 
-                this.routes[i] = this.goalsData[i].waypoints;
+                this.routes[this.goalsData[i].goalIndex] = this.goalsData[i].waypoints;
 
-                this.goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
+                this.goal_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
             }
         }
 
@@ -300,9 +294,7 @@ class Goal
             } else if (i == this.goal_marker_arr.length - 1) {
                 this.routes.push(this.outerRouteSegments[1]);
             } else {
-                for (let j = 0; j < this.innerRouteSegments.length; j++) {
-                    this.routes.push(this.innerRouteSegments[j]);
-                }
+                this.routes.push(this.innerRouteSegments[i-1]);
             }
         }
     }
@@ -321,10 +313,10 @@ class Goal
         map.addLayer(layerManagement.goalLayerGroup);
 
         for (let i = 0; i < this.routes.length; i++) {
+            console.log(this.routes[i]);
             let polyline = new L.Polyline(this.routes[i], {weight: 5});
 
             layerManagement.goalLayerGroup.addLayer(polyline);
-            console.log(polyline);
         }
     }
 
