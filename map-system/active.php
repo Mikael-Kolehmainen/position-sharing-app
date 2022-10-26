@@ -77,8 +77,6 @@
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/drag-events.js' defer></script>
-        <script src='./goal/waypoint/add-waypoint.js' defer></script>
-        <script src='./goal/waypoint/Waypoint.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
     </head>
@@ -127,9 +125,6 @@
                         </a>
                         <a class='btn onclick' id='confirm-goal-positions-btn'>
                             <i class='fa-solid fa-check'></i>
-                        </a>
-                        <a class='btn small onclick' id='remove-waypoint'>
-                            <p>Remove waypoint</p>
                         </a>
                     </div>
                     <div class='options' style='display: none;' id='goal-route-options'>

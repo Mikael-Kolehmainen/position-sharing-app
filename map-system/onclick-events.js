@@ -24,9 +24,6 @@ document.querySelectorAll(".onclick").forEach(element =>
             case "remove-draggable-goal":
                 removeDraggableGoalClicked();
                 break;
-            case "remove-waypoint":
-                removeWaypointClicked();
-                break;
             case "active-goal-disclaimer":
                 activeGoalDisclaimerClicked();
                 break;
@@ -101,11 +98,6 @@ function removeDraggableGoalClicked()
     goal.remove();
     openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
     openMenu("goal-route-options", "add-goal-btn", "inline-block");
-}
-
-function removeWaypointClicked()
-{
-    waypoint.remove();
 }
 
 function activeGoalDisclaimerClicked()

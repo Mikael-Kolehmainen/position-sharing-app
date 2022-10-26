@@ -7,6 +7,5 @@ function objects()
     goal = new Goal();
     chat = new Chat();
     user = new User();
-    waypoint = new Waypoint();
     layerManagement = new LayerManagement();
 }

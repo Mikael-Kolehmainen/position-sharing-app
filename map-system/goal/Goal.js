@@ -166,6 +166,7 @@ class Goal
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal") {
                 console.log(this.goalsData[i]);
+                console.log(this.goalsData.length);
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
 
                 this.goal_waypoints[i] = [];
@@ -356,7 +357,6 @@ class Goal
 
         this.userPopupContent = [];
         this.goal_waypoints = [];
-        waypoint.all_waypoints = [];
         this.goalIndexes = [];
         this.start_marker_arr = [];
         this.start_marker_pos = [];
@@ -367,6 +367,7 @@ class Goal
         this.outerRouteWaypoints = [[], []];
         this.routeLoopIndex = 0;
         this.indexesOfOutermostRoutes = [];
+        this.goalsData = [];
 
         this.routes = [];
 
