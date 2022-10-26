@@ -118,7 +118,6 @@ class Goal
         }
     }
 
-    // New
     sendDataToPHP()
     {
         let xmlhttp = new XMLHttpRequest();
@@ -142,67 +141,22 @@ class Goal
             goalindex = this.idsOfGoals[loopIndex];
             route = this.routes[loopIndex];
 
-            postObj.push({id : loopIndex, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routePoints : route, goalindex : goalindex, groupcode : groupCode});
+            postObj.push({id : loopIndex, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
         }
 
         let post = JSON.stringify(postObj);
 
         xmlhttp.open('POST', url, true);
-        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); // Change to application/JSON
-        xmlhttp.send("testValue=test");
+        xmlhttp.setRequestHeader('Content-type', 'application/JSON');
+        xmlhttp.send(post);
 
-        xmlhttp.onload = function() 
-        {
-            if (xmlhttp.status === 200) {
-                console.log("Post successfully created.");
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(post);
+                console.log(this.response);
             }
-        }
+        };
     }
-/*
-    sendDataToPHP()
-    {
-        let xmlhttp = new XMLHttpRequest();
-        let url = 'goal/send-goals.php?groupcode=' + groupCode;
-        let startlat, startlng, goallat, goallng;
-        for (let i = 0; i < this.goal_marker_pos.length; i++) {
-            goallat = this.goal_marker_pos[i].lat;
-            goallng = this.goal_marker_pos[i].lng;
-
-            startlat = this.start_marker_pos[i].lat;
-            startlng = this.start_marker_pos[i].lng;
-
-            url += '&goallat' + i + '=' + goallat + 
-                    '&goallng' + i + '=' + goallng +
-                    '&startlat' + i + '=' + startlat + 
-                    '&startlng' + i + '=' + startlng + 
-                    '&goalindex' + i + '=' + this.idsOfGoals[i];
-
-            console.log(this.idsOfGoals[i]);
-        }
-
-        // We count how many of each id there's in this.goalIndexes
-        const IDcounts = {};
-        this.goalIndexes.forEach(function (x) { IDcounts[x] = (IDcounts[x] || 0) + 1; });
-
-        let all_waypoints = waypoint.all_waypoints;
-        // We run the loop in reverse because I want to save the waypoints to the database in correct order
-        for (let i = all_waypoints.length - 1; i >= 0; i--) {
-            url += '&waypoint' + this.goalIndexes[i] + '-' + (IDcounts[this.goalIndexes[i]]-1) + '-lat' + '=' + all_waypoints[i].getLatLng().lat;
-            url += '&waypoint' + this.goalIndexes[i] + '-' + (IDcounts[this.goalIndexes[i]]-1) + '-lng' + '=' + all_waypoints[i].getLatLng().lng;
-            IDcounts[this.goalIndexes[i]] = IDcounts[this.goalIndexes[i]] - 1;
-        }
-        url += '&groupcode=' + groupCode + '&goalamount=' + this.goal_marker_pos.length;
-        xmlhttp.open("GET", url, true);
-        xmlhttp.onreadystatechange = function() {
-            if(xmlhttp.readyState === XMLHttpRequest.DONE && xmlhttp.status === 200) {
-                console.log("Successfully sent data.");
-            }
-        }
-        xmlhttp.send();
-
-        LayerManagement.removeAndClearLayers([layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
-    }
-    */
 
     saveDataFromPHPToVariables()
     {
@@ -211,6 +165,7 @@ class Goal
         }
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal") {
+                console.log(this.goalsData[i]);
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
 
                 this.goal_waypoints[i] = [];

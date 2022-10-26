@@ -11,20 +11,6 @@ function dragStartHandler(e)
             }
         }
     })
-   /* let line = e.target.parentLine;
-    console.log(line);
-
-    if (true) {
-
-    } else {
-        let latlngPoly = line.getLatLngs(),
-        latlngMarker = marker.getLatLng();
-        for (let i = 0; i < latlngPoly.length; i++) {
-            if (latlngMarker.equals(latlngPoly[i])) {
-                marker.polylineLatlng[L.stamp(line)] = i;
-            }
-        }
-    } */
 }
 
 function dragHandler(e) 
@@ -48,12 +34,6 @@ function dragHandler(e)
         latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker);
         line.setLatLngs(latlngPoly);
     })
-    /*
-    let line = e.target.parentLine;
-    let latlngPoly = line.getLatLngs(),
-    latlngMarker = marker.getLatLng();
-    latlngPoly.splice(marker.polylineLatlng[L.stamp(line)], 1, latlngMarker);
-    line.setLatLngs(latlngPoly); */
 }
 
 function dragEndHandler(e) 
