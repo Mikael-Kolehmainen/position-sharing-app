@@ -175,8 +175,6 @@ class Goal
                 this.goal_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
             }
         }
-
-        this.drawAllRoutes();
     }
 
     updatePercentagePopups()
@@ -313,11 +311,25 @@ class Goal
         map.addLayer(layerManagement.goalLayerGroup);
 
         for (let i = 0; i < this.routes.length; i++) {
-            console.log(this.routes[i]);
+            this.#addStartGoalMarkersToRoute(i);
+
             let polyline = new L.Polyline(this.routes[i], {weight: 5});
+
+            this.#assignParentLines(polyline, i);
 
             layerManagement.goalLayerGroup.addLayer(polyline);
         }
+    }
+
+    #addStartGoalMarkersToRoute(i)
+    {
+        this.routes[i].unshift(this.start_marker_arr[i].getLatLng());
+        this.routes[i].push(this.goal_marker_arr[i].getLatLng());   
+    }
+
+    #assignParentLines(parentLine, i)
+    {
+        this.start_marker_arr[i].parentLine = parentLine;
     }
 
     removeUserDrawnRoutes()

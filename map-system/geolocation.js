@@ -27,6 +27,7 @@ function onLocationFound(e)
             } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
                 goal.drawPolyline(false);
+                goal.drawAllRoutes();
                 goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
                 ElementDisplay.change('add-goal-btn', 'none');               
