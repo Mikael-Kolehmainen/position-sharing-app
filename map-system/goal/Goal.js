@@ -1,6 +1,7 @@
 class Goal
 {
     #STYLE_CLASS_NAME = "start-goal-style";
+    ACTIVE_GOAL_STYLE_CLASS_NAME = "active-goal-style";
     #DISTANCE_BETWEEN_MARKERS = 0.002;
 
     constructor(goalsData, usersData, current_position)
@@ -359,8 +360,26 @@ class Goal
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
+
+        this.#changeActiveStyleToActiveMarker(0);
+
         this.routeLoopIndex = 0;
         this.#addOnClickEvents();
+    }
+
+    #changeActiveStyleToActiveMarker(i)
+    {
+        const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
+        activeGoalStyle.removeStyle();
+
+        let className = 'active-goal-marker-' + i;
+        let styleSheetContent = '.' + className + '{ box-shadow: 0 0 5px 12px #3388ff; }';
+
+        goal.start_marker_arr[i]._icon.classList.add(className);
+        goal.goal_marker_arr[i]._icon.classList.add(className);
+
+        activeGoalStyle.styleSheetContent = styleSheetContent;
+        activeGoalStyle.createStyle();
     }
 
     #addOnClickEvents()
@@ -405,7 +424,11 @@ class Goal
         goal.routeLoopIndex = goal.routeLoopIndex + 1;
 
         if (goal.routeLoopIndex < goal.indexesOfOutermostRoutes.length) {
+            goal.#changeActiveStyleToActiveMarker(goal.start_marker_arr.length - 1);
             goal.#addOnClickEvents();
+        } else {
+            const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
+            activeGoalStyle.removeStyle();
         }
     }
 
