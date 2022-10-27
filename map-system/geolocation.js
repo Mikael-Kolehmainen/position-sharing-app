@@ -22,7 +22,7 @@ function onLocationFound(e)
             goal.current_position = e.latlng;
 
             if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
-                LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup, layerManagement.goalWaypointsLayerGroup]);
+                LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
             } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();

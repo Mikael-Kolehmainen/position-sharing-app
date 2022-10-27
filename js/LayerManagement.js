@@ -5,7 +5,6 @@ class LayerManagement
         this.goalLayerGroup = L.layerGroup();
         this.refreshedLayerGroup = L.layerGroup();
         this.draggableRouteLayerGroup = L.layerGroup();
-        this.goalWaypointsLayerGroup = L.layerGroup();
     }
 
     static removeAndClearLayers(layers)
