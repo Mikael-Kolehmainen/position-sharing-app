@@ -62,12 +62,22 @@ class Goal
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function remove()
+    public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
+    }
+
+    public function getGoalSession()
+    {
+        $pdo = dbHandler::getPDbConnection();
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GOAL_SESSION . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function save(): void
@@ -78,23 +88,23 @@ class Goal
         $stmt->bindParam(2, $this->goalPositionID);
         $stmt->bindParam(3, $this->goalIndex);
         $stmt->bindParam(4, $this->groupCode);
-        $this->createGoalSession();
         $stmt->bindParam(5, $this->goalSession);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
     }
 
-    private function createGoalSession(): void
+    public function createGoalSession()
     {
         require __DIR__.'/../random-string.php';
         session_start();
 
-        $this->goalSession = getRandomString(15);
+        $goalSession = getRandomString(15);
 
-        if ($this->goalSession == $_SESSION['goalSession']) {
-            $this->goalSession = $this->createGoalSession();
+        if ($goalSession == $_SESSION['goalSession']) {
+            return $this->createGoalSession();
         } else {
-            $_SESSION['goalSession'] = $this->goalSession;
+            $_SESSION['goalSession'] = $goalSession;
+            return $goalSession;
         }
     }
 }

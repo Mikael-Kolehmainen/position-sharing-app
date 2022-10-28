@@ -15,7 +15,12 @@ function getData($groupCode)
     $data = array();
     $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
     $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
-    $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+    
+    if (!goalSessionEqualsDBgoalSession($groupCode)) {
+        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+    } else {
+        $data[GOALSDATA] = [CONSTANT_EMPTY];
+    }
 
     return $data;
 }
@@ -41,6 +46,16 @@ function getMessagesFromDatabase($groupCode)
     $message = new Message($groupCode);
 
     return $message->get();
+}
+
+function goalSessionEqualsDBgoalSession($groupCode)
+{
+    session_start();
+    $goal = new Goal($groupCode);
+
+    if ($goal->getGoalSession() != null) {
+       return $goal->getGoalSession()[0] == $_SESSION['goalSession'];
+    }
 }
 
 function getGoalPositionsFromDatabase($groupCode)
