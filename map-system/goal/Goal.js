@@ -269,8 +269,9 @@ class Goal
     saveOuterRouteSegments()
     {
         for (let i = 0; i < 1; i = i + 0.01) {
-            this.outerRouteSegments[0].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[0], i).latLng);
-            this.outerRouteSegments[1].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[1], i).latLng);
+            for (let j = 0; j < this.outerRouteWaypoints.length; j++) {
+                this.outerRouteSegments[j].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[j], i).latLng);
+            }
         }
     }
 
@@ -355,6 +356,10 @@ class Goal
     {
         this.indexesOfOutermostRoutes = this.#getIndexesOfOutermostRoutes();
 
+        if (this.start_marker_arr.length == 1) {
+            this.outerRouteWaypoints = [[]];
+        }
+
         for (let i = 0; i < this.outerRouteWaypoints.length; i++) {
             this.outerRouteWaypoints[i].push(this.start_marker_arr[this.indexesOfOutermostRoutes[i]].getLatLng());
         }
@@ -423,7 +428,7 @@ class Goal
 
         goal.routeLoopIndex = goal.routeLoopIndex + 1;
 
-        if (goal.routeLoopIndex < goal.indexesOfOutermostRoutes.length) {
+        if (goal.routeLoopIndex < goal.outerRouteWaypoints.length) {
             goal.#changeActiveStyleToActiveMarker(goal.start_marker_arr.length - 1);
             goal.#addOnClickEvents();
         } else {

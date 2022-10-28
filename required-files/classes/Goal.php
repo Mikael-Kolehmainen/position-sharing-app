@@ -7,6 +7,7 @@ class Goal
     private const FIELD_GOAL_POSITIONS_ID = 'goal_positions_id';
     private const FIELD_GOAL_ID = 'goalIndex';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
+    private const FIELD_GOAL_SESSION = 'goalsession';
 
     /** @var int */
     public $id;
@@ -19,6 +20,9 @@ class Goal
 
     /** @var int */
     public $goalIndex;
+
+    /** @var string */
+    public $goalSession;
 
     /** @var string */
     public $groupCode;
@@ -69,12 +73,28 @@ class Goal
     public function save(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_GOAL_SESSION . ') VALUES (?, ?, ?, ?, ?)');
         $stmt->bindParam(1, $this->startPositionID);
         $stmt->bindParam(2, $this->goalPositionID);
         $stmt->bindParam(3, $this->goalIndex);
         $stmt->bindParam(4, $this->groupCode);
+        $this->createGoalSession();
+        $stmt->bindParam(5, $this->goalSession);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
+    }
+
+    private function createGoalSession(): void
+    {
+        require __DIR__.'/../random-string.php';
+        session_start();
+
+        $this->goalSession = getRandomString(15);
+
+        if ($this->goalSession == $_SESSION['goalSession']) {
+            $this->goalSession = $this->createGoalSession();
+        } else {
+            $_SESSION['goalSession'] = $this->goalSession;
+        }
     }
 }

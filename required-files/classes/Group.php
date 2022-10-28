@@ -54,7 +54,7 @@ class Group
 
     private function createGroupCode(): void
     {
-        require './../required-files/random-string.php';
+        require __DIR__.'/../random-string.php';
 
         $this->groupCode = getRandomString(3);
 
