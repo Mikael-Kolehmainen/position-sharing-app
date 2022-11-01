@@ -51,13 +51,15 @@ class Goal
                 goal.start_marker_pos[0] = mouseEvent.latlng;
                 break;
             case 2:
-                goal.goal_marker_pos[0] = mouseEvent.latlng;
                 if (goal.idsOfGoals.length == 1) {
+                    goal.goal_marker_pos[0] = mouseEvent.latlng;
                     map.off('click', goal.#addMarker);
+                } else {
+                    goal.start_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
                 }
                 break;
             case 3:
-                goal.start_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
+                goal.goal_marker_pos[0] = mouseEvent.latlng;
                 break;
             case 4:
                 goal.goal_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
