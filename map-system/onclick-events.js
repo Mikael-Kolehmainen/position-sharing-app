@@ -89,8 +89,7 @@ function showDraggableGoalClicked()
 {
     goal.goalIsBeingPlanned = true;
     goal.goalRoutes = [];
-    goal.calculatePositionsOfStartGoalMarkers();
-    goal.drawPolyline(true);
+    goal.userCanChooseStartGoalMarkerPositions();
     openMenu("goal-popup", "goal-options", "block");
 }
 
