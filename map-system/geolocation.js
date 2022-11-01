@@ -1,4 +1,5 @@
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
+let refreshCounter = 0;
 
 function onLocationFound(e) 
 {
@@ -24,6 +25,8 @@ function onLocationFound(e)
             if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
                 LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
+            } else if (data.goalsdata[0] == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
+                refreshCounter = refreshCounter + 1;
             } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
                 for (let i = 0; i < goal.start_marker_pos.length; i++) {
@@ -32,7 +35,8 @@ function onLocationFound(e)
                 goal.drawAllRoutes();
                 goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
-                ElementDisplay.change('add-goal-btn', 'none');               
+                ElementDisplay.change('add-goal-btn', 'none');
+                refreshCounter = refreshCounter + 1;    
             }
         });
     });

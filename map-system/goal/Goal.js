@@ -117,19 +117,11 @@ class Goal
     {
         if (typeof this.start_marker_pos[i] != "undefined") {
             this.start_marker_arr[i] = new L.Marker(this.start_marker_pos[i], {icon: this.startGoalIcon});
-            this.start_marker_arr[i]
-                .on('dragstart', dragStartHandler)
-                .on('drag', dragHandler)
-                .on('dragend', dragEndHandler);
             layerManagement.draggableRouteLayerGroup.addLayer(this.start_marker_arr[i]);
         }
         
         if (typeof this.goal_marker_pos[i] != "undefined") {
             this.goal_marker_arr[i] = new L.Marker(this.goal_marker_pos[i], {icon: this.startGoalIcon});
-            this.goal_marker_arr[i]
-                .on('dragstart', dragStartHandler)
-                .on('drag', dragHandler)
-                .on('dragend', dragEndHandler);
             layerManagement.draggableRouteLayerGroup.addLayer(this.goal_marker_arr[i]);
         }
 

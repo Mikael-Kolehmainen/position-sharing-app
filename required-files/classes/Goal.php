@@ -55,7 +55,7 @@ class Goal
     public function getIndexes()
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('SELECT goalIndex FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GOAL_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
 

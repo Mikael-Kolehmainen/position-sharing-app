@@ -16,11 +16,21 @@ function getData($groupCode)
     $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
     $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
     
-    if (!goalSessionEqualsDBgoalSession($groupCode)) {
-        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+    session_start();
+
+    if (isset($_SESSION["goalSession"])) {
+        if (goalSessionEqualsDBgoalSession($groupCode)) {
+            $data[GOALSDATA] = ["already saved"];
+        } else {
+            $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+            saveSession($groupCode);
+        }
     } else {
-        $data[GOALSDATA] = [CONSTANT_EMPTY];
+        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+        saveSession($groupCode);
     }
+
+    unset($_SESSION["goalSession"]);
 
     return $data;
 }
@@ -54,7 +64,7 @@ function goalSessionEqualsDBgoalSession($groupCode)
     $goal = new Goal($groupCode);
 
     if ($goal->getGoalSession() != null) {
-       return $goal->getGoalSession()[0] == $_SESSION['goalSession'];
+       return $goal->getGoalSession()[0]["goalsession"] == $_SESSION['goalSession'];
     }
 }
 
@@ -79,6 +89,14 @@ function getGoalPositionsFromDatabase($groupCode)
     }
 
     return $goalsData;
+}
+
+function saveSession($groupCode)
+{
+    session_start();
+    $goal = new Goal($groupCode);
+
+    $_SESSION["goalSession"] = $goal->getGoalSession()[0]["goalsession"];
 }
 
 function getPosition($rowID, $positionName)

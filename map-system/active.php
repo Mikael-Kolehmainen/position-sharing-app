@@ -76,7 +76,6 @@
         <script src='./onclick-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
-        <script src='./goal/drag-events.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
     </head>
