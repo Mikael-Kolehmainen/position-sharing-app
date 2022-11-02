@@ -8,7 +8,9 @@ window.addEventListener('beforeunload', function()
         }
     };
     if (sent == false) {
-        xmlhttp.open("GET", "remove-user.php?groupcode=" + groupCode, true);
+        xmlhttp.open("GET", "user/remove-user.php?groupcode=" + groupCode, true);
         xmlhttp.send();
     }
+
+    //document.cookie = "goalCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 });

@@ -103,6 +103,7 @@ function removeDraggableGoalClicked()
 function activeGoalDisclaimerClicked()
 {
     goal.remove();
+    refreshCounter = 0;
     ElementDisplay.change('active-goal-disclaimer', 'none');
     ElementDisplay.change('add-goal-btn', 'block');
 }

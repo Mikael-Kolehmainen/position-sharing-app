@@ -15,8 +15,25 @@ function getData($groupCode)
     $data = array();
     $data[USERSDATA] = getUsersDetailsFromDatabase($groupCode);
     $data[MESSAGESDATA] = getMessagesFromDatabase($groupCode);
-    $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
 
+    if (isset($_COOKIE["goalCookieRemoved"])) {
+        setcookie("goalCookie", null, -1, "/");
+        setcookie("goalCookieRemoved", null, -1, "/");
+    }
+
+    $data["debug"] = $_COOKIE["goalCookie"];
+
+    if (isset($_COOKIE["goalCookie"])) {
+        if (goalCookieEqualsDBgoalCookie($groupCode)) {
+            $data[GOALSDATA] = ["already saved"];
+        } else {
+            $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+            saveCookie($groupCode);
+        }
+    } else {
+        $data[GOALSDATA] = getGoalPositionsFromDatabase($groupCode);
+        saveCookie($groupCode);
+    }
     return $data;
 }
 
@@ -66,12 +83,20 @@ function getGoalPositionsFromDatabase($groupCode)
     return $goalsData;
 }
 
-function saveSession($groupCode)
+function goalCookieEqualsDBgoalCookie($groupCode)
 {
-    session_start();
     $goal = new Goal($groupCode);
 
-    $_SESSION["goalSession"] = $goal->getGoalSession()[0]["goalsession"];
+    if ($goal->getGoalCookie() != null) {
+       return $goal->getGoalCookie()[0]["goalcookie"] == $_COOKIE['goalCookie'];
+    }
+}
+
+function saveCookie($groupCode)
+{
+    $goal = new Goal($groupCode);
+
+    setcookie("goalCookie", $goal->getGoalCookie()[0]["goalcookie"], time() + (86400 * 30), "/");
 }
 
 function getPosition($rowID, $positionName)

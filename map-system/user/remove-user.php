@@ -1,6 +1,6 @@
 <?php
-    require './../required-files/constants.php';
-    require './../autoloader.php';
+    require './../../required-files/constants.php';
+    require './../../autoloader.php';
 
     if (isset($_GET[GROUPCODE])) {
         session_start();
@@ -11,6 +11,7 @@
 
         removePosition(getPositionsRowID($uniqueID));
         removeUser($uniqueID);
+        removeCookie();
     }
 
     function removeUser($uniqueID)
@@ -34,4 +35,11 @@
         $positionRowId = $user->getPositionsRowID();
 
         return $positionRowId;
+    }
+
+    function removeCookie()
+    {
+        unset($_COOKIE["goalCookie"]);
+        setcookie("goalCookie", null, -1, "/");
+        setcookie("goalCookieRemoved", 1, time() + (86400 * 30), "/");
     }
