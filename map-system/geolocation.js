@@ -22,6 +22,9 @@ function onLocationFound(e)
             goal.usersData = data.usersdata;
             goal.current_position = e.latlng;
 
+            // Create a localStorage that saves a value if there's an active goal then if there's an active goal we don't call
+            // the saveDataFromPHPToVariables() and other functions
+
             if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
                 LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');

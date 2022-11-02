@@ -7,7 +7,6 @@ class Goal
     private const FIELD_GOAL_POSITIONS_ID = 'goal_positions_id';
     private const FIELD_GOAL_ID = 'goalIndex';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
-    private const FIELD_GOAL_SESSION = 'goalsession';
 
     /** @var int */
     public $id;
@@ -20,9 +19,6 @@ class Goal
 
     /** @var int */
     public $goalIndex;
-
-    /** @var string */
-    public $goalSession;
 
     /** @var string */
     public $groupCode;
@@ -70,41 +66,15 @@ class Goal
         $stmt->execute();
     }
 
-    public function getGoalSession()
-    {
-        $pdo = dbHandler::getPDbConnection();
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GOAL_SESSION . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
-        $stmt->bindParam(1, $this->groupCode);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function save(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_GOAL_SESSION . ') VALUES (?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
         $stmt->bindParam(1, $this->startPositionID);
         $stmt->bindParam(2, $this->goalPositionID);
         $stmt->bindParam(3, $this->goalIndex);
         $stmt->bindParam(4, $this->groupCode);
-        $stmt->bindParam(5, $this->goalSession);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
-    }
-
-    public function createGoalSession()
-    {
-        require __DIR__.'/../random-string.php';
-        session_start();
-
-        $goalSession = getRandomString(15);
-
-        if ($goalSession == $_SESSION['goalSession']) {
-            return $this->createGoalSession();
-        } else {
-            $_SESSION['goalSession'] = $goalSession;
-            return $goalSession;
-        }
     }
 }
