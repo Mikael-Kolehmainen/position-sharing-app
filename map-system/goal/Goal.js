@@ -49,22 +49,37 @@ class Goal
         switch (goal.howManyMarkersHasUserAddedToMap) {
             case 1:
                 goal.start_marker_pos[0] = mouseEvent.latlng;
+                if (goal.idsOfGoals.length == 1) {
+                    instructions.instructionText = "Add outer goal marker #1";
+                    instructions.replace();
+                } else {
+                    instructions.instructionText = "Add outer start marker #2";
+                    instructions.replace();
+                }
                 break;
             case 2:
                 if (goal.idsOfGoals.length == 1) {
                     goal.goal_marker_pos[0] = mouseEvent.latlng;
                     map.off('click', goal.#addMarker);
+                    instructions.instructionText = "Confirm positions";
+                    instructions.replace();
                 } else {
                     goal.start_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
+                    instructions.instructionText = "Add outer goal marker #1";
+                    instructions.replace();
                 }
                 break;
             case 3:
                 goal.goal_marker_pos[0] = mouseEvent.latlng;
+                instructions.instructionText = "Add outer goal marker #2";
+                instructions.replace();
                 break;
             case 4:
                 goal.goal_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
                 map.off('click', goal.#addMarker);
                 goal.createTheInnerStartGoalMarkers();
+                instructions.instructionText = "Confirm positions";
+                instructions.replace();
                 break;
             default:
                 console.log("Something went wrong with adding the marker");
@@ -473,6 +488,9 @@ class Goal
         } else {
             const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
             activeGoalStyle.removeStyle();
+
+            instructions.instructionText = "Confirm outer routes";
+            instructions.replace();
         }
     }
 

@@ -401,6 +401,20 @@
                     top: 7.5%;
                 }
             }
+            .instructions {
+                position: absolute;
+                top: 30%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80%;
+                pointer-events: none;
+
+                p {
+                    color: black;
+                    font-size: 26px;
+                    text-align: center;
+                }
+            }
         }
     }
 }

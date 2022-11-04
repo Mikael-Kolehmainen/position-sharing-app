@@ -59,6 +59,9 @@ function confirmGoalPositionsClicked()
     goal.disableMarkerDraggability();
     goal.enableOuterRouteDrawing();
     openMenu("goal-options", "goal-route-options", "block");
+
+    instructions.instructionText = "Draw the outer routes, by adding waypoints";
+    instructions.replace();
 }
 
 function confirmRouteClicked()
@@ -71,6 +74,8 @@ function confirmRouteClicked()
     goal.drawAllRoutes();
     goal.sendDataToPHP();
     openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"])
+
+    instructions.hide();
 }
 
 function addGoalClicked()
@@ -83,6 +88,8 @@ function addGoalClicked()
 function rejectAddGoalClicked()
 {
     openMenu("goal-popup", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
+
+    instructions.hide();
 }
 
 function showDraggableGoalClicked()
@@ -91,6 +98,10 @@ function showDraggableGoalClicked()
     goal.goalRoutes = [];
     goal.userCanChooseStartGoalMarkerPositions();
     openMenu("goal-popup", "goal-options", "block");
+
+    instructions.instructionText = "Add outer start marker #1";
+    instructions.replace();
+    instructions.show();
 }
 
 function removeDraggableGoalClicked()
@@ -98,6 +109,8 @@ function removeDraggableGoalClicked()
     goal.remove();
     openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"]);
     openMenu("goal-route-options", "add-goal-btn", "inline-block");
+
+    instructions.hide();
 }
 
 function activeGoalDisclaimerClicked()

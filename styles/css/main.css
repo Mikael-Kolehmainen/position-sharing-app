@@ -308,6 +308,17 @@
       right: auto; }
     .active-page section article #map .leaflet-top {
       top: 7.5%; }
+  .active-page section article .instructions {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    pointer-events: none; }
+    .active-page section article .instructions p {
+      color: black;
+      font-size: 26px;
+      text-align: center; }
 
 /* width */
 ::-webkit-scrollbar {

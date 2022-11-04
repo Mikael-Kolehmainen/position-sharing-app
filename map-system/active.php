@@ -76,6 +76,7 @@
         <script src='./onclick-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
+        <script src='./goal/Instructions.js' defer></script>
         <script src='./water-switch/show-water.js' defer></script>
         <title>Active group</title>
     </head>
@@ -95,7 +96,7 @@
                 </label>
                 <div id='map'></div>
                 <div class='instructions'>
-                    <p id='instruction-text'></p>
+                    <p style='display: none;' id='instruction-text'>Instruction text</p>
                 </div>
                 <div class='bottom'>
                     <a class='btn round onclick' id='open-chat-btn' style='display: inline-block;'>
