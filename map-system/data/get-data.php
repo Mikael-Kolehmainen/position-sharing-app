@@ -21,8 +21,6 @@ function getData($groupCode)
         setcookie("goalCookieRemoved", null, -1, "/");
     }
 
-    $data["debug"] = $_COOKIE["goalCookie"];
-
     if (isset($_COOKIE["goalCookie"])) {
         if (goalCookieEqualsDBgoalCookie($groupCode)) {
             $data[GOALSDATA] = ["already saved"];

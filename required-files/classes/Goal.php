@@ -71,7 +71,6 @@ class Goal
         if ($goalCookie == $_COOKIE['goalCookie']) {
             return $this->createGoalSession();
         } else {
-            setcookie('goalCookie', $goalCookie, time() + (86400 * 30), "/");
             return $goalCookie;
         }
     }

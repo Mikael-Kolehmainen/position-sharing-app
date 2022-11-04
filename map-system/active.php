@@ -94,6 +94,9 @@
                     <span class='slider'></span>
                 </label>
                 <div id='map'></div>
+                <div class='instructions'>
+                    <p id='instruction-text'></p>
+                </div>
                 <div class='bottom'>
                     <a class='btn round onclick' id='open-chat-btn' style='display: inline-block;'>
                         <i class='fa-solid fa-message'></i>

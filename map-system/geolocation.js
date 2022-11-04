@@ -22,7 +22,6 @@ function onLocationFound(e)
             goal.usersData = data.usersdata;
             goal.current_position = e.latlng;
 
-            console.log(data.debug);
             console.log(goal.goalsData);
 
             if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
