@@ -22,8 +22,6 @@ function onLocationFound(e)
             goal.usersData = data.usersdata;
             goal.current_position = e.latlng;
 
-            console.log(goal.goalsData);
-
             if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
                 LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
