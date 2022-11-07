@@ -48,7 +48,7 @@ class Goal
 
         switch (goal.howManyMarkersHasUserAddedToMap) {
             case 1:
-                goal.start_marker_pos[0] = mouseEvent.latlng;
+                goal.start_marker_pos[goal.idsOfGoals[0]] = mouseEvent.latlng;
                 if (goal.idsOfGoals.length == 1) {
                     instructions.instructionText = "Add outer goal marker #1";
                     instructions.replace();
@@ -59,23 +59,23 @@ class Goal
                 break;
             case 2:
                 if (goal.idsOfGoals.length == 1) {
-                    goal.goal_marker_pos[0] = mouseEvent.latlng;
+                    goal.goal_marker_pos[goal.idsOfGoals[0]] = mouseEvent.latlng;
                     map.off('click', goal.#addMarker);
                     instructions.instructionText = "Confirm positions";
                     instructions.replace();
                 } else {
-                    goal.start_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
+                    goal.start_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]] = mouseEvent.latlng;
                     instructions.instructionText = "Add outer goal marker #1";
                     instructions.replace();
                 }
                 break;
             case 3:
-                goal.goal_marker_pos[0] = mouseEvent.latlng;
+                goal.goal_marker_pos[goal.idsOfGoals[0]] = mouseEvent.latlng;
                 instructions.instructionText = "Add outer goal marker #2";
                 instructions.replace();
                 break;
             case 4:
-                goal.goal_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
+                goal.goal_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]] = mouseEvent.latlng;
                 map.off('click', goal.#addMarker);
                 goal.createTheInnerStartGoalMarkers();
                 instructions.instructionText = "Confirm positions";
@@ -96,8 +96,8 @@ class Goal
         for (let i = 1; i < goal.idsOfGoals.length - 1; i++) {
             let ratio = 1 / (goal.idsOfGoals.length - 1) * i;
 
-            goal.start_marker_pos[i] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.start_marker_pos[0], goal.start_marker_pos[goal.idsOfGoals.length - 1]]), ratio).latLng;
-            goal.goal_marker_pos[i] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.goal_marker_pos[0], goal.goal_marker_pos[goal.idsOfGoals.length - 1]]), ratio).latLng;
+            goal.start_marker_pos[goal.idsOfGoals[i]] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.start_marker_pos[goal.idsOfGoals[0]], goal.start_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]]]), ratio).latLng;
+            goal.goal_marker_pos[goal.idsOfGoals[i]] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.goal_marker_pos[goal.idsOfGoals[0]], goal.goal_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]]]), ratio).latLng;
 
             goal.drawPolyline(i);
         }
@@ -116,7 +116,7 @@ class Goal
             }
         }
 
-        if (typeof this.start_marker_pos[i] != "undefined") {
+        if (typeof this.start_marker_pos[this.idsOfGoals[i]] != "undefined") {
             this.#createStartGoalMarkers(i);
 
             this.goalStyleSheetContent += this.#createMarkerStyleSheetContent(i);
@@ -130,14 +130,14 @@ class Goal
 
     #createStartGoalMarkers(i)
     {
-        if (typeof this.start_marker_pos[i] != "undefined") {
-            this.start_marker_arr[i] = new L.Marker(this.start_marker_pos[i], {icon: this.startGoalIcon});
-            layerManagement.draggableRouteLayerGroup.addLayer(this.start_marker_arr[i]);
+        if (typeof this.start_marker_pos[this.idsOfGoals[i]] != "undefined") {
+            this.start_marker_arr[this.idsOfGoals[i]] = new L.Marker(this.start_marker_pos[this.idsOfGoals[i]], {icon: this.startGoalIcon});
+            layerManagement.draggableRouteLayerGroup.addLayer(this.start_marker_arr[this.idsOfGoals[i]]);
         }
-        
-        if (typeof this.goal_marker_pos[i] != "undefined") {
-            this.goal_marker_arr[i] = new L.Marker(this.goal_marker_pos[i], {icon: this.startGoalIcon});
-            layerManagement.draggableRouteLayerGroup.addLayer(this.goal_marker_arr[i]);
+    
+        if (typeof this.goal_marker_pos[this.idsOfGoals[i]] != "undefined") {
+            this.goal_marker_arr[this.idsOfGoals[i]] = new L.Marker(this.goal_marker_pos[this.idsOfGoals[i]], {icon: this.startGoalIcon});
+            layerManagement.draggableRouteLayerGroup.addLayer(this.goal_marker_arr[this.idsOfGoals[i]]);
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
@@ -145,30 +145,24 @@ class Goal
 
     #createMarkerStyleSheetContent(i)
     {
-        let initialsArr = [];
-
-        for (let j = 0; j < this.idsOfGoals.length; j++) {
-            initialsArr.push(this.usersData[this.idsOfGoals[j]].initials);
-        }
-
         let classNameStartMarkers, classNameGoalMarkers, styleSheetContent = "";
 
-        classNameStartMarkers = 'user-start-marker-' + i;
+        classNameStartMarkers = 'user-start-marker-' + this.idsOfGoals[i];
         styleSheetContent += '.' + classNameStartMarkers + '{ background-color: lightgreen; border-radius: 0 !important;}';
 
-        classNameGoalMarkers = 'user-goal-marker-' + i;
+        classNameGoalMarkers = 'user-goal-marker-' + this.idsOfGoals[i];
         styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
 
-        let initials = '\"' + initialsArr[i] + '\"';
+        let initials = '\"' + this.usersData[this.idsOfGoals[i]].initials + '\"';
         styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initials + '; }';
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initials + '; }';
 
-        if (typeof this.start_marker_arr[i] != "undefined") {
-            this.start_marker_arr[i]._icon.classList.add(classNameStartMarkers);
+        if (typeof this.start_marker_arr[this.idsOfGoals[i]] != "undefined") {
+            this.start_marker_arr[this.idsOfGoals[i]]._icon.classList.add(classNameStartMarkers);
         }
 
-        if (typeof this.goal_marker_arr[i] != "undefined") {
-            this.goal_marker_arr[i]._icon.classList.add(classNameGoalMarkers);
+        if (typeof this.goal_marker_arr[this.idsOfGoals[i]] != "undefined") {
+            this.goal_marker_arr[this.idsOfGoals[i]]._icon.classList.add(classNameGoalMarkers);
         }
 
         return styleSheetContent;
@@ -201,17 +195,19 @@ class Goal
         let goallat, goallng, startlat, startlng, route, goalindex;
 
         for (let i = 0; i < this.goal_marker_pos.length; i++) {
-            goallat = this.goal_marker_pos[i].lat;
-            goallng = this.goal_marker_pos[i].lng;
+            if (typeof this.start_marker_pos[this.idsOfGoals[i]] != "undefined") {
+                goallat = this.goal_marker_pos[this.idsOfGoals[i]].lat;
+                goallng = this.goal_marker_pos[this.idsOfGoals[i]].lng;
 
-            startlat = this.start_marker_pos[i].lat;
-            startlng = this.start_marker_pos[i].lng;
+                startlat = this.start_marker_pos[this.idsOfGoals[i]].lat;
+                startlng = this.start_marker_pos[this.idsOfGoals[i]].lng;
 
-            goalindex = this.idsOfGoals[i];
+                goalindex = this.idsOfGoals[i];
 
-            route = this.routes[this.idsOfGoals[i]];
+                route = this.routes[this.idsOfGoals[i]];
 
-            postObj.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
+                postObj.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex, groupcode : groupCode});
+            }
         }
 
         let post = JSON.stringify(postObj);
@@ -238,11 +234,15 @@ class Goal
                 
                 this.routes[this.goalsData[i].goalIndex] = [];
 
+                this.routes[this.goalsData[i].goalIndex][0] = this.start_marker_pos[this.goalsData[i].goalIndex];
+
                 for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
-                    this.routes[this.goalsData[i].goalIndex][j] = new L.LatLng(this.goalsData[i].waypoints[j][0], this.goalsData[i].waypoints[j][1]);
+                    this.routes[this.goalsData[i].goalIndex][j+1] = new L.LatLng(this.goalsData[i].waypoints[j][0], this.goalsData[i].waypoints[j][1]);
                 }
 
                 this.goal_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
+
+                this.routes[this.goalsData[i].goalIndex][this.routes[this.goalsData[i].goalIndex].length - 1] = this.goal_marker_pos[this.goalsData[i].goalIndex];
             }
         }
     }
@@ -377,9 +377,8 @@ class Goal
         map.addLayer(layerManagement.goalLayerGroup);
 
         for (let i = 0; i < this.routes.length; i++) {
-            if (typeof this.routes[i] != "undefined") {
-                this.#addStartGoalMarkersToRoute(i);
-
+            if (typeof this.routes[i] != "undefined"
+                && typeof this.start_marker_arr[this.idsOfGoals[i]] != "undefined") {
                 let polyline = new L.Polyline(this.routes[i], {weight: 5});
 
                 this.#assignParentLines(polyline, i);
@@ -389,20 +388,10 @@ class Goal
         }
     }
 
-    #addStartGoalMarkersToRoute(i)
-    {
-        if (typeof this.routes[i] != "undefined") {
-            this.routes[i].unshift(this.start_marker_arr[i].getLatLng());
-            this.routes[i].push(this.goal_marker_arr[i].getLatLng());   
-        } else {
-            this.routes[this.idsOfGoals[i]].push(this.start_marker_arr[this.idsOfGoals[i]].getLatLng());
-            this.routes[this.idsOfGoals[i]].push(this.goal_marker_arr[this.idsOfGoals[i]].getLatLng());   
-        }
-    }
-
     #assignParentLines(parentLine, i)
     {
-        this.start_marker_arr[i].parentLine = parentLine;
+        this.start_marker_arr[this.idsOfGoals[i]].parentLine = parentLine;
+        this.goal_marker_arr[this.idsOfGoals[i]].parentLine = parentLine;
     }
 
     calculateTheDistancesOfRoutes()
@@ -429,19 +418,22 @@ class Goal
     disableMarkerDraggability()
     {
         for (let i = 0; i < this.start_marker_arr.length; i++) {
-            this.start_marker_arr[i].dragging.disable();
-            this.goal_marker_arr[i].dragging.disable();
+            if (typeof this.start_marker_arr[this.idsOfGoals[i]] != "undefined") {
+                this.start_marker_arr[this.idsOfGoals[i]].dragging.disable();
+                this.goal_marker_arr[this.idsOfGoals[i]].dragging.disable();
+            }
         }
     }
 
     enableOuterRouteDrawing()
     {
-        if (this.start_marker_arr.length == 1) {
+        console.log(this.idsOfGoals);
+        if (this.idsOfGoals.length == 1) {
             this.outerRouteWaypoints = [[]];
-            this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
+            this.outerRouteWaypoints[0].push(this.start_marker_arr[this.idsOfGoals[0]].getLatLng());
         } else {
-            this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
-            this.outerRouteWaypoints[1].push(this.start_marker_arr[this.start_marker_arr.length - 1].getLatLng());   
+            this.outerRouteWaypoints[0].push(this.start_marker_arr[this.idsOfGoals[0]].getLatLng());
+            this.outerRouteWaypoints[1].push(this.start_marker_arr[this.idsOfGoals[this.idsOfGoals.length - 1]].getLatLng());   
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
@@ -454,17 +446,19 @@ class Goal
 
     #changeActiveStyleToActiveMarker(i)
     {
-        const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
-        activeGoalStyle.removeStyle();
+        if (typeof goal.start_marker_arr[goal.idsOfGoals[i]] != "undefined") {
+            const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
+            activeGoalStyle.removeStyle();
 
-        let className = 'active-goal-marker-' + i;
-        let styleSheetContent = '.' + className + '{ box-shadow: 0 0 5px 12px #3388ff; }';
+            let className = 'active-goal-marker-' + goal.idsOfGoals[i];
+            let styleSheetContent = '.' + className + '{ box-shadow: 0 0 5px 12px #3388ff; }';
 
-        goal.start_marker_arr[i]._icon.classList.add(className);
-        goal.goal_marker_arr[i]._icon.classList.add(className);
+            goal.start_marker_arr[goal.idsOfGoals[i]]._icon.classList.add(className);
+            goal.goal_marker_arr[goal.idsOfGoals[i]]._icon.classList.add(className);
 
-        activeGoalStyle.styleSheetContent = styleSheetContent;
-        activeGoalStyle.createStyle();
+            activeGoalStyle.styleSheetContent = styleSheetContent;
+            activeGoalStyle.createStyle();
+        }
     }
 
     #addOnClickEvents()
@@ -472,9 +466,9 @@ class Goal
         map.on('click', this.#addOuterRouteWaypoint);
 
         if (this.routeLoopIndex == 0) {
-            this.goal_marker_arr[0].on('click', this.#attachOuterRouteToGoalMarker);
+            this.goal_marker_arr[this.idsOfGoals[0]].on('click', this.#attachOuterRouteToGoalMarker);
         } else {
-            this.goal_marker_arr[this.goal_marker_arr.length - 1].on('click', this.#attachOuterRouteToGoalMarker);
+            this.goal_marker_arr[this.idsOfGoals[this.idsOfGoals.length - 1]].on('click', this.#attachOuterRouteToGoalMarker);
         }
     }
 
@@ -488,11 +482,11 @@ class Goal
     #attachOuterRouteToGoalMarker()
     {
         if (goal.routeLoopIndex == 0) {
-            goal.outerRouteWaypoints[0].push(goal.goal_marker_arr[0].getLatLng());
-            goal.goal_marker_arr[0].off('click', goal.#attachOuterRouteToGoalMarker);
+            goal.outerRouteWaypoints[0].push(goal.goal_marker_arr[goal.idsOfGoals[0]].getLatLng());
+            goal.goal_marker_arr[goal.idsOfGoals[0]].off('click', goal.#attachOuterRouteToGoalMarker);
         } else {
-            goal.outerRouteWaypoints[1].push(goal.goal_marker_arr[goal.goal_marker_arr.length - 1].getLatLng());
-            goal.goal_marker_arr[goal.goal_marker_arr.length - 1].off('click', goal.#attachOuterRouteToGoalMarker);
+            goal.outerRouteWaypoints[1].push(goal.goal_marker_arr[goal.idsOfGoals[goal.idsOfGoals.length - 1]].getLatLng());
+            goal.goal_marker_arr[goal.idsOfGoals[goal.idsOfGoals.length - 1]].off('click', goal.#attachOuterRouteToGoalMarker);
         }
 
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
@@ -503,7 +497,7 @@ class Goal
         goal.routeLoopIndex = goal.routeLoopIndex + 1;
 
         if (goal.routeLoopIndex < goal.outerRouteWaypoints.length) {
-            goal.#changeActiveStyleToActiveMarker(goal.start_marker_arr.length - 1);
+            goal.#changeActiveStyleToActiveMarker(goal.idsOfGoals.length - 1);
             goal.#addOnClickEvents();
         } else {
             const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
