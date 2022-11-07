@@ -333,13 +333,8 @@ class Goal
         for (let i = 1; i <= this.goal_marker_arr.length - 2; i++) {
             this.innerRouteSegments.push([]);
             for (let j = 0; j < this.outerRouteSegments[0].length; j++) {
-                if (this.start_marker_arr[i].getLatLng().lat <= this.outerRouteSegments[0][j].lat
-                    && this.start_marker_arr[i].getLatLng().lat <= this.outerRouteSegments[1][j].lat
-                    && this.goal_marker_arr[i].getLatLng().lat >= this.outerRouteSegments[0][j].lat
-                    && this.goal_marker_arr[i].getLatLng().lat >= this.outerRouteSegments[1][j].lat) {
-                    let ratio = this.#defineRatioOfInterpolation(i);
-                    this.innerRouteSegments[i-1].push(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng);
-                }
+                let ratio = this.#defineRatioOfInterpolation(i);
+                this.innerRouteSegments[i-1].push(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng);
             }
         }
     }
