@@ -22,11 +22,12 @@
                 $goalRowID = insertGoalToDatabase($jsonObj->groupcode, $startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $goalCookie);
 
                 $waypoints = $jsonObj->routewaypoints;
-
-                for ($j = 0; $j < count($waypoints); $j++) {
-                    $waypointPositionRowID = insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
-
-                    insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
+                if (isset($waypoints)) {
+                    for ($j = 0; $j < count($waypoints); $j++) {
+                        $waypointPositionRowID = insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
+    
+                        insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
+                    }
                 }
             }
         }

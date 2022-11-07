@@ -26,6 +26,7 @@ function onLocationFound(e)
                 LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                 ElementDisplay.change('active-goal-disclaimer', 'none');
             } else if (data.goalsdata[0] == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
+                goal.updatePercentagePopups();
                 refreshCounter = refreshCounter + 1;
             } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
@@ -33,6 +34,7 @@ function onLocationFound(e)
                     goal.drawPolyline(i);
                 }
                 goal.drawAllRoutes();
+                goal.calculateTheDistancesOfRoutes();
                 goal.updatePercentagePopups();
                 ElementDisplay.change('active-goal-disclaimer', 'block');
                 ElementDisplay.change('add-goal-btn', 'none');
