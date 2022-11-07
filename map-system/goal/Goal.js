@@ -29,7 +29,6 @@ class Goal
         this.innerRouteSegments = [];
         this.outerRouteWaypoints = [[], []];
         this.routeLoopIndex = 0;
-        this.indexesOfOutermostRoutes = [];
 
         this.routes = [];
 
@@ -408,14 +407,12 @@ class Goal
 
     enableOuterRouteDrawing()
     {
-        this.indexesOfOutermostRoutes = this.#getIndexesOfOutermostRoutes();
-
         if (this.start_marker_arr.length == 1) {
             this.outerRouteWaypoints = [[]];
-        }
-
-        for (let i = 0; i < this.outerRouteWaypoints.length; i++) {
-            this.outerRouteWaypoints[i].push(this.start_marker_arr[this.indexesOfOutermostRoutes[i]].getLatLng());
+            this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
+        } else {
+            this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
+            this.outerRouteWaypoints[1].push(this.start_marker_arr[this.start_marker_arr.length - 1].getLatLng());   
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
@@ -445,23 +442,11 @@ class Goal
     {
         map.on('click', this.#addOuterRouteWaypoint);
 
-        this.goal_marker_arr[this.indexesOfOutermostRoutes[this.routeLoopIndex]].on('click', this.#attachOuterRouteToGoalMarker);
-    }
-
-    // Only works with longitude
-    #getIndexesOfOutermostRoutes()
-    {
-        let indexes = [];
-        let longitudes = [];
-
-        for (let i = 0; i < this.start_marker_arr.length; i++) {
-            longitudes.push(this.start_marker_arr[i].getLatLng().lng);
+        if (this.routeLoopIndex == 0) {
+            this.goal_marker_arr[0].on('click', this.#attachOuterRouteToGoalMarker);
+        } else {
+            this.goal_marker_arr[this.goal_marker_arr.length - 1].on('click', this.#attachOuterRouteToGoalMarker);
         }
-
-        indexes.push(longitudes.indexOf(Math.min(...longitudes)));
-        indexes.push(longitudes.indexOf(Math.max(...longitudes)));
-
-        return indexes;
     }
 
     #addOuterRouteWaypoint(mouseEvent)
@@ -473,12 +458,18 @@ class Goal
 
     #attachOuterRouteToGoalMarker()
     {
-        goal.outerRouteWaypoints[goal.routeLoopIndex].push(goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].getLatLng());
+        if (goal.routeLoopIndex == 0) {
+            goal.outerRouteWaypoints[0].push(goal.goal_marker_arr[0].getLatLng());
+            goal.goal_marker_arr[0].off('click', goal.#attachOuterRouteToGoalMarker);
+        } else {
+            goal.outerRouteWaypoints[1].push(goal.goal_marker_arr[goal.goal_marker_arr.length - 1].getLatLng());
+            goal.goal_marker_arr[goal.goal_marker_arr.length - 1].off('click', goal.#attachOuterRouteToGoalMarker);
+        }
+
         let polyline = new L.Polyline(goal.outerRouteWaypoints[goal.routeLoopIndex], {weight: 5});
         layerManagement.draggableRouteLayerGroup.addLayer(polyline);
 
         map.off('click', goal.#addOuterRouteWaypoint);
-        goal.goal_marker_arr[goal.indexesOfOutermostRoutes[goal.routeLoopIndex]].off('click', goal.#attachOuterRouteToGoalMarker);
 
         goal.routeLoopIndex = goal.routeLoopIndex + 1;
 
@@ -517,7 +508,6 @@ class Goal
         this.innerRouteSegments = [];
         this.outerRouteWaypoints = [[], []];
         this.routeLoopIndex = 0;
-        this.indexesOfOutermostRoutes = [];
         this.goalsData = [];
         this.routes = [];
         this.howManyMarkersHasUserAddedToMap = 0;
