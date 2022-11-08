@@ -225,24 +225,38 @@ class Goal
 
     saveDataFromPHPToVariables()
     {
+        let amountOfNoGoals = 0;
         while (this.goalsData.length < this.usersData.length) {
             this.goalsData.push("user has no goal");
+            amountOfNoGoals = amountOfNoGoals + 1;
         }
+        let sortedArrByGoalIndex = [];
+        for (let i = 0; i < this.goalsData.length; i++) {
+            if (typeof this.goalsData[i].goalIndex != "undefined") {
+                sortedArrByGoalIndex[this.goalsData[i].goalIndex] = this.goalsData[i];
+            }
+        }
+        for (let i = 0; i < amountOfNoGoals; i++) {
+            if (typeof sortedArrByGoalIndex[i] == "undefined") {
+                sortedArrByGoalIndex[i] = "user has no goal";
+            }
+        }
+        this.goalsData = sortedArrByGoalIndex;
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal") {
                 this.start_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
                 
                 this.routes[this.goalsData[i].goalIndex] = [];
 
-                this.routes[this.goalsData[i].goalIndex][0] = this.start_marker_pos[this.goalsData[i].goalIndex];
+                this.routes[this.goalsData[i].goalIndex].push(this.start_marker_pos[this.goalsData[i].goalIndex]);
 
                 for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
-                    this.routes[this.goalsData[i].goalIndex][j+1] = new L.LatLng(this.goalsData[i].waypoints[j][0], this.goalsData[i].waypoints[j][1]);
+                    this.routes[this.goalsData[i].goalIndex][j+1] = new L.LatLng(this.goalsData[this.goalsData[i].goalIndex].waypoints[j][0], this.goalsData[this.goalsData[i].goalIndex].waypoints[j][1]);
                 }
 
-                this.goal_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
+                this.goal_marker_pos[this.goalsData[i].goalIndex] = new L.LatLng(this.goalsData[this.goalsData[i].goalIndex].goal_position[0], this.goalsData[this.goalsData[i].goalIndex].goal_position[1]);
 
-                this.routes[this.goalsData[i].goalIndex][this.routes[this.goalsData[i].goalIndex].length - 1] = this.goal_marker_pos[this.goalsData[i].goalIndex];
+                this.routes[this.goalsData[i].goalIndex].push(this.goal_marker_pos[this.goalsData[i].goalIndex]);
             }
         }
     }
@@ -341,7 +355,7 @@ class Goal
 
     saveInnerRouteSegments()
     {
-        for (let i = 1; i <= this.goal_marker_arr.length - 2; i++) {
+        for (let i = 1; i <= this.goal_marker_arr.filter(Boolean).length - 2; i++) {
             this.innerRouteSegments.push([]);
             for (let j = 0; j < this.outerRouteSegments[0].length; j++) {
                 let ratio = this.#defineRatioOfInterpolation(i);
@@ -352,13 +366,13 @@ class Goal
 
     saveSegmentsAsRoutes()
     {
-        for (let i = 0; i < this.goal_marker_arr.length; i++) {
+        for (let i = 0; i < this.goal_marker_arr.filter(Boolean).length; i++) {
             if (i == 0) {
-                this.routes.push(this.outerRouteSegments[0]);
-            } else if (i == this.goal_marker_arr.length - 1) {
-                this.routes.push(this.outerRouteSegments[1]);
+                this.routes[this.idsOfGoals[i]] = this.outerRouteSegments[0];
+            } else if (i == this.goal_marker_arr.filter(Boolean).length - 1) {
+                this.routes[this.idsOfGoals[i]] = this.outerRouteSegments[1];
             } else {
-                this.routes.push(this.innerRouteSegments[i-1]);
+                this.routes[this.idsOfGoals[i]] = this.innerRouteSegments[i-1];
             }
         }
     }
@@ -367,7 +381,7 @@ class Goal
     {
         let increment;
 
-        increment = 1 / (this.goal_marker_arr.length - 1);
+        increment = 1 / (this.goal_marker_arr.filter(Boolean).length - 1);
 
         return increment * i;
     }
@@ -377,9 +391,9 @@ class Goal
         map.addLayer(layerManagement.goalLayerGroup);
 
         for (let i = 0; i < this.routes.length; i++) {
-            if (typeof this.routes[i] != "undefined"
+            if (typeof this.routes[this.idsOfGoals[i]] != "undefined"
                 && typeof this.start_marker_arr[this.idsOfGoals[i]] != "undefined") {
-                let polyline = new L.Polyline(this.routes[i], {weight: 5});
+                let polyline = new L.Polyline(this.routes[this.idsOfGoals[i]], {weight: 5});
 
                 this.#assignParentLines(polyline, i);
 
@@ -427,7 +441,6 @@ class Goal
 
     enableOuterRouteDrawing()
     {
-        console.log(this.idsOfGoals);
         if (this.idsOfGoals.length == 1) {
             this.outerRouteWaypoints = [[]];
             this.outerRouteWaypoints[0].push(this.start_marker_arr[this.idsOfGoals[0]].getLatLng());
