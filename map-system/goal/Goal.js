@@ -87,7 +87,7 @@ class Goal
         }
 
         for (let i = 0; i < goal.start_marker_pos.length; i++) {
-            goal.drawPolyline(i);
+            goal.addStartGoalMarkersToMap(i);
         }
     }
 
@@ -99,11 +99,11 @@ class Goal
             goal.start_marker_pos[goal.idsOfGoals[i]] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.start_marker_pos[goal.idsOfGoals[0]], goal.start_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]]]), ratio).latLng;
             goal.goal_marker_pos[goal.idsOfGoals[i]] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.goal_marker_pos[goal.idsOfGoals[0]], goal.goal_marker_pos[goal.idsOfGoals[goal.idsOfGoals.length - 1]]]), ratio).latLng;
 
-            goal.drawPolyline(i);
+            goal.addStartGoalMarkersToMap(i);
         }
     }
 
-    drawPolyline(i)
+    addStartGoalMarkersToMap(i)
     {
         const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
         startGoalStyle.removeStyle();
@@ -178,11 +178,23 @@ class Goal
     updatePercentagePopups()
     {
         for (let i = 0; i < goal.idsOfGoals.length; i++) {
-            let distanceFromUserToGoal = user.user_markers[goal.idsOfGoals[i]].getLatLng().distanceTo(goal.goal_marker_arr[goal.idsOfGoals[i]].getLatLng());
-            let percentageOfGoalAchieved = Math.round((1 - distanceFromUserToGoal / this.routesDistances[i]) * 100);
+            if (goal.goal_marker_arr.length != 0) {
+                let distanceFromUserToGoal = user.user_markers[goal.idsOfGoals[i]].getLatLng().distanceTo(goal.goal_marker_arr[goal.idsOfGoals[i]].getLatLng());
+                let percentageOfGoalAchieved = Math.round((1 - distanceFromUserToGoal / this.routesDistances[i]) * 100);
 
-            this.userPopupContent[i] = percentageOfGoalAchieved + "%";
-            this.#bindPopupToUsers(i);
+                this.userPopupContent[i] = percentageOfGoalAchieved + "%";
+                this.#bindPopupToUsers(i);
+            }
+        }
+    }
+
+    removePercentagePopups()
+    {
+        for (let i = 0; i < this.idsOfGoals.length; i++) {
+            console.log(user.user_markers[this.idsOfGoals[i]]._popup);
+            user.user_markers[this.idsOfGoals[i]]._popup = null;
+            console.log(user.user_markers[this.idsOfGoals[i]]._popup);
+            user.user_markers[this.idsOfGoals[i]].bindPopup("");
         }
     }
 

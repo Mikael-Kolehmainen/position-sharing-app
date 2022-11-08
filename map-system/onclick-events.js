@@ -115,6 +115,7 @@ function removeDraggableGoalClicked()
 
 function activeGoalDisclaimerClicked()
 {
+    goal.removePercentagePopups();
     goal.remove();
     refreshCounter = 0;
     ElementDisplay.change('active-goal-disclaimer', 'none');

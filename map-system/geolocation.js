@@ -31,7 +31,7 @@ function onLocationFound(e)
             } else if (!goal.goalIsBeingPlanned) {
                 goal.saveDataFromPHPToVariables();
                 for (let i = 0; i < goal.start_marker_pos.length; i++) {
-                    goal.drawPolyline(i);
+                    goal.addStartGoalMarkersToMap(i);
                 }
                 goal.drawAllRoutes();
                 goal.calculateTheDistancesOfRoutes();
