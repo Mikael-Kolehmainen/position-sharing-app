@@ -45,6 +45,17 @@ class User
         }
     }
 
+    public function getIDs()
+    {
+        $pdo = dbHandler::getPdbConnection();
+
+        $stmt = $pdo->prepare('SELECT id FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getMarkerDetails()
     {
         $pdo = dbHandler::getPdbConnection();

@@ -6,6 +6,7 @@ class Goal
     private const FIELD_START_POSITIONS_ID = 'start_positions_id';
     private const FIELD_GOAL_POSITIONS_ID = 'goal_positions_id';
     private const FIELD_GOAL_ID = 'goalIndex';
+    private const FIELD_USER_ID = 'users_id';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
     private const FIELD_GOAL_COOKIE = 'goalcookie';
 
@@ -26,6 +27,9 @@ class Goal
 
     /** @var string */
     public $goalCookie;
+
+    /** @var string */
+    public $userID;
 
     public function __construct($groupCode)
     {
@@ -99,12 +103,13 @@ class Goal
     public function save(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_GOAL_COOKIE . ') VALUES (?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_USER_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_GOAL_COOKIE . ') VALUES (?, ?, ?, ?, ?, ?)');
         $stmt->bindParam(1, $this->startPositionID);
         $stmt->bindParam(2, $this->goalPositionID);
         $stmt->bindParam(3, $this->goalIndex);
-        $stmt->bindParam(4, $this->groupCode);
-        $stmt->bindParam(5, $this->goalCookie);
+        $stmt->bindParam(4, $this->userID);
+        $stmt->bindParam(5, $this->groupCode);
+        $stmt->bindParam(6, $this->goalCookie);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
     }

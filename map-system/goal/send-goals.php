@@ -13,13 +13,20 @@
             $groupCode = $json[0]->groupcode;
             $goalCookie = createGoalCookie($groupCode);
 
+            $userIDs = getUserIDs($groupCode);
+            $rowIDsOfUsersWithGoal = [];
+
+            for ($i = 0; $i < count($json); $i++) {
+                $rowIDsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalindex]["id"];
+            }
+
             for ($i = 0; $i < count($json); $i++) {
                 $jsonObj = $json[$i];
                 
                 $startPositionRowID = insertPositionToDatabase($jsonObj->startlat, $jsonObj->startlng);
                 $goalPositionRowID = insertPositionToDatabase($jsonObj->goallat, $jsonObj->goallng);
 
-                $goalRowID = insertGoalToDatabase($jsonObj->groupcode, $startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $goalCookie);
+                $goalRowID = insertGoalToDatabase($jsonObj->groupcode, $startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $rowIDsOfUsersWithGoal[$i], $goalCookie);
 
                 $waypoints = $jsonObj->routewaypoints;
                 if (isset($waypoints)) {
@@ -42,6 +49,15 @@
         return $goal->createGoalCookie();
     }
 
+    function getUserIDs($groupCode)
+    {
+        $user = new User();
+
+        $user->groupCode = $groupCode;
+
+        return $user->getIDs();
+    }
+
     function insertPositionToDatabase($lat, $lng)
     {
         $position = new Position($lat, $lng);
@@ -50,12 +66,13 @@
         return $position->id;
     }
 
-    function insertGoalToDatabase($groupCode, $startPositionRowID, $goalPositionRowID, $goalIndex, $goalCookie)
+    function insertGoalToDatabase($groupCode, $startPositionRowID, $goalPositionRowID, $goalIndex, $userID, $goalCookie)
     {
         $goal = new Goal($groupCode);
         $goal->startPositionID = $startPositionRowID;
         $goal->goalPositionID = $goalPositionRowID;
         $goal->goalIndex = $goalIndex;
+        $goal->userID = $userID;
         $goal->goalCookie = $goalCookie;
         $goal->save();
 
