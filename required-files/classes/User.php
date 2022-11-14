@@ -94,6 +94,16 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getGroupCodes()
+    {
+        $pdo = dbHandler::getPdbConnection();
+
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GROUPCODE . ' FROM ' . self::TABLE_NAME);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();

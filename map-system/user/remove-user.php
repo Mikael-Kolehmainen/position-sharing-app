@@ -15,12 +15,12 @@
     if (isset($_GET[GROUPCODE])) {
         session_start();
 
-        $uniqueID = $_SESSION[UNIQUEID];
+/*        $uniqueID = $_SESSION[UNIQUEID];
 
         unset($_SESSION[UNIQUEID]);
 
         removePosition(getPositionsRowID($uniqueID));
-        removeUser($uniqueID);
+        removeUser($uniqueID); */
         removeCookie();
     }
 

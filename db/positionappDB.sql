@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 22, 2022 at 10:31 AM
+-- Generation Time: Nov 10, 2022 at 04:50 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -32,7 +32,9 @@ CREATE TABLE `goals` (
   `start_positions_id` int(4) DEFAULT NULL,
   `goal_positions_id` int(4) DEFAULT NULL,
   `goalIndex` int(255) DEFAULT NULL,
-  `groups_groupcode` varchar(10) DEFAULT NULL
+  `users_id` int(4) DEFAULT NULL,
+  `groups_groupcode` varchar(10) DEFAULT NULL,
+  `goalcookie` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -51,7 +53,7 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `groupcode`) VALUES
-(27, 'qOv');
+(42, '08A');
 
 -- --------------------------------------------------------
 
@@ -66,20 +68,6 @@ CREATE TABLE `messages` (
   `color` varchar(7) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `messages`
---
-
-INSERT INTO `messages` (`id`, `message`, `initials`, `color`, `groups_groupcode`) VALUES
-(40, 'test', 'MK', '#5BC0EB', 'qOv'),
-(41, 'test', 'MK', '#5BC0EB', 'qOv'),
-(42, 'another test', 'MK', '#5BC0EB', 'qOv'),
-(46, 'test &#39;', 'MK', '#5BC0EB', 'qOv'),
-(47, 'test . &#39; , &#34; # $', 'MK', '#5BC0EB', 'qOv'),
-(48, 'test', 'MK', '#FF0000', 'qOv'),
-(49, 'test', 'MK', '#5BC0EB', 'qOv'),
-(50, 'test', 'MK', '#5BC0EB', 'qOv');
 
 -- --------------------------------------------------------
 
@@ -98,7 +86,10 @@ CREATE TABLE `positions` (
 --
 
 INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
-(736, '63.105632', '21.615515');
+(1, '63.110000', '21.630000'),
+(2, '63.115000', '21.635000'),
+(3, '63.117500', '21.634240'),
+(93121, '63.104614', '21.620326');
 
 -- --------------------------------------------------------
 
@@ -120,7 +111,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `positions_id`, `uniqueID`, `initials`, `color`, `groups_groupcode`) VALUES
-(3395, 726, 'tuRPpbpPBF', 'MK', '#5BC0EB', 'qOv');
+(5421, 1, 'testtest11', 'EE', '#FF00FF', '08A'),
+(5422, 2, 'testtest22', 'FF', '#FFBBAA', '08A'),
+(5423, 3, 'testtest33', 'GG', '#00FF00', '08A'),
+(5432, 93121, 'QaAUWQcbFE', 'MK', '#5BC0EB', '08A');
 
 -- --------------------------------------------------------
 
@@ -182,37 +176,37 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=435;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1811;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=737;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93938;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3396;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5433;
 
 --
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88347;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

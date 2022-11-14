@@ -1,3 +1,15 @@
+<?php
+require './../required-files/constants.php';
+require './../autoloader.php';
+
+session_start();
+if (isset($_SESSION[UNIQUEID])) {
+    $user = new User();
+    $user->uniqueId = $_SESSION[UNIQUEID];
+    $user->remove();
+    unset($_SESSION[UNIQUEID]);
+}
+?>
 <!DOCTYPE html>
 <html>
     <head>

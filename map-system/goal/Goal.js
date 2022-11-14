@@ -96,7 +96,6 @@ class Goal
         for (let i = 1; i < goal.idsOfGoals.length - 1; i++) {
             let ratio = 1 / (goal.idsOfGoals.length - 1) * i;
 
-            console.log(goal.start_marker_pos);
             goal.start_marker_pos[i] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.start_marker_pos[0], goal.start_marker_pos[goal.start_marker_pos.length - 1]]), ratio).latLng;
             goal.goal_marker_pos[i] = L.GeometryUtil.interpolateOnLine(map, new L.Polyline([goal.goal_marker_pos[0], goal.goal_marker_pos[goal.goal_marker_pos.length - 1]]), ratio).latLng;
 
@@ -545,5 +544,4 @@ function getIdOfCheckbox(checkbox)
     idOfCheckbox = idSplitted[1];
     
     goal.updateIdsOfGoals(idOfCheckbox);
-    console.log(goal.idsOfGoals);
 }
