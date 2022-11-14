@@ -1,5 +1,6 @@
 <?php
     const GROUPCODE = "groupcode";
+    const GROUPS_GROUPCODE = "groups_groupcode";
     const INITIALS = "initials";
     const POSITIONS = "positions";
     const POSITION = "position";

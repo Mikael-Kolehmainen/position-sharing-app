@@ -7,13 +7,8 @@ if (isset($_GET[LAT]) && isset($_GET[LNG]) && isset($_GET[GROUPCODE])) {
     $newLat = filter_input(INPUT_GET, LAT, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $newLng = filter_input(INPUT_GET, LNG, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
-    $uniqueIdExistsInDatabase = false;
 
-    if (isset($_SESSION[UNIQUEID])) {
-        $uniqueIdExistsInDatabase = checkIfUniqueIdExistsInDatabase($groupCode);
-    }
-
-    if ($uniqueIdExistsInDatabase) {
+    if (checkIfUniqueIdExistsInDatabase($groupCode)) {
         $uniqueID = $_SESSION[UNIQUEID];
         $positionsRowID = getPositionsRowID($uniqueID);
 
@@ -32,14 +27,16 @@ if (isset($_GET[LAT]) && isset($_GET[LNG]) && isset($_GET[GROUPCODE])) {
 
 function checkIfUniqueIdExistsInDatabase($groupCode)
 {
-    $user = new User();
-    $uniqueIDs = $user->getUniqueIDs();
-    $groupCodes = $user->getGroupCodes();
+    if (isset($_SESSION[UNIQUEID])) {
+        $user = new User();
+        $uniqueIDs = $user->getUniqueIDs();
+        $groupCodes = $user->getGroupCodes();
 
-    for ($i = 0; $i < count($uniqueIDs); $i++) {
-        if ($uniqueIDs[$i][UNIQUEID] == $_SESSION[UNIQUEID]
-            && $groupCodes[$i][GROUPCODE] == $groupCode) {
-            return true;
+        for ($i = 0; $i < count($uniqueIDs); $i++) {
+            if ($uniqueIDs[$i][UNIQUEID] == $_SESSION[UNIQUEID]
+                && $groupCodes[$i][GROUPS_GROUPCODE] == $groupCode) {
+                return true;
+            }
         }
     }
 
