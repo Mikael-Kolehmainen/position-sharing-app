@@ -10,40 +10,63 @@ function onLocationFound(e)
     {
         const getData = new Data("data/get-data.php?groupcode=" + groupCode);
         getData.getFromPHP(function(data) {
+            if (data != "Group doesn't exist") {
 
-            user.user_markers = [];
-            user.usersData = data.usersdata;
-            user.addMarkersToMap();
-
-            chat.messagesData = data.messagesdata;
-            chat.updateChat();
+                saveUsersData(data);
+                saveChatData(data);
+                saveGoalData(e.latlng, data);
             
-            goal.goalsData = data.goalsdata;
-            goal.usersData = data.usersdata;
-            goal.current_position = e.latlng;
-
-            if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
-                LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
-                ElementDisplay.change('active-goal-disclaimer', 'none');
-            } else if (data.goalsdata[0] == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
-                goal.updatePercentagePopups();
-                refreshCounter = refreshCounter + 1;
-            } else if (!goal.goalIsBeingPlanned) {
-                goal.saveDataFromPHPToVariables();
-                for (let i = 0; i < goal.start_marker_pos.length; i++) {
-                    goal.addStartGoalMarkersToMap(i);
+                if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
+                    LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
+                    ElementDisplay.change('active-goal-disclaimer', 'none');
+                } else if (data.goalsdata[0] == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
+                    goal.updatePercentagePopups();
+                    refreshCounter = refreshCounter + 1;
+                } else if (!goal.goalIsBeingPlanned) {
+                    goal.saveDataFromPHPToVariables();
+                    for (let i = 0; i < goal.start_marker_pos.length; i++) {
+                        goal.addStartGoalMarkersToMap(i);
+                    }
+                    goal.drawAllRoutes();
+                    goal.calculateTheDistancesOfRoutes();
+                    goal.updatePercentagePopups();
+                    ElementDisplay.change('active-goal-disclaimer', 'block');
+                    ElementDisplay.change('add-goal-btn', 'none');
+                    refreshCounter = refreshCounter + 1;
                 }
-                goal.drawAllRoutes();
-                goal.calculateTheDistancesOfRoutes();
-                goal.updatePercentagePopups();
-                ElementDisplay.change('active-goal-disclaimer', 'block');
-                ElementDisplay.change('add-goal-btn', 'none');
-                refreshCounter = refreshCounter + 1;
+            } else {
+                redirectUserToIndexPage();
             }
         });
     });
 
     layerManagement.refreshedLayerGroup.addTo(map);
+}
+
+function saveUsersData(data)
+{
+    user.user_markers = [];
+    user.usersData = data.usersdata;
+    user.addMarkersToMap();
+}
+
+function saveChatData(data)
+{
+    chat.messagesData = data.messagesdata;
+    chat.updateChat();
+}
+
+function saveGoalData(current_position, data)
+{
+    goal.goalsData = data.goalsdata;
+    goal.usersData = data.usersdata;
+    goal.current_position = current_position;
+}
+
+function redirectUserToIndexPage()
+{
+    alert('The group has been removed.');
+    window.location.href = './../index.php';
 }
 
 function onLocationError(e) 

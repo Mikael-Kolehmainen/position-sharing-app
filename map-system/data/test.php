@@ -1,11 +1,8 @@
 <?php
 require './../../autoloader.php';
 
-        $user = new User();
-        $groupCodes = $user->getGroupCodes();
-        $user->groupCode = "DgG";
-        $IDs = $user->getIDs();
+        
+        $group = new Group('09A');
+        $rowCount = $group->getRowCount();
 
-        print_r($IDs);
-        echo "<br>";
-        print_r($groupCodes);
+        print_r($rowCount);

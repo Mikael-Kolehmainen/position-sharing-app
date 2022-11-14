@@ -5,9 +5,20 @@ require './../../autoloader.php';
 if (isset($_GET[GROUPCODE])) {
     $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-    $data = getData($groupCode);
+    if (groupExists($groupCode)) {
+        $data = getData($groupCode);
+    } else {
+        $data = "Group doesn't exist";
+    }
 
     echo json_encode($data);
+}
+
+function groupExists($groupCode)
+{
+    $group = new Group($groupCode);
+
+    return $group->getRowCount();
 }
 
 function getData($groupCode)
