@@ -98,6 +98,14 @@ class User
         $stmt->execute();
     }
 
+    public function removeWithGroupCode(): void
+    {
+        $pdo = dbHandler::getPdbConnection();
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?');
+        $stmt->bindParam(1, $this->groupCode);
+        $stmt->execute();
+    }
+
     public function save(): void
     {
         if (empty($this->id)) {

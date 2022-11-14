@@ -6,6 +6,7 @@
         $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         removeGroup($groupCode);
+        removeGroupUsers($groupCode);
         removeGroupMessages($groupCode);
         $goalsID = getGoalsID($groupCode);
         removeGoalPositions(getStartGoalPositionsIDs($groupCode), getWaypointPositionsIDs($goalsID));
@@ -19,6 +20,13 @@
     {
         $group = new Group($groupCode);
         $group->remove();
+    }
+
+    function removeGroupUsers($groupCode)
+    {
+        $user = new User();
+        $user->groupCode = $groupCode;
+        $user->removeWithGroupCode();
     }
 
     function removeGroupMessages($groupCode)
