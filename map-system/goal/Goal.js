@@ -189,9 +189,7 @@ class Goal
     removePercentagePopups()
     {
         for (let i = 0; i < this.idsOfGoals.length; i++) {
-            console.log(user.user_markers[i]._popup);
             user.user_markers[i]._popup = null;
-            console.log(user.user_markers[i]._popup);
             user.user_markers[i].bindPopup("");
         }
     }

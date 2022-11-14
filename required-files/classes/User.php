@@ -4,7 +4,6 @@ class User
 {
     private const TABLE_NAME = 'users';
     private const FIELD_POSITIONS_ID = 'positions_id';
-    private const FIELD_UNIQUE_ID = 'uniqueID';
     private const FIELD_INITIALS = 'initials';
     private const FIELD_COLOR = 'color';
     private const FIELD_GROUPCODE = 'groups_groupcode';
@@ -14,9 +13,6 @@ class User
 
     /** @var int */
     public $positionsId;
-
-    /** @var varchar */
-    public $uniqueId;
 
     /** @var string */
     public $initials;
@@ -82,16 +78,6 @@ class User
 
         $_SESSION[INITIALS] = $initials;
         $_SESSION[COLOR] = $color;
-    }
-
-    public function getUniqueIDs()
-    {
-        $pdo = dbHandler::getPdbConnection();
-
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_UNIQUE_ID . ' FROM ' . self::TABLE_NAME);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getGroupCodes()

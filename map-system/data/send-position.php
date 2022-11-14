@@ -28,11 +28,9 @@ function checkIfRowIdExistsInDatabase($groupCode)
     $user = new User();
     $user->groupCode = $groupCode;
     $IDs = $user->getIDs();
-    $groupCodes = $user->getGroupCodes();
 
     for ($i = 0; $i < count($IDs); $i++) {
-        if ($IDs[$i]["id"] == $_SESSION[USER_ROW_ID]
-            && $groupCodes[$i][GROUPS_GROUPCODE] == $groupCode) {
+        if ($IDs[$i]["id"] == $_SESSION[USER_ROW_ID]) {
             return true;
         }
     }
