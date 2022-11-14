@@ -10,7 +10,7 @@ class User
     private const FIELD_GROUPCODE = 'groups_groupcode';
 
     /** @var int */
-    private $id;
+    public $id;
 
     /** @var int */
     public $positionsId;
@@ -36,8 +36,8 @@ class User
     {
         $pdo = dbHandler::getPdbConnection();
 
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_UNIQUE_ID . ' = ?');
-        $stmt->bindParam(1, $this->uniqueId);
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?');
+        $stmt->bindParam(1, $this->id);
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -107,8 +107,8 @@ class User
     public function remove(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE uniqueID = ?');
-        $stmt->bindParam(1, $this->uniqueId);
+        $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?');
+        $stmt->bindParam(1, $this->id);
         $stmt->execute();
     }
 
@@ -117,33 +117,31 @@ class User
         if (empty($this->id)) {
             $this->insert();
         } else {
-            $this->update();
+            $this->insertWithID();
         }
     }
 
     private function insert(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_UNIQUE_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?)');
         $stmt->bindParam(1, $this->positionsId);
-        $stmt->bindParam(2, $this->uniqueId);
-        $stmt->bindParam(3, $this->initials);
-        $stmt->bindParam(4, $this->color);
-        $stmt->bindParam(5, $this->groupCode);
+        $stmt->bindParam(2, $this->initials);
+        $stmt->bindParam(3, $this->color);
+        $stmt->bindParam(4, $this->groupCode);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
     }
 
-    private function update(): void
+    private function insertWithID(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_POSITIONS_ID . ' =  ?, ' . self::FIELD_UNIQUE_ID . ' = ?, ' . self::FIELD_INITIALS . ' = ?, ' . self::FIELD_COLOR . ' = ?, ' . self::FIELD_GROUPCODE . ' = ?' . 'WHERE id = ?');
-        $stmt->bindParam(1, $this->positionsId);
-        $stmt->bindParam(2, $this->uniqueId);
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (id, ' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?, ?)');
+        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(2, $this->positionsId);
         $stmt->bindParam(3, $this->initials);
         $stmt->bindParam(4, $this->color);
         $stmt->bindParam(5, $this->groupCode);
-        $stmt->bindParam(6, $this->id);
         $stmt->execute();
     }
 }

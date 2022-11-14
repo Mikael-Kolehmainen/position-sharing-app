@@ -30,3 +30,4 @@
     const CONSTANT_EMPTY = "empty";
     const CREATE_GROUP = "create-group";
     const SEARCH_GROUP = "search-group";
+    const USER_ROW_ID = "user_row_id";

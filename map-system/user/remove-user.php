@@ -1,33 +1,21 @@
 <?php
-    /*
-        when removeUser is commented it creates a huge mess when a new group is created
-
-        removeUser is commented because it removes the user on refresh hence it creates problems when
-        we try to connect the goal database to user database because the user id is a new one when 
-        a new user is created on refresh.
-
-        This creates a problem, how do we remove inactive users? We remove them on group removal
-
-    */
     require './../../required-files/constants.php';
     require './../../autoloader.php';
 
     if (isset($_GET[GROUPCODE])) {
         session_start();
 
-/*        $uniqueID = $_SESSION[UNIQUEID];
+        $id = $_SESSION[USER_ROW_ID];
 
-        unset($_SESSION[UNIQUEID]);
-
-        removePosition(getPositionsRowID($uniqueID));
-        removeUser($uniqueID); */
+        removePosition(getPositionsRowID($id));
+        removeUser($id);
         removeCookie();
     }
 
-    function removeUser($uniqueID)
+    function removeUser($id)
     {
         $user = new User();
-        $user->uniqueId = $uniqueID;
+        $user->id = $id;
         $user->remove();
     }
 
@@ -38,10 +26,10 @@
         $position->remove();
     }
 
-    function getPositionsRowID($uniqueID)
+    function getPositionsRowID($id)
     {
         $user = new User();
-        $user->uniqueId = $uniqueID;
+        $user->id = $id;
         $positionRowId = $user->getPositionsRowID();
 
         return $positionRowId;

@@ -8,45 +8,42 @@ if (isset($_GET[LAT]) && isset($_GET[LNG]) && isset($_GET[GROUPCODE])) {
     $newLng = filter_input(INPUT_GET, LNG, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $groupCode = filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
-    if (checkIfUniqueIdExistsInDatabase($groupCode)) {
-        $uniqueID = $_SESSION[UNIQUEID];
-        $positionsRowID = getPositionsRowID($uniqueID);
+    if (isset($_SESSION[USER_ROW_ID]) && checkIfRowIdExistsInDatabase($groupCode)) {
+        $id = $_SESSION[USER_ROW_ID];
+        $positionsRowID = getPositionsRowID($id);
 
         updatePositionInDatabase($newLat, $newLng, $positionsRowID);
     } else {
-        $uniqueID = getUniqueID();
-        $_SESSION[UNIQUEID] = $uniqueID;
         $initials = $_SESSION[INITIALS];
         $color = $_SESSION[COLOR];
 
         $positionsRowID = insertPositionToDatabase($newLat, $newLng);
 
-        insertUserToDatabase($groupCode, $positionsRowID, $uniqueID, $initials, $color);
+        insertUserToDatabase($groupCode, $positionsRowID, $initials, $color);
     }
 }
 
-function checkIfUniqueIdExistsInDatabase($groupCode)
+function checkIfRowIdExistsInDatabase($groupCode)
 {
-    if (isset($_SESSION[UNIQUEID])) {
-        $user = new User();
-        $uniqueIDs = $user->getUniqueIDs();
-        $groupCodes = $user->getGroupCodes();
+    $user = new User();
+    $user->groupCode = $groupCode;
+    $IDs = $user->getIDs();
+    $groupCodes = $user->getGroupCodes();
 
-        for ($i = 0; $i < count($uniqueIDs); $i++) {
-            if ($uniqueIDs[$i][UNIQUEID] == $_SESSION[UNIQUEID]
-                && $groupCodes[$i][GROUPS_GROUPCODE] == $groupCode) {
-                return true;
-            }
+    for ($i = 0; $i < count($IDs); $i++) {
+        if ($IDs[$i]["id"] == $_SESSION[USER_ROW_ID]
+            && $groupCodes[$i][GROUPS_GROUPCODE] == $groupCode) {
+            return true;
         }
     }
 
     return false;
 }
 
-function getPositionsRowID($uniqueID)
+function getPositionsRowID($id)
 {
     $user = new User();
-    $user->uniqueId = $uniqueID;
+    $user->id = $id;
     $positionsRowID = $user->getPositionsRowID();
 
     return $positionsRowID;
@@ -68,35 +65,17 @@ function insertPositionToDatabase($lat, $lng)
     return $positionsRowID;
 }
 
-function insertUserToDatabase($groupCode, $positionsRowID, $uniqueID, $initials, $color)
+function insertUserToDatabase($groupCode, $positionsRowID, $initials, $color)
 {
     $user = new User();
+    if (isset($_SESSION[USER_ROW_ID])) {
+        $user->id = $_SESSION[USER_ROW_ID];
+    }
     $user->groupCode = $groupCode;
     $user->positionsId = $positionsRowID;
-    $user->uniqueId = $uniqueID;
     $user->initials = $initials;
     $user->color = $color;
     $user->save();
-}
 
-function getUniqueID() 
-{
-    require './../../required-files/random-string.php';
-
-    $uniqueID = getRandomString(10);
-    $uniqueIDs = getUsersUniqueIDsFromDatabase();
-
-    for ($i = 0; $i < count($uniqueIDs); $i++) {
-        if ($uniqueID == $uniqueIDs[$i][UNIQUEID]) {
-            $uniqueID = getUniqueID();
-        }
-    }
-    
-    return $uniqueID;
-}
-
-function getUsersUniqueIDsFromDatabase()
-{
-    $user = new User();
-    return $user->getUniqueIDs();
+    $_SESSION[USER_ROW_ID] = $user->id;
 }
