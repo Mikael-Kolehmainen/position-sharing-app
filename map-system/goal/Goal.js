@@ -167,14 +167,14 @@ class Goal
 
     #bindPopupToUsers(i)
     {
-        if (this.userPopupContent.length > 0) {
+    /*    if (this.userPopupContent.length > 0) {
             user.user_markers[goal.idsOfGoals[i]].bindPopup('<h3>'+this.userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
-        }
+        } */
     }
 
     updatePercentagePopups()
     {
-        for (let i = 0; i < goal.start_marker_arr.length; i++) {
+    /*    for (let i = 0; i < goal.start_marker_arr.length; i++) {
             if (goal.goal_marker_arr.length != 0) {
                 let distanceFromUserToGoal = user.user_markers[i].getLatLng().distanceTo(goal.goal_marker_arr[i].getLatLng());
                 let percentageOfGoalAchieved = Math.round((1 - distanceFromUserToGoal / this.routesDistances[i]) * 100);
@@ -182,14 +182,14 @@ class Goal
                 this.userPopupContent[i] = percentageOfGoalAchieved + "%";
                 this.#bindPopupToUsers(i);
             }
-        }
+        } */
     }
 
     removePercentagePopups()
     {
-        for (let i = 0; i < this.start_marker_arr.length; i++) {
+    /*    for (let i = 0; i < this.start_marker_arr.length; i++) {
             user.user_markers[i].bindPopup("");
-        }
+        } */
     }
 
     sendDataToPHP()
