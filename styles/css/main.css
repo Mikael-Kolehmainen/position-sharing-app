@@ -578,3 +578,12 @@ section .box {
   background: url("./../../media/icons/xmark.svg") no-repeat center;
   width: 70%;
   height: 70%; }
+
+.btn i.fa-check {
+  background: url("./../../media/icons/check.svg") no-repeat center;
+  width: 50%;
+  height: 50%; }
+
+#remove-draggable-goal i.fa-xmark {
+  width: 55%;
+  height: 55%; }

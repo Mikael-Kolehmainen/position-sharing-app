@@ -21,6 +21,8 @@ function onLocationFound(e)
                     ElementDisplay.change('active-goal-disclaimer', 'none');
                 } else if (data.goalsdata[0] == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
                     goal.updatePercentagePopups();
+                    ElementDisplay.change('active-goal-disclaimer', 'block');
+                    ElementDisplay.change('add-goal-btn', 'none');
                     refreshCounter = refreshCounter + 1;
                 } else if (!goal.goalIsBeingPlanned) {
                     goal.saveDataFromPHPToVariables();

@@ -14,4 +14,4 @@ map.on('locationerror', onLocationError);
 
 map.locate({setView: true, enableHighAccuracy: true});
 
-setInterval("map.locate({setView: false, enableHighAccuracy: true})", 3000);
+setInterval("map.locate({setView: false, enableHighAccuracy: true})", 1000);
