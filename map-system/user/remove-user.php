@@ -37,7 +37,6 @@
 
     function removeCookie()
     {
-        unset($_COOKIE["goalCookie"]);
-        setcookie("goalCookie", null, -1, "/");
-        setcookie("goalCookieRemoved", 1, time() + (86400 * 30), "/");
+        session_start();
+        unset($_SESSION[GOALSESSION]);
     }

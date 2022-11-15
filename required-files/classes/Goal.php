@@ -8,7 +8,7 @@ class Goal
     private const FIELD_GOAL_ID = 'goalIndex';
     private const FIELD_USER_ID = 'users_id';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
-    private const FIELD_GOAL_COOKIE = 'goalcookie';
+    private const FIELD_GOAL_SESSION = 'goalsession';
 
     /** @var int */
     public $id;
@@ -66,23 +66,24 @@ class Goal
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function createGoalCookie()
+    public function createGoalSession()
     {
         require __DIR__.'/../random-string.php';
 
-        $goalCookie = getRandomString(15);
-
-        if ($goalCookie == $_COOKIE['goalCookie']) {
+        $goalSession = getRandomString(15);
+        
+        session_start();
+        if ($goalSession == $_SESSION[GOALSESSION]) {
             return $this->createGoalSession();
         } else {
-            return $goalCookie;
+            return $goalSession;
         }
     }
 
-    public function getGoalCookie()
+    public function getGoalSession()
     {
         $pdo = dbHandler::getPDbConnection();
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GOAL_COOKIE . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_GOAL_SESSION . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
 
@@ -91,8 +92,8 @@ class Goal
 
     public function remove(): void
     {
-        unset($_COOKIE["goalCookie"]);
-        setcookie("goalCookie", null, -1, "/");
+        session_start();
+        unset($_SESSION[GOALSESSION]);
 
         $pdo = dbHandler::getPdbConnection();
         $stmt = $pdo->prepare('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');

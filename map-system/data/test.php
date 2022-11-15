@@ -1,8 +1,8 @@
 <?php
 require './../../autoloader.php';
+require './../../required-files/constants.php';
 
-        
-        $group = new Group('09A');
-        $rowCount = $group->getRowCount();
+$goal = new Goal("01A");
 
-        print_r($rowCount);
+session_start();
+echo $goal->getGoalCookie()[0]["goalcookie"] == $_SESSION[GOALSESSION];

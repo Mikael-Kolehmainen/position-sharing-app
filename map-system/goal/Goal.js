@@ -22,7 +22,6 @@ class Goal
         this.start_marker_pos = [];
         this.goal_marker_arr = [];
         this.goal_marker_pos = [];
-        this.goalIndexes = [];
         this.goalIsBeingPlanned = false;
 
         this.outerRouteSegments = [[], []];
@@ -175,7 +174,7 @@ class Goal
 
     updatePercentagePopups()
     {
-        for (let i = 0; i < goal.idsOfGoals.length; i++) {
+        for (let i = 0; i < goal.start_marker_arr.length; i++) {
             if (goal.goal_marker_arr.length != 0) {
                 let distanceFromUserToGoal = user.user_markers[i].getLatLng().distanceTo(goal.goal_marker_arr[i].getLatLng());
                 let percentageOfGoalAchieved = Math.round((1 - distanceFromUserToGoal / this.routesDistances[i]) * 100);
@@ -188,8 +187,7 @@ class Goal
 
     removePercentagePopups()
     {
-        for (let i = 0; i < this.idsOfGoals.length; i++) {
-            user.user_markers[i]._popup = null;
+        for (let i = 0; i < this.start_marker_arr.length; i++) {
             user.user_markers[i].bindPopup("");
         }
     }
@@ -234,7 +232,8 @@ class Goal
     saveDataFromPHPToVariables()
     {
         for (let i = 0; i < this.goalsData.length; i++) {
-            if (this.goalsData[i] != "user has no goal") {
+            if (this.goalsData[i] != "user has no goal"
+                || this.goalsData[i] != "already saved") {
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
                 
                 this.routes[i] = [];
@@ -517,7 +516,6 @@ class Goal
         xmlhttp.send();
 
         this.userPopupContent = [];
-        this.goalIndexes = [];
         this.start_marker_arr = [];
         this.start_marker_pos = [];
         this.goal_marker_arr = [];

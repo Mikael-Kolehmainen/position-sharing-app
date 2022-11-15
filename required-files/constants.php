@@ -31,3 +31,5 @@
     const CREATE_GROUP = "create-group";
     const SEARCH_GROUP = "search-group";
     const USER_ROW_ID = "user_row_id";
+    const USERS_ID = "users_id";
+    const GOALSESSION = "goalsession";
