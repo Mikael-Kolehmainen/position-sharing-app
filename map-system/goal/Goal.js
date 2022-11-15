@@ -528,6 +528,8 @@ class Goal
         this.routes = [];
         this.howManyMarkersHasUserAddedToMap = 0;
         this.goalStyleSheetContent = "";
+        map.off('click', goal.#addMarker);
+        map.off('click', goal.#addOuterRouteWaypoint);
 
         LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
     }
