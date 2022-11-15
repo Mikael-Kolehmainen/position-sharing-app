@@ -69,7 +69,7 @@
         <script src='./global-objects.js' defer></script>
         <script src='./geolocation.js' defer></script>
         <script src='./map.js' defer></script>
-        <script src='./visibilitychange.js' defer></script>
+        <script src='./before-closing.js' defer></script>
         <script src='./user/User.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>

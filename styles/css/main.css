@@ -133,7 +133,7 @@
           height: 25px;
           left: 39%; }
         .active-page section article .bottom .chat .textbox #send-btn {
-          background: #5BC0EB url("./../../media/send.png") no-repeat center;
+          background: #5BC0EB url("./../../media/icons/send.png") no-repeat center;
           width: 80px;
           background-size: 40%;
           margin: 0;
@@ -408,14 +408,13 @@ body {
   text-decoration: none;
   color: white; }
   .btn i {
-    font-size: 36px;
+    width: 40%;
+    height: 40%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white; }
-    .btn i.fa-plus {
-      font-size: 44px; }
   .btn:hover {
     background-color: #C3423F; }
   .btn.round {
@@ -550,3 +549,32 @@ section .box {
     border-radius: 30px;
     background-color: white;
     transition: .4s; }
+
+.btn i.fa-plus {
+  background: url("./../../media/icons/plus.svg") no-repeat center;
+  width: 50%;
+  height: 50%; }
+
+.btn i.fa-magnifying-glass {
+  background: url("./../../media/icons/magnifying-glass.svg") no-repeat center; }
+
+.btn i.fa-chevron-left {
+  background: url("./../../media/icons/chevron-left.svg") no-repeat center;
+  width: 60%;
+  height: 60%; }
+
+.btn i.fa-message {
+  background: url("./../../media/icons/message.svg") no-repeat center; }
+
+.btn i.fa-layer-group {
+  background: url("./../../media/icons/layergroup.svg") no-repeat center;
+  width: 60%;
+  height: 60%; }
+
+.btn i.fa-location-dot {
+  background: url("./../../media/icons/location-dot.svg") no-repeat center; }
+
+.btn i.fa-xmark {
+  background: url("./../../media/icons/xmark.svg") no-repeat center;
+  width: 70%;
+  height: 70%; }

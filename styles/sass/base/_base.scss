@@ -107,16 +107,13 @@ body {
     color: white;
 
     i {
-        font-size: 36px;
+        width: 40%;
+        height: 40%;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: white;
-
-        &.fa-plus {
-            font-size: 44px;
-        }
     }
     &:hover {
         background-color: $secondary-color;
