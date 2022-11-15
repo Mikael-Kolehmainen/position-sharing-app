@@ -1,4 +1,4 @@
-window.addEventListener('beforeunload', function() 
+window.addEventListener('visibilitychange', function() 
 {
     let xmlhttp = new XMLHttpRequest();
     let sent = false;

@@ -9,7 +9,7 @@
 
         removePosition(getPositionsRowID($id));
         removeUser($id);
-        removeCookie();
+        removeSession();
     }
 
     function removeUser($id)
@@ -35,7 +35,7 @@
         return $positionRowId;
     }
 
-    function removeCookie()
+    function removeSession()
     {
         session_start();
         unset($_SESSION[GOALSESSION]);
