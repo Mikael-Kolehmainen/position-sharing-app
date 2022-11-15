@@ -398,7 +398,8 @@
                     right: auto;
                 }
                 .leaflet-top {
-                    top: 7.5%;
+                    position: fixed;
+                    top: 10%;
                 }
             }
             .instructions {

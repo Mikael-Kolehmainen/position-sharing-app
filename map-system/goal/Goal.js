@@ -233,7 +233,7 @@ class Goal
     {
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal"
-                || this.goalsData[i] != "already saved") {
+                && this.goalsData[i] != "already saved") {
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
                 
                 this.routes[i] = [];

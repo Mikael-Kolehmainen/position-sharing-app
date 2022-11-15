@@ -307,7 +307,8 @@
       left: 85%;
       right: auto; }
     .active-page section article #map .leaflet-top {
-      top: 7.5%; }
+      position: fixed;
+      top: 10%; }
   .active-page section article .instructions {
     position: absolute;
     top: 30%;
@@ -505,10 +506,9 @@ section .box {
     text-align: center; }
 
 .switch {
-  position: absolute;
+  position: fixed;
   top: 10%;
-  left: 15%;
-  transform: translate(-50%, -50%);
+  left: 7.5%;
   display: inline-block;
   width: 92px;
   height: 30px; }
