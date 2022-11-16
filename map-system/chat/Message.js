@@ -42,6 +42,10 @@ class Message
         messageText.innerHTML = this.message;
         initialsText.innerHTML = this.initials;
 
+        if (this.initials == null) {
+            initialsText.innerHTML = "Removed User";
+        }
+
         const messages = document.getElementById(this.#MESSAGES_ID);
         messages.appendChild(message);
 

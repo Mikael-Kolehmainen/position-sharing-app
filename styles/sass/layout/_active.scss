@@ -136,6 +136,11 @@
                             .profile, p {
                                 display: inline-block;
                             }
+                            .profile {
+                                p {
+                                    text-align: center;
+                                }
+                            }
                             .text {
                                 background-color: white; 
                                 color: black;

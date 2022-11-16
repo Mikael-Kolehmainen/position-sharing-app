@@ -114,6 +114,8 @@
               background-color: gainsboro; }
           .active-page section article .bottom .chat .messages .message .profile, .active-page section article .bottom .chat .messages .message p {
             display: inline-block; }
+          .active-page section article .bottom .chat .messages .message .profile p {
+            text-align: center; }
           .active-page section article .bottom .chat .messages .message .text {
             background-color: white;
             color: black;
