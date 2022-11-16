@@ -72,6 +72,8 @@ function getMessagesFromDatabase($groupCode)
 
         $messageData[$i][INITIALS] = $user->getMarkerDetailsWithUserID()[0][INITIALS];
         $messageData[$i][COLOR] = $user->getMarkerDetailsWithUserID()[0][COLOR];
+        $messageData[$i][DATE_OF_MESSAGE] = $messageData[$i][DATE_OF_MESSAGE];
+        $messageData[$i][TIME_OF_MESSAGE] = $messageData[$i][TIME_OF_MESSAGE];
         $messageData[$i][MESSAGE_SENT_BY_USER] = false;
 
         if ($messageData[$i][USERS_ID] == $_SESSION[USER_ROW_ID]) {

@@ -22,6 +22,7 @@ class Chat
             message.message = this.messagesData[i].message;
             message.initials = this.messagesData[i].initials;
             message.elementClassName = messageClassName;
+            message.timeOfMessage = this.messagesData[i].timeofmessage;
             message.sentByUser = this.messagesData[i].message_sent_by_user;
             
             message.createMessageElement();

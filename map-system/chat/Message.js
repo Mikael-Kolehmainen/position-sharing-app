@@ -3,13 +3,15 @@ class Message
     #MESSAGE_CLASS_NAME = "message";
     #SENT_CLASS_NAME = "sent";
     #PROFILE_CLASS_NAME = "profile";
+    #TEXT_CONTAINER_CLASS_NAME = "text-container";
     #MESSAGES_ID = "messages";
 
-    constructor(message, initials, elementClassName, sentByUser)
+    constructor(message, initials, elementClassName, timeOfMessage, sentByUser)
     {
         this.message = message;
         this.initials = initials;
         this.elementClassName = elementClassName;
+        this.timeOfMessage = timeOfMessage;
         this.sentByUser = sentByUser;
     }
     
@@ -18,7 +20,10 @@ class Message
             <div class='profile'>
                 <p>MK</p>
             </div>
-            <p class='text'>Hello, this is a placeholder message.</p>
+            <div class='text-container'>
+                <p class='text'>Hello, this is a placeholder message.</p>
+                <p class='time'>00:00</p>
+            </div>
         </div>
     */
     createMessageElement()
@@ -35,12 +40,19 @@ class Message
         message.appendChild(profile);
         const initialsText = document.createElement("p");
         profile.appendChild(initialsText);
+        const textContainer = document.createElement("div");
+        textContainer.classList.add(this.#TEXT_CONTAINER_CLASS_NAME);
+        message.appendChild(textContainer)
         const messageText = document.createElement("p");
         messageText.classList.add("text");
-        message.appendChild(messageText);
+        textContainer.appendChild(messageText);
+        const timeText = document.createElement("p");
+        timeText.classList.add("time");
+        textContainer.appendChild(timeText);
 
         messageText.innerHTML = this.message;
         initialsText.innerHTML = this.initials;
+        timeText.innerHTML = this.timeOfMessage;
 
         if (this.initials == null) {
             initialsText.innerHTML = "Removed User";
