@@ -33,3 +33,4 @@
     const USER_ROW_ID = "user_row_id";
     const USERS_ID = "users_id";
     const GOALSESSION = "goalsession";
+    const MESSAGE_SENT_BY_USER = "message_sent_by_user";

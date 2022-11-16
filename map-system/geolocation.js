@@ -52,10 +52,16 @@ function saveUsersData(data)
     user.addMarkersToMap();
 }
 
+let haha = 0;
+
 function saveChatData(data)
 {
-    chat.messagesData = data.messagesdata;
-    chat.updateChat();
+    if (haha == 0) {
+        chat.messagesData = data.messagesdata;
+        chat.updateChat();
+
+        haha = haha + 1;
+    }
 }
 
 function saveGoalData(current_position, data)

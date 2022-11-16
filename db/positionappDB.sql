@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 15, 2022 at 04:04 PM
+-- Generation Time: Nov 16, 2022 at 05:05 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -64,10 +64,19 @@ INSERT INTO `groups` (`id`, `groupcode`) VALUES
 CREATE TABLE `messages` (
   `id` int(4) NOT NULL,
   `message` varchar(255) DEFAULT NULL,
-  `initials` varchar(2) DEFAULT NULL,
-  `color` varchar(7) DEFAULT NULL,
+  `users_id` int(4) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `message`, `users_id`, `groups_groupcode`) VALUES
+(103, 'test', 5626, '01A'),
+(104, 'another test', 5626, '01A'),
+(105, 'test', 5626, '01A'),
+(106, 'test by another user', 5632, '01A');
 
 -- --------------------------------------------------------
 
@@ -173,7 +182,7 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1890;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1922;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -185,13 +194,13 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102646;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106041;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -203,7 +212,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96247;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99447;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

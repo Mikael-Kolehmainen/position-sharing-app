@@ -124,6 +124,15 @@
                             display: flex;
                             flex-wrap: nowrap;
                             
+                            &.sent {
+                                flex-direction: row-reverse;
+
+                                .text {
+                                    margin-left: 0;
+                                    margin-right: 15px;
+                                    background-color: rgb(220, 220, 220);
+                                }
+                            }
                             .profile, p {
                                 display: inline-block;
                             }

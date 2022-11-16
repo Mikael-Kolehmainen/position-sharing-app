@@ -22,6 +22,8 @@ class Chat
             message.message = this.messagesData[i].message;
             message.initials = this.messagesData[i].initials;
             message.elementClassName = messageClassName;
+            message.sentByUser = this.messagesData[i].message_sent_by_user;
+            
             message.createMessageElement();
 
             this.messageStyleSheetContent += '.' + messageClassName + ' { background-color: ' + this.messagesData[i].color + '; }';

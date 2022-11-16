@@ -63,6 +63,18 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getMarkerDetailsWithUserID()
+    {
+        $pdo = dbHandler::getPdbConnection();
+
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ' FROM ' . self::TABLE_NAME . ' WHERE id = ? AND ' . self::FIELD_GROUPCODE . ' = ?');
+        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(2, $this->groupCode);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function saveMarkerToSession()
     {
         $initials = filter_input(INPUT_POST, self::FIELD_INITIALS, FILTER_DEFAULT);;

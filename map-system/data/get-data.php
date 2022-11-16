@@ -60,9 +60,28 @@ function getUsersDetailsFromDatabase($groupCode)
 
 function getMessagesFromDatabase($groupCode)
 {
+    session_start();
     $message = new Message($groupCode);
+    $messageData = $message->get();
 
-    return $message->get();
+    $user = new User();
+    $user->groupCode = $groupCode;
+
+    for ($i = 0; $i < count($messageData); $i++) {
+        $user->id = $messageData[$i][USERS_ID];
+
+        $messageData[$i][INITIALS] = $user->getMarkerDetailsWithUserID()[0][INITIALS];
+        $messageData[$i][COLOR] = $user->getMarkerDetailsWithUserID()[0][COLOR];
+        $messageData[$i][MESSAGE_SENT_BY_USER] = false;
+
+        if ($messageData[$i][USERS_ID] == $_SESSION[USER_ROW_ID]) {
+            $messageData[$i][MESSAGE_SENT_BY_USER] = true;
+        }
+
+        unset($messageData[$i][USERS_ID]);
+    }
+
+    return $messageData;
 }
 
 function getGoalPositionsFromDatabase($groupCode)

@@ -106,6 +106,12 @@
           margin: auto;
           display: flex;
           flex-wrap: nowrap; }
+          .active-page section article .bottom .chat .messages .message.sent {
+            flex-direction: row-reverse; }
+            .active-page section article .bottom .chat .messages .message.sent .text {
+              margin-left: 0;
+              margin-right: 15px;
+              background-color: gainsboro; }
           .active-page section article .bottom .chat .messages .message .profile, .active-page section article .bottom .chat .messages .message p {
             display: inline-block; }
           .active-page section article .bottom .chat .messages .message .text {

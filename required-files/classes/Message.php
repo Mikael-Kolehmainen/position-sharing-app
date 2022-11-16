@@ -4,9 +4,8 @@ class Message
 {
     private const TABLE_NAME = 'messages';
     private const FIELD_MESSAGE = 'message';
-    private const FIELD_INITIALS = 'initials';
-    private const FIELD_COLOR = 'color';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
+    private const FIELD_USERS_ID = 'users_id';
 
     /** @var int */
     public $id;
@@ -14,11 +13,8 @@ class Message
     /** @var string */
     public $message;
 
-    /** @var string */
-    public $initials;
-
-    /** @var string */
-    public $color;
+    /** @var int */
+    public $userID;
 
     /** @var string */
     public $groupCode;
@@ -31,7 +27,7 @@ class Message
     public function get()
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('SELECT ' . self::FIELD_MESSAGE . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
+        $stmt = $pdo->prepare('SELECT ' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?');
         $stmt->bindParam(1, $this->groupCode);
         $stmt->execute();
 
@@ -49,11 +45,10 @@ class Message
     public function save(): void
     {
         $pdo = dbHandler::getPdbConnection();
-        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_GROUP_CODE . ') VALUES (?, ?, ?)');
         $stmt->bindParam(1, $this->message);
-        $stmt->bindParam(2, $this->initials);
-        $stmt->bindParam(3, $this->color);
-        $stmt->bindParam(4, $this->groupCode);
+        $stmt->bindParam(2, $this->userID);
+        $stmt->bindParam(3, $this->groupCode);
         $stmt->execute();
         $this->id = $pdo->lastInsertId();
     }

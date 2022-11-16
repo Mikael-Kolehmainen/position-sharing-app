@@ -13,17 +13,16 @@
     {
         session_start();
         $message = filter_input(INPUT_POST, MESSAGE, FILTER_SANITIZE_SPECIAL_CHARS);
-        $initials = $_SESSION[INITIALS];
-        $color = $_SESSION[COLOR];
 
-        insertMessageToDatabase($message, $initials, $color, $groupCode);
+        $messageSenderID = $_SESSION[USER_ROW_ID];
+
+        insertMessageToDatabase($message, $messageSenderID, $groupCode);
     }
 
-    function insertMessageToDatabase($messageText, $initials, $color, $groupCode)
+    function insertMessageToDatabase($messageText, $messageSenderID, $groupCode)
     {
         $message = new Message($groupCode);
         $message->message = $messageText;
-        $message->initials = $initials;
-        $message->color = $color;
+        $message->userID = $messageSenderID;
         $message->save();
     }

@@ -1,14 +1,16 @@
 class Message 
 {
     #MESSAGE_CLASS_NAME = "message";
+    #SENT_CLASS_NAME = "sent";
     #PROFILE_CLASS_NAME = "profile";
     #MESSAGES_ID = "messages";
 
-    constructor(message, initials, elementClassName)
+    constructor(message, initials, elementClassName, sentByUser)
     {
         this.message = message;
         this.initials = initials;
         this.elementClassName = elementClassName;
+        this.sentByUser = sentByUser;
     }
     
     /*
@@ -23,6 +25,11 @@ class Message
     {
         const message = document.createElement("div");
         message.classList.add(this.#MESSAGE_CLASS_NAME);
+
+        if (this.sentByUser) {
+            message.classList.add(this.#SENT_CLASS_NAME);
+        }
+
         const profile = document.createElement("div");
         profile.classList.add(this.#PROFILE_CLASS_NAME);
         message.appendChild(profile);
