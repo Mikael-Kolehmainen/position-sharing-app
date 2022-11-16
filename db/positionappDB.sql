@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 16, 2022 at 05:05 PM
+-- Generation Time: Nov 16, 2022 at 07:52 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -64,6 +64,8 @@ INSERT INTO `groups` (`id`, `groupcode`) VALUES
 CREATE TABLE `messages` (
   `id` int(4) NOT NULL,
   `message` varchar(255) DEFAULT NULL,
+  `dateofmessage` date DEFAULT NULL,
+  `timeofmessage` time DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -72,11 +74,11 @@ CREATE TABLE `messages` (
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `message`, `users_id`, `groups_groupcode`) VALUES
-(103, 'test', 5626, '01A'),
-(104, 'another test', 5626, '01A'),
-(105, 'test', 5626, '01A'),
-(106, 'test by another user', 5632, '01A');
+INSERT INTO `messages` (`id`, `message`, `dateofmessage`, `timeofmessage`, `users_id`, `groups_groupcode`) VALUES
+(110, 'test', '2022-11-16', '18:52:47', 5626, '01A'),
+(111, 'test', '2022-11-16', '18:56:00', 5626, '01A'),
+(112, 'test', '2022-11-16', '18:58:00', 5633, '01A'),
+(113, 'test', '2022-11-16', '19:51:00', 5626, '01A');
 
 -- --------------------------------------------------------
 
@@ -118,7 +120,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `positions_id`, `initials`, `color`, `groups_groupcode`) VALUES
-(5632, 1, 'EE', '#FF00FF', '01A'),
 (5633, 2, 'FF', '#FFBBAA', '01A'),
 (5634, 3, 'GG', '#00FF00', '01A');
 
@@ -194,13 +195,13 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106041;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106143;
 
 --
 -- AUTO_INCREMENT for table `users`
