@@ -98,6 +98,13 @@
         max-width: 510px;
         margin: auto;
         overflow-y: scroll; }
+        .active-page section article .bottom .chat .messages .date p {
+          background-color: #5BC0EB;
+          border-radius: 1vmax;
+          padding: 5px;
+          width: fit-content;
+          margin-left: auto;
+          margin-right: auto; }
         .active-page section article .bottom .chat .messages .message {
           position: relative;
           padding: 5px;

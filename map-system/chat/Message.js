@@ -3,19 +3,24 @@ class Message
     #MESSAGE_CLASS_NAME = "message";
     #SENT_CLASS_NAME = "sent";
     #PROFILE_CLASS_NAME = "profile";
+    #DATE_CLASS_NAME = "date";
     #TEXT_CONTAINER_CLASS_NAME = "text-container";
     #MESSAGES_ID = "messages";
 
-    constructor(message, initials, elementClassName, timeOfMessage, sentByUser)
+    constructor(message, initials, elementClassName, timeOfMessage, dateOfMessage, sentByUser)
     {
         this.message = message;
         this.initials = initials;
         this.elementClassName = elementClassName;
         this.timeOfMessage = timeOfMessage;
+        this.dateOfMessage = dateOfMessage;
         this.sentByUser = sentByUser;
     }
     
     /*
+        <div class='date'>
+            <p>00.00.0000</p>
+        </div>
         <div class='message'>
             <div class='profile'>
                 <p>MK</p>
@@ -26,6 +31,19 @@ class Message
             </div>
         </div>
     */
+    createDateElement()
+    {
+        const date = document.createElement("div");
+        date.classList.add(this.#DATE_CLASS_NAME);
+        const dateText = document.createElement("p");
+        date.appendChild(dateText);
+
+        dateText.innerText = this.dateOfMessage;
+
+        const messages = document.getElementById(this.#MESSAGES_ID);
+        messages.appendChild(date);
+    }
+
     createMessageElement()
     {
         const message = document.createElement("div");
@@ -50,12 +68,12 @@ class Message
         timeText.classList.add("time");
         textContainer.appendChild(timeText);
 
-        messageText.innerHTML = this.message;
-        initialsText.innerHTML = this.initials;
-        timeText.innerHTML = this.timeOfMessage;
+        messageText.innerText = this.message;
+        initialsText.innerText = this.initials;
+        timeText.innerText = this.timeOfMessage;
 
         if (this.initials == null) {
-            initialsText.innerHTML = "Removed User";
+            initialsText.innerText = "Removed User";
         }
 
         const messages = document.getElementById(this.#MESSAGES_ID);

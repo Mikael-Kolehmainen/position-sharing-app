@@ -115,6 +115,16 @@
                         margin: auto;
                         overflow-y: scroll;
                         
+                        .date {
+                            p {
+                                background-color: $primary-color;
+                                border-radius: 1vmax;
+                                padding: 5px;
+                                width: fit-content;
+                                margin-left: auto;
+                                margin-right: auto;
+                            }
+                        }
                         .message {
                             position: relative;
                             padding: 5px;
