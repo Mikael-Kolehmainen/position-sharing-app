@@ -1,12 +1,13 @@
 class Camera
 {
-    constructor(constraints, cameraViewElement, cameraOutputElement, cameraSensorElement, cameraTriggerElement)
+    constructor(constraints, cameraViewElement, cameraOutputElement, cameraSensorElement, cameraTriggerElement, url)
     {
         this.constraints = constraints;
         this.cameraView = cameraViewElement;
         this.cameraOutput = cameraOutputElement;
         this.cameraSensor = cameraSensorElement;
         this.cameraTrigger = cameraTriggerElement;
+        this.url = url;
     }
 
     startCamera()

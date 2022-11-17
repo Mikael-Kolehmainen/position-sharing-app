@@ -113,7 +113,7 @@
                         </div>
                         <form method='POST' action='./chat/send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
-                            <a href='./../camera-system/camera.php' class='camera-btn'></a>
+                            <a href='./../camera-system/camera.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='camera-btn'></a>
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>

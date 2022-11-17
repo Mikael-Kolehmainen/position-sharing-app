@@ -160,7 +160,7 @@ function closeMapLegendsClicked()
 
 function acceptImageClicked()
 {
-    // redirect back to map page with image in message textbox
+    // submit form
 }
 
 function rejectImageClicked()
