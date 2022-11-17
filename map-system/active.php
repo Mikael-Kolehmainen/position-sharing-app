@@ -54,7 +54,7 @@
 <html>
     <head>
         <?php require './../required-files/head.php'; ?>
-        <link rel='icon' type='image/svg' href='./../media/'>
+<!--        <link rel='icon' type='image/svg' href='./../media/'> -->
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../js/turf.min.js'></script>
@@ -73,7 +73,7 @@
         <script src='./user/User.js' defer></script>
         <script src='./chat/Message.js' defer></script>
         <script src='./chat/Chat.js' defer></script>
-        <script src='./onclick-events.js' defer></script>
+        <script src='./../js/onclick-events.js' defer></script>
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/Instructions.js' defer></script>
@@ -111,8 +111,9 @@
                         <div class='messages' id='messages'>
                             
                         </div>
-                        <form method='POST' action='chat/send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
+                        <form method='POST' action='./chat/send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
+                            <a href='./../camera-system/camera.php' class='camera-btn'></a>
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>

@@ -45,6 +45,12 @@ document.querySelectorAll(".onclick").forEach(element =>
             case "close-map-legends-btn":
                 closeMapLegendsClicked();
                 break;
+            case "accept-image":
+                acceptImageClicked();
+                break;
+            case "reject-image":
+                rejectImageClicked();
+                break;
         }
     });
 });
@@ -150,4 +156,16 @@ function checkMapLegendsClicked()
 function closeMapLegendsClicked()
 {
     openMenu("map-legends-popup", "check-map-legends-btn", "block", ["open-chat-btn", "delete-group-btn", "add-goal-btn"], "block");
+}
+
+function acceptImageClicked()
+{
+    // redirect back to map page with image in message textbox
+}
+
+function rejectImageClicked()
+{
+    ElementDisplay.change("image-options", "none");
+    camera.hideTakenImage();
+    startCamera();
 }
