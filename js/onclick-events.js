@@ -160,7 +160,7 @@ function closeMapLegendsClicked()
 
 function acceptImageClicked()
 {
-    // submit form
+    camera.sendImagePathToDatabase();
 }
 
 function rejectImageClicked()

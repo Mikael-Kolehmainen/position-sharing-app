@@ -8,6 +8,7 @@ class Camera
         this.cameraSensor = cameraSensorElement;
         this.cameraTrigger = cameraTriggerElement;
         this.url = url;
+        this.imageBlob = "";
     }
 
     startCamera()
@@ -29,7 +30,7 @@ class Camera
         this.cameraSensor.height = this.cameraView.videoHeight;
         this.cameraSensor.getContext("2d").drawImage(this.cameraView, 0, 0);
         this.cameraOutput.style.display = "inline-block";
-        this.cameraOutput.src = this.cameraSensor.toDataURL("image/webp");
+        this.cameraSensor.toBlob(function(blob) { camera.cameraOutput.src = URL.createObjectURL(blob); camera.imageBlob = blob; });
         this.cameraOutput.classList.add("taken");
     }
 
@@ -45,5 +46,26 @@ class Camera
     showOptions()
     {
         ElementDisplay.change("image-options", "block");
+    }
+
+    sendImagePathToDatabase()
+    {
+        let xmlhttp = new XMLHttpRequest();
+        const groupCode = new URLSearchParams(window.location.search).get("groupcode");
+        const url = 'send-image.php?groupcode=' + groupCode;
+        
+        let formData = new FormData();
+        formData.append("webimagepath", this.imageBlob);
+        formData.append("webimagetype", this.imageBlob.type.split("/")[1]);
+
+        xmlhttp.open('POST', url, true);
+        xmlhttp.send(formData);
+
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("Successfully sent data.");
+                window.location.replace("./../map-system/active.php?groupcode=" + groupCode);
+            }
+        };
     }
 }

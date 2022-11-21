@@ -111,9 +111,9 @@
                         <div class='messages' id='messages'>
                             
                         </div>
-                        <form method='POST' action='./chat/send-message.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='textbox'>
+                        <form method='POST' action='./chat/send-message.php?groupcode=<?php echo filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);; ?>' class='textbox'>
                             <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>
-                            <a href='./../camera-system/camera.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>' class='camera-btn'></a>
+                            <a href='./../camera-system/camera.php?groupcode=<?php echo filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);; ?>' class='camera-btn'></a>
                             <input type='submit' value='' id='send-btn'>
                         </form>
                     </div>
@@ -148,7 +148,7 @@
                     <a class='btn onclick' id='reject-group-delete-btn'>
                         <p>No</p>
                     </a>
-                    <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo $_GET[GROUPCODE]; ?>'>
+                    <a class='btn' href='./../group-system/delete-group.php?groupcode=<?php echo filter_input(INPUT_GET, GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);; ?>'>
                         <p>Yes</p>
                     </a>
                 </div>
