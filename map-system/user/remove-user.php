@@ -39,4 +39,5 @@
     {
         session_start();
         unset($_SESSION[GOALSESSION]);
+        unset($_SESSION[AMOUNT_OF_MESSAGES]);
     }

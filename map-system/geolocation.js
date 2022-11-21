@@ -13,8 +13,13 @@ function onLocationFound(e)
             if (data != "Group doesn't exist") {
 
                 saveUsersData(data);
-                saveChatData(data);
                 saveGoalData(e.latlng, data);
+
+                console.log(data.messagesdata[0]);
+
+                if (data.messagesdata[0] != "already saved") {
+                    saveChatData(data);
+                }
             
                 if (data.goalsdata[0] == "empty" && !goal.goalIsBeingPlanned) {
                     LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);

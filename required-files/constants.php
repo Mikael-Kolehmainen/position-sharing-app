@@ -37,3 +37,4 @@
     const DATE_OF_MESSAGE = "dateofmessage";
     const TIME_OF_MESSAGE = "timeofmessage";
     const SENT_IMAGE = "sent_image";
+    const AMOUNT_OF_MESSAGES = "amount_of_messages";
