@@ -15,8 +15,6 @@ function onLocationFound(e)
                 saveUsersData(data);
                 saveGoalData(e.latlng, data);
 
-                console.log(data.messagesdata[0]);
-
                 if (data.messagesdata[0] != "already saved") {
                     saveChatData(data);
                 }
