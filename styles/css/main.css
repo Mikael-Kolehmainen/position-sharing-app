@@ -92,6 +92,9 @@
           width: 77%;
           padding: 10px;
           border-radius: 5px; }
+          .active-page section article .bottom .chat .messages .message .text-container .image {
+            width: 100%;
+            margin-bottom: 15px; }
     .active-page section article .bottom .chat .textbox {
       position: relative;
       height: 60px;

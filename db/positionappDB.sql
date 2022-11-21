@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 16, 2022 at 07:52 PM
+-- Generation Time: Nov 21, 2022 at 06:42 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -64,6 +64,7 @@ INSERT INTO `groups` (`id`, `groupcode`) VALUES
 CREATE TABLE `messages` (
   `id` int(4) NOT NULL,
   `message` varchar(255) DEFAULT NULL,
+  `imagepath` varchar(255) DEFAULT NULL,
   `dateofmessage` date DEFAULT NULL,
   `timeofmessage` time DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
@@ -74,11 +75,13 @@ CREATE TABLE `messages` (
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `message`, `dateofmessage`, `timeofmessage`, `users_id`, `groups_groupcode`) VALUES
-(110, 'test', '2022-11-16', '18:52:47', 5626, '01A'),
-(111, 'test', '2022-11-16', '18:56:00', 5626, '01A'),
-(112, 'test', '2022-11-16', '18:58:00', 5633, '01A'),
-(113, 'test', '2022-11-16', '19:51:00', 5626, '01A');
+INSERT INTO `messages` (`id`, `message`, `imagepath`, `dateofmessage`, `timeofmessage`, `users_id`, `groups_groupcode`) VALUES
+(110, 'test', NULL, '2022-11-16', '18:52:47', 5626, '01A'),
+(111, 'test', NULL, '2022-11-16', '18:56:00', 5626, '01A'),
+(112, 'test', NULL, '2022-11-16', '18:58:00', 5633, '01A'),
+(113, 'test', NULL, '2022-11-16', '19:51:00', 5626, '01A'),
+(114, 'test', NULL, '2022-11-17', '16:03:00', 5626, '01A'),
+(161, NULL, 'media/chat_images/01A/IfdHCJLrLL.png', '2022-11-21', '18:38:00', 5626, '01A');
 
 -- --------------------------------------------------------
 
@@ -183,7 +186,7 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1922;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1923;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -195,13 +198,13 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106143;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106382;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -213,7 +216,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99447;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99547;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

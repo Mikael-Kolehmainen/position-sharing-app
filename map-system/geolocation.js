@@ -52,6 +52,7 @@ function saveUsersData(data)
     user.addMarkersToMap();
 }
 
+
 function saveChatData(data)
 {
     chat.messagesData = data.messagesdata;

@@ -7,10 +7,11 @@ class Message
     #TEXT_CONTAINER_CLASS_NAME = "text-container";
     #MESSAGES_ID = "messages";
 
-    constructor(message, initials, elementClassName, timeOfMessage, dateOfMessage, sentByUser)
+    constructor(message, initials, imagePath, elementClassName, timeOfMessage, dateOfMessage, sentByUser)
     {
         this.message = message;
         this.initials = initials;
+        this.imagePath = imagePath;
         this.elementClassName = elementClassName;
         this.timeOfMessage = timeOfMessage;
         this.dateOfMessage = dateOfMessage;
@@ -60,15 +61,27 @@ class Message
         profile.appendChild(initialsText);
         const textContainer = document.createElement("div");
         textContainer.classList.add(this.#TEXT_CONTAINER_CLASS_NAME);
-        message.appendChild(textContainer)
-        const messageText = document.createElement("p");
-        messageText.classList.add("text");
-        textContainer.appendChild(messageText);
+        message.appendChild(textContainer);
+
+        if (this.message != null) {
+            const messageText = document.createElement("p");
+            messageText.classList.add("text");
+            textContainer.appendChild(messageText);
+            messageText.innerText = this.message;
+        } else if (this.imagePath != null) {
+            const messageImage = document.createElement("img");
+            messageImage.classList.add("image");
+            textContainer.appendChild(messageImage);
+
+            let relativeImagePath = "./../" + this.imagePath;
+            messageImage.addEventListener("error", function() { messageImage.src = "./../media/image-not-found.png" });
+            messageImage.src = relativeImagePath;
+        }
+
         const timeText = document.createElement("p");
         timeText.classList.add("time");
         textContainer.appendChild(timeText);
 
-        messageText.innerText = this.message;
         initialsText.innerText = this.initials;
         timeText.innerText = this.timeOfMessage;
 
