@@ -1,8 +1,11 @@
 const groupCode = new URLSearchParams(window.location.search).get('groupcode');
 let refreshCounter = 0;
+let geolocationPermission = false;
 
 function onLocationFound(e) 
 {
+    geolocationPermission = true;
+
     map.removeLayer(layerManagement.refreshedLayerGroup);
 
     const sendData = new Data("data/send-position.php?lat=" + e.latlng.lat + "&lng=" + e.latlng.lng + "&groupcode=" + groupCode);
@@ -14,8 +17,6 @@ function onLocationFound(e)
 
                 saveUsersData(data);
                 saveGoalData(e.latlng, data);
-
-                console.log(data.messagesdata);
 
                 if (data.messagesdata[0] != "already saved") {
                     saveChatData(data);
@@ -79,5 +80,6 @@ function redirectUserToIndexPage()
 
 function onLocationError(e) 
 {
+    geolocationPermission = false;
     alert(e.message);
 }

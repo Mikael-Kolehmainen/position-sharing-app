@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2022 at 06:42 PM
+-- Generation Time: Nov 22, 2022 at 03:47 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -68,6 +68,8 @@ CREATE TABLE `messages` (
   `dateofmessage` date DEFAULT NULL,
   `timeofmessage` time DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
+  `fallbackInitials` varchar(2) DEFAULT NULL,
+  `fallbackColor` varchar(7) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -75,13 +77,12 @@ CREATE TABLE `messages` (
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `message`, `imagepath`, `dateofmessage`, `timeofmessage`, `users_id`, `groups_groupcode`) VALUES
-(110, 'test', NULL, '2022-11-16', '18:52:47', 5626, '01A'),
-(111, 'test', NULL, '2022-11-16', '18:56:00', 5626, '01A'),
-(112, 'test', NULL, '2022-11-16', '18:58:00', 5633, '01A'),
-(113, 'test', NULL, '2022-11-16', '19:51:00', 5626, '01A'),
-(114, 'test', NULL, '2022-11-17', '16:03:00', 5626, '01A'),
-(161, NULL, 'media/chat_images/01A/IfdHCJLrLL.png', '2022-11-21', '18:38:00', 5626, '01A');
+INSERT INTO `messages` (`id`, `message`, `imagepath`, `dateofmessage`, `timeofmessage`, `users_id`, `fallbackInitials`, `fallbackColor`, `groups_groupcode`) VALUES
+(168, 'test', NULL, '2022-11-22', '14:28:00', 5633, NULL, NULL, '01A'),
+(169, 'test', NULL, '2022-11-22', '14:31:00', 5626, NULL, NULL, '01A'),
+(179, 'test', NULL, '2022-11-22', '15:34:00', 5626, 'MK', '#5BC0EB', '01A'),
+(180, 'test', NULL, '2022-11-22', '15:43:00', 5646, 'AA', '#FF0000', '01A'),
+(181, 'test', NULL, '2022-11-22', '15:44:00', 5646, 'AA', '#FF0000', '01A');
 
 -- --------------------------------------------------------
 
@@ -186,7 +187,7 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1923;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1925;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -198,25 +199,25 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106382;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106760;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5640;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5647;
 
 --
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99547;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99747;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
