@@ -58,7 +58,6 @@
         <link href='./../styles/css/main.css' rel='stylesheet' type='text/css'>
         <link href='./../leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
         <script src='./../js/turf.min.js'></script>
-        <script src='./../geojson/vaasa.geojson' type='text/javascript'></script>
         <script src='./../js/open.js' defer></script>
         <script src='./../js/remove-children.js' defer></script>
         <script src='./../js/ElementDisplay.js' defer></script>
@@ -67,8 +66,6 @@
         <script src='./../leaflet/leaflet.js'></script>
         <script src='./../leaflet/leaflet.geometryutil.js'></script>
         <script src='./global-objects.js' defer></script>
-        <script src='./geolocation.js' defer></script>
-        <script src='./map.js' defer></script>
         <script src='./before-closing.js' defer></script>
         <script src='./user/User.js' defer></script>
         <script src='./chat/Message.js' defer></script>
@@ -77,7 +74,8 @@
         <script src='./data/Data.js' defer></script>
         <script src='./goal/Goal.js' defer></script>
         <script src='./goal/Instructions.js' defer></script>
-        <script src='./water-switch/show-water.js' defer></script>
+        <script src='./geolocation.js' defer></script>
+        <script src='./map.js' defer></script>
         <title>Active group</title>
     </head>
     <body class='active-page'>
@@ -90,10 +88,6 @@
                 <div class='disclaimer onclick' id='active-goal-disclaimer' style='display: none;'>
                     <p>There's an active goal</p>
                 </div>
-                <label class='switch'>
-                    <input type='checkbox' class='onclick' id='water-switch'>
-                    <span class='slider'></span>
-                </label>
                 <div id='map'></div>
                 <div class='instructions'>
                     <p style='display: none;' id='instruction-text'>Instruction text</p>
