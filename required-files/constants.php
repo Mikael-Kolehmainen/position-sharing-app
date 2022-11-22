@@ -2,6 +2,8 @@
     const GROUPCODE = "groupcode";
     const GROUPS_GROUPCODE = "groups_groupcode";
     const INITIALS = "initials";
+    const FALLBACK_INITIALS = "fallbackInitials";
+    const FALLBACK_COLOR = "fallbackColor";
     const POSITIONS = "positions";
     const POSITION = "position";
     const COLOR = "color";

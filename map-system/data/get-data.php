@@ -73,11 +73,13 @@ function getMessagesFromDatabase($groupCode)
 
             $messageData[$i][INITIALS] = $user->getMarkerDetailsWithUserID()[0][INITIALS];
             $messageData[$i][COLOR] = $user->getMarkerDetailsWithUserID()[0][COLOR];
-            $messageData[$i][MESSAGE_SENT_BY_USER] = false;
 
-            if ($messageData[$i][USERS_ID] == $_SESSION[USER_ROW_ID]) {
-                $messageData[$i][MESSAGE_SENT_BY_USER] = true;
+            if ($messageData[$i][INITIALS] == null || $messageData[$i][COLOR] == null) {
+                $messageData[$i][INITIALS] = $messageData[$i][FALLBACK_INITIALS];
+                $messageData[$i][COLOR] = $messageData[$i][FALLBACK_COLOR];
             }
+
+            $messageData[$i][MESSAGE_SENT_BY_USER] = $messageData[$i][USERS_ID] == $_SESSION[USER_ROW_ID];
 
             unset($messageData[$i][USERS_ID]);
         }

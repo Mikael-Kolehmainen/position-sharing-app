@@ -143,12 +143,12 @@ function closeChatClicked()
 
 function deleteGroupClicked()
 {
-    openMenu("delete-group-btn", "delete-popup", "block");
+    openMenu("delete-group-btn", "delete-popup", "block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "none");
 }
 
 function rejectGroupDeleteClicked()
 {
-    openMenu("delete-popup", "delete-group-btn", "inline-block");
+    openMenu("delete-popup", "delete-group-btn", "inline-block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "block");
 }
 
 function checkMapLegendsClicked()

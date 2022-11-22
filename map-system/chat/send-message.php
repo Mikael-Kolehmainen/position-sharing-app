@@ -15,14 +15,18 @@
         $message = filter_input(INPUT_POST, MESSAGE, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $messageSenderID = $_SESSION[USER_ROW_ID];
+        $fallbackInitials = $_SESSION[INITIALS];
+        $fallbackColor = $_SESSION[COLOR];
 
-        insertMessageToDatabase($message, $messageSenderID, $groupCode);
+        insertMessageToDatabase($message, $fallbackInitials, $fallbackColor, $messageSenderID, $groupCode);
     }
 
-    function insertMessageToDatabase($messageText, $messageSenderID, $groupCode)
+    function insertMessageToDatabase($messageText, $fallbackInitials, $fallbackColor, $messageSenderID, $groupCode)
     {
         $message = new Message($groupCode);
         $message->message = $messageText;
+        $message->fallbackInitials = $fallbackInitials;
+        $message->fallbackColor = $fallbackColor;
         $message->userID = $messageSenderID;
         $message->save();
     }
