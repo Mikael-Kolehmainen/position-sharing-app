@@ -318,19 +318,29 @@
   width: 100%;
   object-fit: cover; }
 
+#camera .top {
+  margin-top: 15px; }
+
 #camera-trigger {
-  width: 200px;
+  width: fit-content;
   background-color: #5BC0EB;
   color: white;
   font-size: 16px;
-  border-radius: 30px;
+  border-radius: 50%;
   border: none;
   padding: 15px 20px;
   text-align: center;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-  position: fixed;
-  bottom: 30px;
-  left: calc(50% - 100px); }
+  position: absolute;
+  top: 92.5%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+  #camera-trigger img {
+    height: 50px;
+    width: 50px; }
+  #camera-trigger:hover {
+    cursor: pointer;
+    background-color: #C3423F; }
 
 .taken {
   z-index: 2; }

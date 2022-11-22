@@ -17,7 +17,12 @@
                 <video id='camera-view' autoplay playsinline></video>
                 <canvas id='camera-sensor'></canvas>
                 <img src="" alt="" id='camera-output' style='display: none;'>
-                <button id='camera-trigger'>Take a picture</button>
+                <button id='camera-trigger'><img src='./../media/icons/camera-light.svg'></button>
+                <div class='top'>
+                    <a class='btn round onclick' id='close-camera'>
+                        <i class='fa-solid fa-chevron-left'></i>
+                    </a>
+                </div>
                 <div class='bottom' id='image-options' style='display: none;'>
                     <a class='btn onclick' id='reject-image'>
                         <i class='fa-solid fa-xmark'></i>

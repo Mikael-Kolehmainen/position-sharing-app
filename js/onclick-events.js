@@ -51,6 +51,9 @@ document.querySelectorAll(".onclick").forEach(element =>
             case "reject-image":
                 rejectImageClicked();
                 break;
+            case "close-camera":
+                closeCameraClicked();
+                break;
         }
     });
 });
@@ -168,4 +171,9 @@ function rejectImageClicked()
     ElementDisplay.change("image-options", "none");
     camera.hideTakenImage();
     startCamera();
+}
+
+function closeCameraClicked()
+{
+    window.location.replace("./../map-system/active.php?groupcode=" + new URLSearchParams(window.location.search).get("groupcode"));
 }
