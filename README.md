@@ -1,1 +1,1 @@
-# position-app-api
+# position-sharing-app
