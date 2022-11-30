@@ -1,0 +1,48 @@
+.btn {
+    i {
+
+        &.fa-plus {
+            background: url('/appearance/media/icons/plus.svg') no-repeat center;
+            width: 50%;
+            height: 50%;
+        }
+        &.fa-magnifying-glass {
+            background: url('/appearance/media/icons/magnifying-glass.svg') no-repeat center;
+        }
+        &.fa-chevron-left {
+            background: url('/appearance/media/icons/chevron-left.svg') no-repeat center;
+            width: 60%;
+            height: 60%;
+        }
+        &.fa-message {
+            background: url('/appearance/media/icons/message.svg') no-repeat center;
+        }
+        &.fa-layer-group {
+            background: url('/appearance/media/icons/layergroup.svg') no-repeat center;
+            width: 60%;
+            height: 60%;
+        }
+        &.fa-location-dot {
+            background: url('/appearance/media/icons/location-dot.svg') no-repeat center;
+        }
+        &.fa-xmark {
+            background: url('/appearance/media/icons/xmark.svg') no-repeat center;
+            width: 70%;
+            height: 70%;
+        }
+
+        &.fa-check {
+            background: url('/appearance/media/icons/check.svg') no-repeat center;
+            width: 50%;
+            height: 50%;
+        }
+    }
+}
+#remove-draggable-goal {
+    i {
+        &.fa-xmark {
+            width: 55%;
+            height: 55%;
+        }
+    }
+}
