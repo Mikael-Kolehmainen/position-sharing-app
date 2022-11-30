@@ -5,7 +5,7 @@ require PROJECT_ROOT_PATH . "/controller/basic/CreateController.php";
 require PROJECT_ROOT_PATH . "/controller/basic/SearchController.php";
 require PROJECT_ROOT_PATH . "/controller/api/ActiveMapController.php";
 require PROJECT_ROOT_PATH . "/controller/api/CameraController.php";
-
+s
 require PROJECT_ROOT_PATH . "/controller/api/GroupController.php";
 require PROJECT_ROOT_PATH . "/controller/api/UserController.php";
 require PROJECT_ROOT_PATH . "/controller/api/GoalController.php";
