@@ -23,6 +23,7 @@ function onLocationFound(e)
             
                 if (data.goalsdata == "empty" && !goal.goalIsBeingPlanned) {
                     LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
+                    console.log(layerManagement.goalLayerGroup);
                     ElementDisplay.change('active-goal-disclaimer', 'none');
                 } else if (data.goalsdata == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
                     goal.updatePercentagePopups();
@@ -31,7 +32,7 @@ function onLocationFound(e)
                     refreshCounter = refreshCounter + 1;
                 } else if (!goal.goalIsBeingPlanned) {
                     goal.saveDataFromPHPToVariables();
-                    for (let i = 0; i < goal.start_marker_pos.length; i++) {
+                    for (let i = 0; i < goal.goalsData.length; i++) {
                         goal.addStartGoalMarkersToMap(i);
                     }
                     goal.drawAllRoutes();

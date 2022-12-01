@@ -315,7 +315,7 @@ function getData()
     $data[DATA_USERSDATA] = getUsersDataFromDatabase();
     $data[DATA_MESSAGESDATA] = getMessagesDataFromDatabase();
 
-    if (isset($_SESSION[SESSION_GOALSESSION])) {
+    if (isset($_SESSION[SESSION_GOALSESSION]) && goalSessionEqualsDbGoalSession()) {
         $data[DATA_GOALSDATA] = DATA_ALREADY_SAVED;
     } else {
         $data[DATA_GOALSDATA] = getGoalDataFromDatabase();
@@ -363,7 +363,7 @@ function getMessagesDataFromDatabase()
             $markerStyle = $userController->getMarkerFromDatabaseWithID();
             $messageData[$i][USER_INITIALS] = $markerStyle[0][USER_INITIALS];
             $messageData[$i][USER_COLOR] = $markerStyle[0][USER_COLOR];
-
+        
             if ($messageData[$i][USER_INITIALS] == null || $messageData[$i][USER_COLOR] == null) {
                 $messageData[$i][USER_INITIALS] = $messageData[$i][USER_FALLBACK_INITIALS];
                 $messageData[$i][USER_COLOR] = $messageData[$i][USER_FALLBACK_COLOR];
@@ -402,13 +402,17 @@ function getGoalDataFromDatabase()
     $goalsData = [];
 
     if (count($rowIdsOfGoalPositions) > 0) {
+        $orderNumbers = $goalController->getOrderNumbersOfGoalsFromDatabase();
+        $fallBackInitials = $goalController->getFallbackInitialsFromDatabase();
         for ($i = 0; $i < count($rowIdsOfGoalPositions); $i++) {
-            $goalsData[$i][GOAL_ORDER_NUMBER] = $goalController->getOrderNumbersOfGoalsFromDatabase()[$i][GOAL_ORDER_NUMBER];
+            $goalsData[$i][GOAL_ORDER_NUMBER] = $orderNumbers[$i][GOAL_ORDER_NUMBER];
 
             $goalsData[$i][GOAL_START_POSITION] = getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_START_POSITIONS_ID]);
             $goalsData[$i][GOAL_GOAL_POSITION] = getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_GOAL_POSITIONS_ID]);
 
             $goalsData[$i][GOAL_WAYPOINTS] = getWaypointPositionsFromDatabase($i);
+
+            $goalsData[$i][USER_FALLBACK_INITIALS] = $fallBackInitials[$i][USER_FALLBACK_INITIALS];
         }
     } else {
         $goalsData = DATA_EMPTY;
@@ -470,8 +474,6 @@ function sendGoal(): void
     $userController = new UserController();
 
     $json = json_decode(file_get_contents('php://input'));
-
-    $goalSession = $goalController->createGoalSession();
     
     $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
     $userIDs = $userController->getIDsFromDatabase();
@@ -479,8 +481,10 @@ function sendGoal(): void
     $rowIdsOfUsersWithGoal = [];
 
     for ($i = 0; $i < count($json); $i++) {
-        $rowIDsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalindex];
+        $rowIdsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalindex];
     }
+
+    $goalRowIds = [];
 
     for ($i = 0; $i < count($json); $i++) {
         $jsonObj = $json[$i];
@@ -488,28 +492,44 @@ function sendGoal(): void
         $startPositionRowID = insertPositionToDatabase($jsonObj->startlat, $jsonObj->startlng);
         $goalPositionRowID = insertPositionToDatabase($jsonObj->goallat, $jsonObj->goallng);
 
-        $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $rowIDsOfUsersWithGoal[$i], $goalSession);
+        $fallBackInitials = getUserInitialsFromDatabase($rowIdsOfUsersWithGoal[$i])[0][USER_INITIALS];
+
+        $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $rowIdsOfUsersWithGoal[$i], $fallBackInitials);
+        $goalRowIds[$i] = $goalRowID;
 
         $waypoints = $jsonObj->routewaypoints;
-        if (isset($waypoints)) {
-            for ($j = 0; $j < count($waypoints); $j++) {
-                $waypointPositionRowID = insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
+        for ($j = 0; $j < count($waypoints); $j++) {
+            $waypointPositionRowID = insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
 
-                insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
-            }
+            insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
         }
+    }
+
+    $goalController->createGoalSession();
+
+    for ($i = 0; $i < count($goalRowIds); $i++) {
+        $goalController->id = $goalRowIds[$i];
+        $goalController->updateGoalSessionInDatabase();
     }
 }
 
-function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalOrderNumber, $userID, $goalSession)
+function getUserInitialsFromDatabase($id)
+{
+    $userController = new UserController();
+    $userController->id = $id;
+
+    return $userController->getMarkerFromDatabaseWithID();
+}
+
+function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalOrderNumber, $userID, $fallBackInitials)
 {
     $goalController = new GoalController();
     $goalController->startPositionId = $startPositionRowID;
     $goalController->goalPositionId = $goalPositionRowID;
     $goalController->goalOrderNumber = $goalOrderNumber;
     $goalController->userId = $userID;
-    $goalController->goalSession = $goalSession;
     $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
+    $goalController->fallbackInitials = $fallBackInitials;
     
     return $goalController->saveToDatabase();
 }

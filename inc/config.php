@@ -8,8 +8,8 @@ const GROUP_GROUPCODE = "groupcode";
 
 const USER_INITIALS = "initials";
 const USER_COLOR = "color";
-const USER_FALLBACK_INITIALS = "fallbackInitials";
-const USER_FALLBACK_COLOR = "fallbackColor";
+const USER_FALLBACK_INITIALS = "fallbackinitials";
+const USER_FALLBACK_COLOR = "fallbackcolor";
 const USER_DB_ROW_ID = "user_row_id";
 const USER_POSITIONS_ID = "positions_id";
 const USER_POSITIONS = "positions";

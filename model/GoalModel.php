@@ -10,6 +10,8 @@ class GoalModel extends Database
     private const FIELD_USER_ID = 'users_id';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
     private const FIELD_GOAL_SESSION = 'goalsession';
+    private const FIELD_FALLBACK_INITIALS = 'fallbackinitials';
+    private const FIELD_FALLBACK_COLOR = 'fallbackcolor';
 
     /** @var int */
     public $id;
@@ -32,9 +34,17 @@ class GoalModel extends Database
     /** @var string */
     public $userId;
 
+    /** @var string */
+    public $fallbackInitials;
+
     public function save()
     {
-        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_USER_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_GOAL_SESSION . ') VALUES (?, ?, ?, ?, ?, ?)', [['iiiiss'], [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber, $this->userId, $this->groupCode, $this->goalSession]]);
+        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_USER_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_FALLBACK_INITIALS . ') VALUES (?, ?, ?, ?, ?, ?)', [['iiiiss'], [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber, $this->userId, $this->groupCode, $this->fallbackInitials]]);
+    }
+
+    public function update()
+    {
+        $this->id = $this->insert('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_GOAL_SESSION . ' = ? WHERE id = ?', [['si'], [$this->goalSession, $this->id]]);
     }
 
     public function removeWithGroupCode()
@@ -44,6 +54,6 @@ class GoalModel extends Database
 
     public function getWithGroupCode()
     {
-        return $this->select('SELECT id, ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_SESSION . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [["s"], [$this->groupCode]]);
+        return $this->select('SELECT id, ' . self::FIELD_GOAL_ID . ', ' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_SESSION . ', ' . self::FIELD_FALLBACK_INITIALS . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [["s"], [$this->groupCode]]);
     }
 }

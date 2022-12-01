@@ -9,8 +9,8 @@ class MessageModel extends Database
     private const FIELD_DATE = 'dateofmessage';
     private const FIELD_TIME = 'timeofmessage';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
-    private const FIELD_FALLBACK_INITIALS = 'fallbackInitials';
-    private const FIELD_FALLBACK_COLOR = 'fallbackColor';
+    private const FIELD_FALLBACK_INITIALS = 'fallbackinitials';
+    private const FIELD_FALLBACK_COLOR = 'fallbackcolor';
     private const FIELD_USERS_ID = 'users_id';
 
     /** @var int */

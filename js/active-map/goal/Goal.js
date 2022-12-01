@@ -107,6 +107,7 @@ class Goal
         const startGoalStyle = new Style(this.#STYLE_CLASS_NAME);
         startGoalStyle.removeStyle();
 
+
         if (this.idsOfGoals.length == 0) {
             for (let j = 0; j < this.goalsData.length; j++) {
                 if (this.goalsData[j] != "user has no goal") {
@@ -150,7 +151,14 @@ class Goal
         classNameGoalMarkers = 'user-goal-marker-' + i;
         styleSheetContent += '.' + classNameGoalMarkers + '{ background-color: red; border-radius: 0 !important;}';
 
-        let initials = '\"' + this.usersData[this.idsOfGoals[i]].initials + '\"';
+        let initials = "";
+
+        if (typeof this.goalsData[i].fallbackinitials != "undefined") {
+            initials = '\"' + this.goalsData[i].fallbackinitials + '\"';
+        } else {
+            initials = '\"' + this.usersData[this.idsOfGoals[i]].initials + '\"';
+        }
+
         styleSheetContent += '.' + classNameStartMarkers + '::before { content: ' + initials + '; }';
         styleSheetContent += '.' + classNameGoalMarkers + '::before { content: ' + initials + '; }';
 
