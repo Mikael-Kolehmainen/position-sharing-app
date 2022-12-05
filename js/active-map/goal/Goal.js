@@ -203,7 +203,7 @@ class Goal
     sendDataToPHP()
     {
         let goalData = [];
-        let goallat, goallng, startlat, startlng, route, goalindex;
+        let goallat, goallng, startlat, startlng, route, goalordernumber;
 
         for (let i = 0; i < this.goal_marker_pos.length; i++) {
             if (typeof this.start_marker_pos[i] != "undefined") {
@@ -213,11 +213,11 @@ class Goal
                 startlat = this.start_marker_pos[i].lat;
                 startlng = this.start_marker_pos[i].lng;
 
-                goalindex = this.idsOfGoals[i];
+                goalordernumber = this.idsOfGoals[i];
 
                 route = this.routes[i];
 
-                goalData.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalindex : goalindex});
+                goalData.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalordernumber : goalordernumber});
             }
         }
 

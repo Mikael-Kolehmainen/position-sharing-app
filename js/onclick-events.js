@@ -30,11 +30,11 @@ document.querySelectorAll(".onclick").forEach(element =>
                 case "close-chat-btn":
                     closeChatClicked();
                     break;
-                case "delete-group-btn":
-                    deleteGroupClicked();
+                case "delete-leave-group-btn":
+                    deleteLeaveGroupClicked();
                     break;
-                case "reject-group-delete-btn":
-                    rejectGroupDeleteClicked();
+                case "close-delete-leave-group-btn":
+                    closeDeleteLeaveGroupClicked();
                     break;
                 case "check-map-legends-btn":
                     checkMapLegendsClicked();
@@ -74,7 +74,7 @@ document.querySelectorAll(".onclick").forEach(element =>
         goal.removeUserDrawnRoutes();
         goal.drawAllRoutes();
         goal.sendDataToPHP();
-        openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"], "block")
+        openMenu("goal-route-options", "add-goal-btn", "block", ["open-chat-btn", "delete-leave-group-btn", "check-map-legends-btn"], "block")
     
         instructions.hide();
     }
@@ -83,12 +83,12 @@ document.querySelectorAll(".onclick").forEach(element =>
     {
         goal.clearPreviousPopup();
         goal.createPopup();
-        openMenu("add-goal-btn", "goal-popup", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"], "none");
+        openMenu("add-goal-btn", "goal-popup", "block", ["open-chat-btn", "delete-leave-group-btn", "check-map-legends-btn"], "none");
     }
     
     function rejectAddGoalClicked()
     {
-        openMenu("goal-popup", "add-goal-btn", "block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"], "block");
+        openMenu("goal-popup", "add-goal-btn", "block", ["open-chat-btn", "delete-leave-group-btn", "check-map-legends-btn"], "block");
     
         instructions.hide();
     }
@@ -108,7 +108,7 @@ document.querySelectorAll(".onclick").forEach(element =>
     function removeDraggableGoalClicked()
     {
         goal.remove();
-        openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-group-btn", "check-map-legends-btn"], "block");
+        openMenu("goal-options", "add-goal-btn", "inline-block", ["open-chat-btn", "delete-leave-group-btn", "check-map-legends-btn"], "block");
         openMenu("goal-route-options", "add-goal-btn", "inline-block");
     
         instructions.hide();
@@ -125,32 +125,32 @@ document.querySelectorAll(".onclick").forEach(element =>
     
     function openChatClicked()
     {
-        openMenu("open-chat-btn", "chat", "block", ["add-goal-btn", "delete-group-btn", "check-map-legends-btn"], "none");
+        openMenu("open-chat-btn", "chat", "block", ["add-goal-btn", "delete-leave-group-btn", "check-map-legends-btn"], "none");
     }
     
     function closeChatClicked()
     {
-        openMenu("chat", "open-chat-btn", "inline-block", ["add-goal-btn", "delete-group-btn", "check-map-legends-btn"], "block")
+        openMenu("chat", "open-chat-btn", "inline-block", ["add-goal-btn", "delete-leave-group-btn", "check-map-legends-btn"], "block")
     }
     
-    function deleteGroupClicked()
+    function deleteLeaveGroupClicked()
     {
-        openMenu("delete-group-btn", "delete-popup", "block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "none");
+        openMenu("delete-leave-group-btn", "delete-leave-popup", "block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "none");
     }
-    
-    function rejectGroupDeleteClicked()
+
+    function closeDeleteLeaveGroupClicked()
     {
-        openMenu("delete-popup", "delete-group-btn", "inline-block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "block");
+        openMenu("delete-leave-popup", "delete-leave-group-btn", "block", ["add-goal-btn", "check-map-legends-btn", "open-chat-btn"], "block");
     }
     
     function checkMapLegendsClicked()
     {
-        openMenu("check-map-legends-btn", "map-legends-popup", "block", ["open-chat-btn", "delete-group-btn", "add-goal-btn"], "none");
+        openMenu("check-map-legends-btn", "map-legends-popup", "block", ["open-chat-btn", "delete-leave-group-btn", "add-goal-btn"], "none");
     }
     
     function closeMapLegendsClicked()
     {
-        openMenu("map-legends-popup", "check-map-legends-btn", "block", ["open-chat-btn", "delete-group-btn", "add-goal-btn"], "block");
+        openMenu("map-legends-popup", "check-map-legends-btn", "block", ["open-chat-btn", "delete-leave-group-btn", "add-goal-btn"], "block");
     }
     
     function acceptImageClicked()

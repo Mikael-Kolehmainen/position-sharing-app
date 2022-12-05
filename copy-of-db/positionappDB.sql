@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 22, 2022 at 03:47 PM
+-- Generation Time: Dec 01, 2022 at 07:01 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -33,8 +33,9 @@ CREATE TABLE `goals` (
   `goal_positions_id` int(4) DEFAULT NULL,
   `goalIndex` int(255) DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
+  `fallbackinitials` varchar(2) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL,
-  `goalsession` varchar(15) NOT NULL
+  `goalsession` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -68,8 +69,8 @@ CREATE TABLE `messages` (
   `dateofmessage` date DEFAULT NULL,
   `timeofmessage` time DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
-  `fallbackInitials` varchar(2) DEFAULT NULL,
-  `fallbackColor` varchar(7) DEFAULT NULL,
+  `fallbackinitials` varchar(2) DEFAULT NULL,
+  `fallbackcolor` varchar(7) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -77,12 +78,13 @@ CREATE TABLE `messages` (
 -- Dumping data for table `messages`
 --
 
-INSERT INTO `messages` (`id`, `message`, `imagepath`, `dateofmessage`, `timeofmessage`, `users_id`, `fallbackInitials`, `fallbackColor`, `groups_groupcode`) VALUES
-(168, 'test', NULL, '2022-11-22', '14:28:00', 5633, NULL, NULL, '01A'),
-(169, 'test', NULL, '2022-11-22', '14:31:00', 5626, NULL, NULL, '01A'),
+INSERT INTO `messages` (`id`, `message`, `imagepath`, `dateofmessage`, `timeofmessage`, `users_id`, `fallbackinitials`, `fallbackcolor`, `groups_groupcode`) VALUES
 (179, 'test', NULL, '2022-11-22', '15:34:00', 5626, 'MK', '#5BC0EB', '01A'),
 (180, 'test', NULL, '2022-11-22', '15:43:00', 5646, 'AA', '#FF0000', '01A'),
-(181, 'test', NULL, '2022-11-22', '15:44:00', 5646, 'AA', '#FF0000', '01A');
+(181, 'test', NULL, '2022-11-22', '15:44:00', 5646, 'AA', '#FF0000', '01A'),
+(186, 'test', NULL, '2022-11-30', '17:12:00', 6604, 'AA', '#000000', '01A'),
+(191, 'test', NULL, '2022-11-30', '18:39:00', 6602, 'MK', '#5BC0EB', '01A'),
+(192, 'test', NULL, '2022-11-30', '18:40:00', 6602, 'MK', '#5BC0EB', '01A');
 
 -- --------------------------------------------------------
 
@@ -101,9 +103,10 @@ CREATE TABLE `positions` (
 --
 
 INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
-(1, '63.110000', '21.630000'),
 (2, '63.115000', '21.635000'),
-(3, '63.117500', '21.634240');
+(3, '63.117500', '21.634240'),
+(118865, '63.119140', '21.663666'),
+(118866, '63.155130', '21.672592');
 
 -- --------------------------------------------------------
 
@@ -187,37 +190,37 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1925;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2168;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
 
 --
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106760;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134150;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5647;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6610;
 
 --
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99747;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124047;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

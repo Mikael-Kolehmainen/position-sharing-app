@@ -25,7 +25,7 @@ const GOAL_GOAL_POSITION = "goal_position";
 const GOAL_START_POSITIONS_ID = "start_positions_id";
 const GOAL_GOAL_POSITIONS_ID = "goal_positions_id";
 const GOAL_WAYPOINTS = "waypoints";
-const GOAL_ORDER_NUMBER = "goalIndex";
+const GOAL_ORDER_NUMBER = "goalordernumber";
 
 const MESSAGE_MESSAGE = "message";
 const MESSAGE_AMOUNT_OF_MESSAGES = "amount_of_messages";

@@ -88,8 +88,13 @@ switch ($uri[2]) {
                     sendGoal();
                     break;
                 case "get-data":
-                    $data = getData();
-                    echo json_encode($data);
+                    if (groupExists()) {
+                        $data = getData();
+                        echo json_encode($data);
+                    } else {
+                        $data = "Group doesn't exist";
+                        echo json_encode($data);
+                    }
                     break;
                 case "remove-user":
                     removeUser();
@@ -481,7 +486,7 @@ function sendGoal(): void
     $rowIdsOfUsersWithGoal = [];
 
     for ($i = 0; $i < count($json); $i++) {
-        $rowIdsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalindex];
+        $rowIdsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalordernumber];
     }
 
     $goalRowIds = [];
@@ -494,7 +499,7 @@ function sendGoal(): void
 
         $fallBackInitials = getUserInitialsFromDatabase($rowIdsOfUsersWithGoal[$i])[0][USER_INITIALS];
 
-        $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $jsonObj->goalindex, $rowIdsOfUsersWithGoal[$i], $fallBackInitials);
+        $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $jsonObj->goalordernumber, $rowIdsOfUsersWithGoal[$i], $fallBackInitials);
         $goalRowIds[$i] = $goalRowID;
 
         $waypoints = $jsonObj->routewaypoints;
@@ -540,6 +545,14 @@ function insertWaypointToDatabase($goalRowID, $positionRowID): void
     $waypointController->goalId = $goalRowID;
     $waypointController->positionId = $positionRowID;
     $waypointController->saveToDatabase();
+}
+
+function groupExists()
+{
+    $groupController = new GroupController();
+    $groupController->groupCode = $_SESSION[GROUP_GROUPCODE];
+
+    return count($groupController->findGroupInDatabase());
 }
 
 function removeGoal(): void

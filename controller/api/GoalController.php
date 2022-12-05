@@ -2,7 +2,7 @@
 class GoalController extends BaseController
 {
     private const FIELD_GOAL_SESSION = 'goalsession';
-    private const FIELD_GOAL_ID = 'goalIndex';
+    private const FIELD_GOAL_ID = 'goalordernumber';
 
     /** @var int */
     public $id;

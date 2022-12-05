@@ -66,8 +66,8 @@ class ActiveController extends BaseController
                                 <input type='submit' value='' id='send-btn'>
                             </form>
                         </div>
-                        <a class='btn small onclick' id='delete-group-btn'>
-                            <p>Delete group</p>
+                        <a class='btn small round onclick' id='delete-leave-group-btn'>
+                            <i class='fa-solid fa-xmark'></i>
                         </a>
                         <a class='btn round onclick' id='add-goal-btn' style='display: inline-block;'>
                             <i class='fa-solid fa-location-dot'></i>
@@ -92,13 +92,18 @@ class ActiveController extends BaseController
                             <i class='fa-solid fa-layer-group'></i>
                         </a>
                     </div>
-                    <div class='popup' id='delete-popup' style='display: none;'>
-                        <p>Are you sure you want to delete this group?</p>
-                        <a class='btn onclick' id='reject-group-delete-btn'>
-                            <p>No</p>
+                    <div class='popup' id='delete-leave-popup' style='display: none;'>
+                        <div class='btn-container'>
+                            <a class='btn round onclick' id='close-delete-leave-group-btn'>
+                                <i class='fa-solid fa-xmark'></i>
+                            </a>
+                        </div>
+                        <p>Leave or delete group?</p>
+                        <a class='btn' href='/index.php'>
+                            <p>Leave</p>
                         </a>
                         <a class='btn' href='/index.php/map/remove-group'>
-                            <p>Yes</p>
+                            <p>Delete</p>
                         </a>
                     </div>
                     <div class='popup' id='goal-popup' style='display: none;'>

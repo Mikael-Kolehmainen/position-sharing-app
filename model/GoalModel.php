@@ -6,7 +6,7 @@ class GoalModel extends Database
     private const TABLE_NAME = 'goals';
     private const FIELD_START_POSITIONS_ID = 'start_positions_id';
     private const FIELD_GOAL_POSITIONS_ID = 'goal_positions_id';
-    private const FIELD_GOAL_ID = 'goalIndex';
+    private const FIELD_GOAL_ID = 'goalordernumber';
     private const FIELD_USER_ID = 'users_id';
     private const FIELD_GROUP_CODE = 'groups_groupcode';
     private const FIELD_GOAL_SESSION = 'goalsession';

@@ -179,30 +179,6 @@
                         }
                     }
                 }
-                .options {
-                    .distance, .degrees {
-                        position: absolute;
-                        top: -5%;
-                        left: 40%;
-                        transform: translate(-50%, -50%);
-                        text-align: center;
-
-                        .btn {
-                            position: static;
-                            left: 0;
-                            top: 0;
-                            transform: none;
-                        }
-                        p {
-                            color: black;
-                            margin-bottom: 5px;
-                        }
-                    }
-                    .degrees {
-                        top: -5%;
-                        left: 60%;
-                    }
-                }
             }
             table {
                 display: block;
@@ -247,6 +223,36 @@
                     font-weight: bold;
                     color: white;
                     background-color: transparent;
+                }
+            }
+            #delete-leave-popup {
+                .btn-container {
+                    width: 100%;
+                    max-width: 510px;
+                    margin: auto;
+                    margin-bottom: 10px;
+                    text-align: right;
+                    
+                    .btn {
+                        width: 30px;
+                        height: 30px;
+                        background-color: $secondary-color;
+                        margin: 0;
+                        margin-right: 10px;
+                        position: relative;
+                        left: 0;
+                        top: 0;
+                        transform: none;
+                        border-radius: 50%;
+                        padding: 0;
+
+                        &:nth-child(1) {
+                            float: none;
+                        }
+                        i {
+                            font-size: 26px;
+                        }
+                    }
                 }
             }
             #map-legends-popup {

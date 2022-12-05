@@ -23,7 +23,6 @@ function onLocationFound(e)
             
                 if (data.goalsdata == "empty" && !goal.goalIsBeingPlanned) {
                     LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
-                    console.log(layerManagement.goalLayerGroup);
                     ElementDisplay.change('active-goal-disclaimer', 'none');
                 } else if (data.goalsdata == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
                     goal.updatePercentagePopups();
@@ -74,7 +73,7 @@ function saveGoalData(current_position, data)
 function redirectUserToIndexPage()
 {
     alert('The group has been removed.');
-    window.location.href = './../index.php';
+    window.location.replace('/index.php');
 }
 
 function onLocationError(e) 
