@@ -621,11 +621,6 @@ function sendImage(): void
         $messageController->userId = $_SESSION[USER_DB_ROW_ID];
         $messageController->saveToDatabase();
     } else {
-        echo "
-        <script>
-            alert('Something went wrong with saving the image to the server.');
-            window.location.replace('/index.php/map/camera');
-        </script>
-    ";
+        Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
     }
 }
