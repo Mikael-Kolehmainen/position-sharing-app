@@ -41,6 +41,10 @@ class Chat
             message.createMessageElement();
 
             this.messageStyleSheetContent += '.' + messageClassName + ' { background-color: ' + this.messagesData[i].color + '; }';
+        
+            if (i == this.messagesData.length - 1) {
+                message.messageElement.scrollIntoView();
+            }
         }
 
         this.#updateMarkerStyle();

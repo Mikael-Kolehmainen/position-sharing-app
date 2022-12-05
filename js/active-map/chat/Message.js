@@ -16,6 +16,7 @@ class Message
         this.timeOfMessage = timeOfMessage;
         this.dateOfMessage = dateOfMessage;
         this.sentByUser = sentByUser;
+        this.messageElement;
     }
     
     /*
@@ -47,21 +48,21 @@ class Message
 
     createMessageElement()
     {
-        const message = document.createElement("div");
-        message.classList.add(this.#MESSAGE_CLASS_NAME);
+        this.messageElement = document.createElement("div");
+        this.messageElement.classList.add(this.#MESSAGE_CLASS_NAME);
 
         if (this.sentByUser) {
-            message.classList.add(this.#SENT_CLASS_NAME);
+            this.messageElement.classList.add(this.#SENT_CLASS_NAME);
         }
 
         const profile = document.createElement("div");
         profile.classList.add(this.#PROFILE_CLASS_NAME);
-        message.appendChild(profile);
+        this.messageElement.appendChild(profile);
         const initialsText = document.createElement("p");
         profile.appendChild(initialsText);
         const textContainer = document.createElement("div");
         textContainer.classList.add(this.#TEXT_CONTAINER_CLASS_NAME);
-        message.appendChild(textContainer);
+        this.messageElement.appendChild(textContainer);
 
         if (this.message != null) {
             const messageText = document.createElement("p");
@@ -89,7 +90,7 @@ class Message
         }
 
         const messages = document.getElementById(this.#MESSAGES_ID);
-        messages.appendChild(message);
+        messages.appendChild(this.messageElement);
 
         profile.classList.add(this.elementClassName);
     }

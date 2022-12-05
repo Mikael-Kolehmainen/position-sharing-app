@@ -126,6 +126,8 @@ document.querySelectorAll(".onclick").forEach(element =>
     function openChatClicked()
     {
         openMenu("open-chat-btn", "chat", "block", ["add-goal-btn", "delete-leave-group-btn", "check-map-legends-btn"], "none");
+        const messages = document.getElementsByClassName("message");
+        messages[messages.length - 1].scrollIntoView();
     }
     
     function closeChatClicked()
