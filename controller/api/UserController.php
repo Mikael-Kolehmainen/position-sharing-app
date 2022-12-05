@@ -43,14 +43,14 @@ class UserController extends BaseController
     public function removeUsersFromDatabase()
     {
         $userModel = new UserModel();
-        $userModel->groupCode = $this->groupCode;
+        $userModel->groupCode = SessionManager::getGroupCode();
         $userModel->removeWithGroupCode();
     }
 
     public function getMarkersFromDatabase()
     {
         $userModel = new UserModel();
-        $userModel->groupCode = $this->groupCode;
+        $userModel->groupCode = SessionManager::getGroupCode();
 
         return $userModel->getWithGroupCode();
     }
@@ -66,7 +66,7 @@ class UserController extends BaseController
     public function getIDsFromDatabase()
     {
         $userModel = new UserModel();
-        $userModel->groupCode = $this->groupCode;
+        $userModel->groupCode = SessionManager::getGroupCode();
         $userData = $userModel->getWithGroupCode();
         $IDs = [];
 
@@ -80,13 +80,16 @@ class UserController extends BaseController
     public function getRowIdOfPositionFromDatabase()
     {
         $userModel = new UserModel();
-        $userModel->id = $this->id;
+        $userModel->id = SessionManager::getUserRowId();
         
         return $userModel->getWithId()[0][self::FIELD_POSITIONS_ID];
     }
 
     public function saveMarkerStyleToSession()
     {
+        $this->initials = filter_input(INPUT_POST, USER_INITIALS, FILTER_DEFAULT);
+        $this->color = filter_input(INPUT_POST, USER_COLOR, FILTER_DEFAULT);
+
         if ($this->color == "") {
             $this->color = "#FF0000";
         }
@@ -95,5 +98,18 @@ class UserController extends BaseController
 
         $_SESSION[USER_INITIALS] = $this->initials;
         $_SESSION[USER_COLOR] = $this->color;
+    }
+
+    public function checkIfRowIdExistsInDatabase()
+    {
+        $IDs = self::getIDsFromDatabase();
+
+        for ($i = 0; $i < count($IDs); $i++) {
+            if ($IDs[$i] == $_SESSION[USER_DB_ROW_ID]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

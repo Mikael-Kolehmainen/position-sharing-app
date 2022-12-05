@@ -55,7 +55,7 @@ class MessageController extends BaseController
     public function getMessagesFromDatabase()
     {
         $messageModel = new MessageModel();
-        $messageModel->groupCode = $this->groupCode;
+        $messageModel->groupCode = SessionManager::getGroupCode();
 
         return $messageModel->get();
     }
@@ -63,7 +63,7 @@ class MessageController extends BaseController
     public function removeMessagesFromDatabase(): void
     {
         $messageModel = new MessageModel();
-        $messageModel->groupCode = $this->groupCode;
+        $messageModel->groupCode = SessionManager::getGroupCode();
         $messageModel->removeWithGroupCode();
     }
 }

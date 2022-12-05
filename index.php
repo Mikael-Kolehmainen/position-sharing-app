@@ -90,8 +90,7 @@ switch ($uri[2]) {
                     break;
                 case "get-data":
                     if (groupExists()) {
-                        $data = getData();
-                        echo json_encode($data);
+                        getData();
                     } else {
                         $data = "Group doesn't exist";
                         echo json_encode($data);
@@ -151,37 +150,31 @@ function Create(): void
 {
     $groupController = new GroupController();
     $groupController->saveToDatabase();
-
-    $_SESSION[GROUP_GROUPCODE] = $groupController->groupCode;
     
-    redirectToActive();
+    redirectToGroupMap();
 }
 
 function Search(): void
 {
     $groupController = new GroupController();
-    $groupController->groupCode = filter_input(INPUT_POST, GROUP_GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
     
     if ($groupController->findGroupInDatabase()) {
-        $_SESSION[GROUP_GROUPCODE] = $groupController->groupCode;
-        redirectToActive();
+        redirectToGroupMap();
     } else {
         Redirect::redirect("Couldn\'t find a group with the given code.", "/index.php/search");
     }
 }
 
-function redirectToActive(): void
+function redirectToGroupMap(): void
 {
     $userController = new UserController();
-    $userController->initials = filter_input(INPUT_POST, USER_INITIALS, FILTER_DEFAULT);
-    $userController->color = filter_input(INPUT_POST, USER_COLOR, FILTER_DEFAULT);
     $userController->saveMarkerStyleToSession();
     header("LOCATION: /index.php/map/active");
 }
 
 function ActiveMap(): void
 {
-    $activeController = new ActiveController($_SESSION[GROUP_GROUPCODE]);
+    $activeController = new ActiveController();
     $activeController->showMapPage();
 }
 
@@ -205,120 +198,31 @@ function Remove(): void
 function removeGroup(): void
 {
     $groupController = new GroupController();
-    $groupController->groupCode = $_SESSION[GROUP_GROUPCODE];
     $groupController->removeGroupFromDatabase();
 }
 
 function removeGroupUsers(): void
 {
     $userController = new UserController();
-    $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
     $userController->removeUsersFromDatabase();
 }
 
 function removeGroupMessages(): void
 {
     $messageController = new MessageController();
-    $messageController->groupCode = $_SESSION[GROUP_GROUPCODE];
     $messageController->removeMessagesFromDatabase();
 }
 
 function sendPosition(): void
 {
-    $json = json_decode(file_get_contents('php://input'));
-
-    $lat = $json->lat;
-    $lng = $json->lng;
-
-    if (isset($_SESSION[USER_DB_ROW_ID]) && checkIfRowIdExistsInDatabase()) {
-        updatePositionInDatabase($lat, $lng, getRowIdOfPositionFromDatabase());
-    } else {
-        insertUserToDatabase(insertPositionToDatabase($lat, $lng));
-    }
-}
-
-function checkIfRowIdExistsInDatabase()
-{
-    $userController = new UserController();
-    $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $IDs = $userController->getIDsFromDatabase();
-
-    for ($i = 0; $i < count($IDs); $i++) {
-        if ($IDs[$i] == $_SESSION[USER_DB_ROW_ID]) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function getRowIdOfPositionFromDatabase()
-{
-    $userController = new UserController();
-    $userController->id = $_SESSION[USER_DB_ROW_ID];
-
-    return $userController->getRowIdOfPositionFromDatabase();
-}
-
-function updatePositionInDatabase($lat, $lng, $positionsRowId): void
-{
     $positionController = new PositionController();
-    $positionController->latitude = $lat;
-    $positionController->longitude = $lng;
-    $positionController->id = $positionsRowId;
-    $positionController->updateInDatabase();
-}
-
-function insertPositionToDatabase($lat, $lng)
-{
-    $positionController = new PositionController();
-    $positionController->latitude = $lat;
-    $positionController->longitude = $lng;
-    
-    return $positionController->saveToDatabase();
-}
-
-function insertUserToDatabase($positionsRowId): void
-{
-    $userController = new UserController();
-    $userController->id = isset($_SESSION[USER_DB_ROW_ID]) ? $_SESSION[USER_DB_ROW_ID] : null;
-    $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $userController->positionsId = $positionsRowId;
-    $userController->initials = $_SESSION[USER_INITIALS];
-    $userController->color = $_SESSION[USER_COLOR];
-    $userController->saveToDatabase();
-
-    $_SESSION[USER_DB_ROW_ID] = $userController->id;
+    $positionController->sendPositionToDatabase();
 }
 
 function getData()
 {
-    $data = [];
-    $data[DATA_USERSDATA] = getUsersDataFromDatabase();
-    $data[DATA_MESSAGESDATA] = getMessagesDataFromDatabase();
-
-    if (isset($_SESSION[SESSION_GOALSESSION]) && goalSessionEqualsDbGoalSession()) {
-        $data[DATA_GOALSDATA] = DATA_ALREADY_SAVED;
-    } else {
-        $data[DATA_GOALSDATA] = getGoalDataFromDatabase();
-        saveSession();
-    }
-
-    return $data;
-}
-
-function getUsersDataFromDatabase()
-{
-    $userController = new UserController();
-    $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
-
-    $users = $userController->getMarkersFromDatabase();
-
-    for ($i = 0; $i < count($users); $i++) {
-        $users[$i][USER_POSITIONS] = getPositionFromDatabase($users[$i][USER_POSITIONS_ID]);
-    }
-
-    return $users;
+    $dataManager = new DataManager();
+    $dataManager->encodeDataToJSON();
 }
 
 function getPositionFromDatabase($id)
@@ -327,52 +231,6 @@ function getPositionFromDatabase($id)
     $positionController->id = $id;    
 
     return $positionController->getLatLngFromDatabase();
-}
-
-function getMessagesDataFromDatabase()
-{
-    $messageController = new MessageController();
-    $messageController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $messageData = $messageController->getMessagesFromDatabase();
-
-    if (!isset($_SESSION[MESSAGE_AMOUNT_OF_MESSAGES]) || $_SESSION[MESSAGE_AMOUNT_OF_MESSAGES] != count($messageData)) {
-        $userController = new UserController();
-        $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
-
-        for ($i = 0; $i < count($messageData); $i++) {
-            $userController->id = $messageData[$i][POSITION_USERS_ID];
-
-            $markerStyle = $userController->getMarkerFromDatabaseWithID();
-            $messageData[$i][USER_INITIALS] = $markerStyle[0][USER_INITIALS];
-            $messageData[$i][USER_COLOR] = $markerStyle[0][USER_COLOR];
-        
-            if ($messageData[$i][USER_INITIALS] == null || $messageData[$i][USER_COLOR] == null) {
-                $messageData[$i][USER_INITIALS] = $messageData[$i][USER_FALLBACK_INITIALS];
-                $messageData[$i][USER_COLOR] = $messageData[$i][USER_FALLBACK_COLOR];
-            }
-
-            $messageData[$i][MESSAGE_MESSAGE_SENT_BY_USER] = $messageData[$i][POSITION_USERS_ID] == $_SESSION[USER_DB_ROW_ID];
-
-            unset($messageData[$i][POSITION_USERS_ID]);
-        }
-
-        $_SESSION[MESSAGE_AMOUNT_OF_MESSAGES] = count($messageData);
-    } else {
-        $messageData = DATA_ALREADY_SAVED;
-    }
-
-    return $messageData;
-}
-
-function goalSessionEqualsDbGoalSession()
-{
-    $goalController = new GoalController();
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $goalSession = $goalController->getGoalSessionFromDatabase();
-
-    if ($goalSession != null) {
-        return $goalSession == $_SESSION[SESSION_GOALSESSION];
-    }
 }
 
 function getGoalDataFromDatabase()
@@ -529,7 +387,7 @@ function groupExists()
     $groupController = new GroupController();
     $groupController->groupCode = $_SESSION[GROUP_GROUPCODE];
 
-    return count($groupController->findGroupInDatabase());
+    return $groupController->findGroupInDatabase();
 }
 
 function removeGoal(): void

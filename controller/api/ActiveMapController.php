@@ -8,9 +8,9 @@ class ActiveController extends BaseController
     /** @var string */
     public $groupCode;
 
-    public function __construct($groupCode)
+    public function __construct()
     {
-        $this->groupCode = $groupCode;
+        $this->groupCode = SessionManager::getGroupCode();
     }
 
     public function showMapPage(): void

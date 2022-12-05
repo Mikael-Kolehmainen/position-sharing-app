@@ -64,6 +64,13 @@ class GoalController extends BaseController
         return isset($goalModel->getWithGroupCode()[0][self::FIELD_GOAL_SESSION]) ? $goalModel->getWithGroupCode()[0][self::FIELD_GOAL_SESSION] : null;
     }
 
+    public function goalSessionEqualsDbGoalSession()
+    {
+        $goalSession = $this->getGoalSessionFromDatabase();
+
+        return $goalSession == SessionManager::getGoalSession();
+    }
+
     public function getOrderNumbersOfGoalsFromDatabase()
     {
         $goalModel = new GoalModel();
