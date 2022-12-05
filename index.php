@@ -12,6 +12,7 @@ require PROJECT_ROOT_PATH . "/controller/api/GoalController.php";
 require PROJECT_ROOT_PATH . "/controller/api/PositionController.php";
 require PROJECT_ROOT_PATH . "/controller/api/WaypointController.php";
 require PROJECT_ROOT_PATH . "/controller/api/MessageController.php";
+
 session_start();
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

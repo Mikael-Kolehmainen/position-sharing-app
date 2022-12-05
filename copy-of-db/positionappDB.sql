@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 01, 2022 at 07:01 PM
+-- Generation Time: Dec 05, 2022 at 05:04 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -31,7 +31,7 @@ CREATE TABLE `goals` (
   `id` int(4) NOT NULL,
   `start_positions_id` int(4) DEFAULT NULL,
   `goal_positions_id` int(4) DEFAULT NULL,
-  `goalIndex` int(255) DEFAULT NULL,
+  `goalordernumber` int(255) DEFAULT NULL,
   `users_id` int(4) DEFAULT NULL,
   `fallbackinitials` varchar(2) DEFAULT NULL,
   `groups_groupcode` varchar(10) DEFAULT NULL,
@@ -106,7 +106,12 @@ INSERT INTO `positions` (`id`, `lat`, `lng`) VALUES
 (2, '63.115000', '21.635000'),
 (3, '63.117500', '21.634240'),
 (118865, '63.119140', '21.663666'),
-(118866, '63.155130', '21.672592');
+(118866, '63.155130', '21.672592'),
+(134152, '63.104614', '21.620326'),
+(134159, '63.104614', '21.620326'),
+(134172, '63.104614', '21.620326'),
+(134182, '63.104614', '21.620326'),
+(134185, '63.104614', '21.620326');
 
 -- --------------------------------------------------------
 
@@ -190,13 +195,13 @@ ALTER TABLE `waypoints`
 -- AUTO_INCREMENT for table `goals`
 --
 ALTER TABLE `goals`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2168;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2172;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -208,19 +213,19 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134150;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134660;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6610;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6616;
 
 --
 -- AUTO_INCREMENT for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124047;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124447;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
