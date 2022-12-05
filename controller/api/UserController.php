@@ -52,7 +52,7 @@ class UserController extends BaseController
         $userModel = new UserModel();
         $userModel->groupCode = $this->groupCode;
 
-        return $userModel->getMarkers();
+        return $userModel->getWithGroupCode();
     }
 
     public function getMarkerFromDatabaseWithID()
@@ -60,7 +60,7 @@ class UserController extends BaseController
         $userModel = new UserModel();
         $userModel->id = $this->id;
 
-        return $userModel->getMarkerWithID();
+        return $userModel->getWithId();
     }
 
     public function getIDsFromDatabase()
@@ -82,7 +82,7 @@ class UserController extends BaseController
         $userModel = new UserModel();
         $userModel->id = $this->id;
         
-        return $userModel->getRowIdOfPosition()[0][self::FIELD_POSITIONS_ID];
+        return $userModel->getWithId()[0][self::FIELD_POSITIONS_ID];
     }
 
     public function saveMarkerStyleToSession()

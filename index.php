@@ -48,21 +48,21 @@ switch ($uri[2]) {
                 if (isset($_POST[FORM_CREATE_GROUP])) {
                     Create();
                 } else {
-                    redirectToHome("Please fill the group creation form.");
+                    Redirect::redirect("Please fill the group creation form.", "/index.php");
                 }
                 break;
             case "search":
                 if (isset($_POST[FORM_SEARCH_GROUP])) {
                     Search();
                 } else {
-                    redirectToHome("Please fill the search group form.");
+                    Redirect::redirect("Please fill the search group form.", "/index.php");
                 }
                 break;
             case "active":
                 if (isset($_SESSION[GROUP_GROUPCODE])) {
                     ActiveMap();
                 } else {
-                    redirectToHome("Your session has expired, try again.");
+                    Redirect::redirect("Your session has expired, try again.", "/index.php");
                 }
                 break;
             case "camera":
@@ -165,7 +165,7 @@ function Search(): void
         $_SESSION[GROUP_GROUPCODE] = $groupController->groupCode;
         redirectToActive();
     } else {
-        redirectToSearchForm();
+        Redirect::redirect("Couldn\'t find a group with the given code.", "/index.php/search");
     }
 }
 
@@ -176,26 +176,6 @@ function redirectToActive(): void
     $userController->color = filter_input(INPUT_POST, USER_COLOR, FILTER_DEFAULT);
     $userController->saveMarkerStyleToSession();
     header("LOCATION: /index.php/map/active");
-}
-
-function redirectToSearchForm(): void
-{
-    echo "
-        <script>
-            alert('Couldn\'t find a group with the given code.');
-            window.location.replace('/index.php/search');
-        </script>
-    ";
-}
-
-function redirectToHome($message): void
-{
-    echo "
-        <script>
-            alert('$message');
-            window.location.replace('/index.php');
-        </script>
-    ";
 }
 
 function ActiveMap(): void
@@ -250,13 +230,9 @@ function sendPosition(): void
     $lng = $json->lng;
 
     if (isset($_SESSION[USER_DB_ROW_ID]) && checkIfRowIdExistsInDatabase()) {
-        $positionsRowId = getRowIdOfPositionFromDatabase();
-
-        updatePositionInDatabase($lat, $lng, $positionsRowId);
+        updatePositionInDatabase($lat, $lng, getRowIdOfPositionFromDatabase());
     } else {
-        $positionsRowId = insertPositionToDatabase($lat, $lng);
-
-        insertUserToDatabase($positionsRowId);
+        insertUserToDatabase(insertPositionToDatabase($lat, $lng));
     }
 }
 

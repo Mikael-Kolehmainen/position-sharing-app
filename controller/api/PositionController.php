@@ -42,7 +42,7 @@ class PositionController extends BaseController
         $positionModel = new PositionModel();
         $positionModel->id = $this->id;
 
-        $latlngs = $positionModel->getLatLng();
+        $latlngs = $positionModel->get();
 
         return [$latlngs[0][POSITION_LAT], $latlngs[0][POSITION_LNG]];
     }

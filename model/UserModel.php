@@ -58,17 +58,7 @@ class UserModel extends Database
         return $this->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ? ', [['s'], [$this->groupCode]]);
     }
 
-    public function getRowIdOfPosition()
-    {
-        return $this->select('SELECT ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
-    }
-
-    public function getMarkers()
-    {
-        return $this->select('SELECT ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?', [["s"], [$this->groupCode]]);
-    }
-
-    public function getMarkerWithID()
+    public function getWithId()
     {
         return $this->select('SELECT ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?', [["i"], [$this->id]]);
     }

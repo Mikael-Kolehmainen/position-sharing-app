@@ -31,7 +31,7 @@ class PositionModel extends Database
         $this->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
     }
 
-    public function getLatLng()
+    public function get()
     {
         return $this->select('SELECT ' . self::FIELD_LATITUDE . ', ' . self::FIELD_LONGITUDE . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?', [["i"], [$this->id]]);
     }
