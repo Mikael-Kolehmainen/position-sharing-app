@@ -1,4 +1,11 @@
 <?php
+
+namespace controller\api;
+
+use model;
+use manager;
+use misc;
+
 class GoalController extends BaseController
 {
     private const FIELD_GOAL_SESSION = 'goalsession';
@@ -26,10 +33,10 @@ class GoalController extends BaseController
 
     public function saveToDatabase()
     {
-        $goalModel = new GoalModel();
+        $goalModel = new model\GoalModel();
         $goalModel->startPositionId = $this->startPositionId;
         $goalModel->goalPositionId = $this->goalPositionId;
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
         $goalModel->userId = $this->userId;
         $goalModel->goalOrderNumber = $this->goalOrderNumber;
         $goalModel->fallbackInitials = $this->fallbackInitials;
@@ -38,24 +45,24 @@ class GoalController extends BaseController
 
     public function updateGoalSessionInDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->goalSession = SessionManager::getGoalSession();
+        $goalModel = new model\GoalModel();
+        $goalModel->goalSession = manager\SessionManager::getGoalSession();
         $goalModel->id = $this->id;
         $goalModel->update();
     }
 
     public function getIdsFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         return $goalModel->getWithGroupCode();
     }
 
     public function getGoalSessionFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         return isset($goalModel->getWithGroupCode()[0][self::FIELD_GOAL_SESSION]) ? $goalModel->getWithGroupCode()[0][self::FIELD_GOAL_SESSION] : null;
     }
@@ -64,36 +71,36 @@ class GoalController extends BaseController
     {
         $goalSession = $this->getGoalSessionFromDatabase();
 
-        return $goalSession == SessionManager::getGoalSession();
+        return $goalSession == manager\SessionManager::getGoalSession();
     }
 
     public function getOrderNumbersOfGoalsFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         return $goalModel->getWithGroupCode();
     }
 
     public function getRowIdsOfGoalPositionsFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
         
         return $goalModel->getWithGroupCode();
     }
 
     public function getFallbackInitialsFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         return $goalModel->getWithGroupCode();
     }
 
     public function createGoalSession()
     {
-        $goalSession = RandomString::getRandomString(15);
+        $goalSession = misc\RandomString::getRandomString(15);
 
         if ($goalSession == $_SESSION[SESSION_GOALSESSION]) {
             $this->createGoalSession();
@@ -104,8 +111,8 @@ class GoalController extends BaseController
 
     public function removeFromDatabase()
     {
-        $goalModel = new GoalModel();
-        $goalModel->groupCode = SessionManager::getGroupCode();
+        $goalModel = new model\GoalModel();
+        $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         $goalModel->removeWithGroupCode();
     }
@@ -212,7 +219,7 @@ class GoalController extends BaseController
             }
         }
 
-        SessionManager::removeGoalSession();
+        manager\SessionManager::removeGoalSession();
     }
 
     private function getRowIdsOfWaypointPositions($goalsIds)

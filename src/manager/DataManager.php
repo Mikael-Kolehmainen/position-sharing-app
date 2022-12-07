@@ -1,4 +1,8 @@
 <?php
+namespace manager;
+
+use controller;
+
 class DataManager
 {
     private const USERSDATA = "usersdata";
@@ -29,13 +33,13 @@ class DataManager
 
     private function saveGoalSession(): void
     {
-        $goalController = new GoalController();
+        $goalController = new controller\api\GoalController();
         $_SESSION[SESSION_GOALSESSION] = $goalController->getGoalSessionFromDatabase();
     }
 
     private function getUsersDataFromDatabase(): void
     {
-        $userController = new UserController();
+        $userController = new controller\api\UserController();
 
         $users = $userController->getMarkersFromDatabase();
 
@@ -48,7 +52,7 @@ class DataManager
 
     private function getPositionFromDatabase($id)
     {
-        $positionController = new PositionController();
+        $positionController = new controller\api\PositionController();
         $positionController->id = $id;    
 
         return $positionController->getLatLngFromDatabase();
@@ -56,11 +60,11 @@ class DataManager
 
     private function getMessagesDataFromDatabase(): void
     {
-        $messageController = new MessageController();
+        $messageController = new controller\api\MessageController();
         $messageData = $messageController->getMessagesFromDatabase();
 
         if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count($messageData)) {
-            $userController = new UserController();
+            $userController = new controller\api\UserController();
 
             for ($i = 0; $i < count($messageData); $i++) {
                 $userController->id = $messageData[$i][POSITION_USERS_ID];
@@ -89,14 +93,14 @@ class DataManager
 
     private function goalSessionEqualsDbGoalSession()
     {
-        $goalController = new GoalController();
+        $goalController = new controller\api\GoalController();
         
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
     private function getGoalDataFromDatabase(): void
     {
-        $goalController = new GoalController();
+        $goalController = new controller\api\GoalController();
 
         $rowIdsOfGoalPositions = $goalController->getRowIdsOfGoalPositionsFromDatabase();
 
@@ -124,9 +128,9 @@ class DataManager
 
     private function getWaypointPositionsFromDatabase($i)
     {
-        $goalController = new GoalController();
-        $positionController = new PositionController();
-        $waypointController = new WaypointController();
+        $goalController = new controller\api\GoalController();
+        $positionController = new controller\api\PositionController();
+        $waypointController = new controller\api\WaypointController();
 
         $waypointController->goalId = $goalController->getIdsFromDatabase()[$i]["id"];
         $waypointPositionsRowIds = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();

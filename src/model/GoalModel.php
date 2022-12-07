@@ -1,5 +1,6 @@
 <?php
-require_once PROJECT_ROOT_PATH . "/model/Database.php";
+
+namespace model;
  
 class GoalModel extends Database
 {
@@ -11,7 +12,6 @@ class GoalModel extends Database
     private const FIELD_GROUP_CODE = 'groups_groupcode';
     private const FIELD_GOAL_SESSION = 'goalsession';
     private const FIELD_FALLBACK_INITIALS = 'fallbackinitials';
-    private const FIELD_FALLBACK_COLOR = 'fallbackcolor';
 
     /** @var int */
     public $id;

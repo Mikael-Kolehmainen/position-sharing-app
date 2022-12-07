@@ -1,4 +1,9 @@
 <?php
+
+namespace controller\api;
+
+use model;
+
 class WaypointController extends BaseController
 {
     /** @var int */
@@ -9,7 +14,7 @@ class WaypointController extends BaseController
 
     public function saveToDatabase(): void
     {
-        $waypointModel = new WaypointModel();
+        $waypointModel = new model\WaypointModel();
         $waypointModel->goalId = $this->goalId;
         $waypointModel->positionId = $this->positionId;
         $waypointModel->save();
@@ -17,7 +22,7 @@ class WaypointController extends BaseController
 
     public function getRowIdsOfWaypointPositionsFromDatabase()
     {
-        $waypointModel = new WaypointModel();
+        $waypointModel = new model\WaypointModel();
         $waypointModel->goalId = $this->goalId;
 
         return $waypointModel->getWithGoalId();
@@ -25,7 +30,7 @@ class WaypointController extends BaseController
 
     public function removeFromDatabase(): void
     {
-        $waypointModel = new WaypointModel();
+        $waypointModel = new model\WaypointModel();
         $waypointModel->goalId = $this->goalId;
         
         $waypointModel->removeWithId();

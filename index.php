@@ -1,17 +1,5 @@
 <?php
 require __DIR__ . "/inc/bootstrap.php";
-require PROJECT_ROOT_PATH . "/controller/basic/HomeController.php";
-require PROJECT_ROOT_PATH . "/controller/basic/CreateController.php";
-require PROJECT_ROOT_PATH . "/controller/basic/SearchController.php";
-require PROJECT_ROOT_PATH . "/controller/api/ActiveMapController.php";
-require PROJECT_ROOT_PATH . "/controller/api/CameraController.php";
-
-require PROJECT_ROOT_PATH . "/controller/api/GroupController.php";
-require PROJECT_ROOT_PATH . "/controller/api/UserController.php";
-require PROJECT_ROOT_PATH . "/controller/api/GoalController.php";
-require PROJECT_ROOT_PATH . "/controller/api/PositionController.php";
-require PROJECT_ROOT_PATH . "/controller/api/WaypointController.php";
-require PROJECT_ROOT_PATH . "/controller/api/MessageController.php";
 
 session_start();
 
@@ -49,21 +37,21 @@ switch ($uri[2]) {
                 if (isset($_POST[FORM_CREATE_GROUP])) {
                     Create();
                 } else {
-                    Redirect::redirect("Please fill the group creation form.", "/index.php");
+                    misc\Redirect::redirect("Please fill the group creation form.", "/index.php");
                 }
                 break;
             case "search":
                 if (isset($_POST[FORM_SEARCH_GROUP])) {
                     Search();
                 } else {
-                    Redirect::redirect("Please fill the search group form.", "/index.php");
+                    misc\Redirect::redirect("Please fill the search group form.", "/index.php");
                 }
                 break;
             case "active":
                 if (isset($_SESSION[GROUP_GROUPCODE])) {
                     ActiveMap();
                 } else {
-                    Redirect::redirect("Your session has expired, try again.", "/index.php");
+                    misc\Redirect::redirect("Your session has expired, try again.", "/index.php");
                 }
                 break;
             case "camera":
@@ -127,25 +115,25 @@ if ($uri[2] != "ajax") {
 
 function Home(): void
 {
-    $homeController = new HomeController();
+    $homeController = new controller\basic\HomeController();
     $homeController->showHomePage();
 }
 
 function CreateForm(): void
 {
-    $createController = new CreateController();
+    $createController = new controller\basic\CreateController();
     $createController->showCreatePage();
 }
 
 function SearchForm(): void
 {
-    $searchController = new SearchController();
+    $searchController = new controller\basic\SearchController();
     $searchController->showSearchPage();
 }
 
 function Create(): void
 {
-    $groupController = new GroupController();
+    $groupController = new controller\api\GroupController();
     $groupController->saveToDatabase();
     
     redirectToGroupMap();
@@ -153,18 +141,18 @@ function Create(): void
 
 function Search(): void
 {
-    $groupController = new GroupController();
+    $groupController = new controller\api\GroupController();
     
     if ($groupController->findGroupInDatabase()) {
         redirectToGroupMap();
     } else {
-        Redirect::redirect("Couldn\'t find a group with the given code.", "/index.php/search");
+        misc\Redirect::redirect("Couldn\'t find a group with the given code.", "/index.php/search");
     }
 }
 
 function redirectToGroupMap(): void
 {
-    $userController = new UserController();
+    $userController = new controller\api\UserController();
     $userController->saveMarkerStyleToSession();
     
     header("LOCATION: /index.php/map/active");
@@ -172,13 +160,13 @@ function redirectToGroupMap(): void
 
 function ActiveMap(): void
 {
-    $activeController = new ActiveController();
+    $activeController = new controller\api\ActiveMapController();
     $activeController->showMapPage();
 }
 
 function Camera(): void
 {
-    $cameraController = new CameraController();
+    $cameraController = new controller\api\CameraController();
     $cameraController->showCamera();
 }
 
@@ -194,38 +182,38 @@ function Remove(): void
 
 function removeGroup(): void
 {
-    $groupController = new GroupController();
+    $groupController = new controller\api\GroupController();
     $groupController->removeGroupFromDatabase();
 }
 
 function removeGroupUsers(): void
 {
-    $userController = new UserController();
+    $userController = new controller\api\UserController();
     $userController->removeUsersFromDatabase();
 }
 
 function removeGroupMessages(): void
 {
-    $messageController = new MessageController();
+    $messageController = new controller\api\MessageController();
     $messageController->removeMessagesFromDatabase();
 }
 
 function sendPosition(): void
 {
-    $positionController = new PositionController();
+    $positionController = new controller\api\PositionController();
     $positionController->sendPositionToDatabase();
 }
 
 function getData(): void
 {
-    $dataManager = new DataManager();
+    $dataManager = new manager\DataManager();
     $dataManager->encodeDataToJSON();
 }
 
 function removeUser(): void
 {
-    $userController = new UserController();
-    $positionController = new PositionController();
+    $userController = new controller\api\UserController();
+    $positionController = new controller\api\PositionController();
 
     $positionController->id = $userController->getRowIdOfPositionFromDatabase();
 
@@ -235,31 +223,31 @@ function removeUser(): void
 
 function sendGoal(): void
 {
-    $goalController = new GoalController();
+    $goalController = new controller\api\GoalController();
     $goalController->sendGoalToDatabase();
 }
 
 function groupExists()
 {
-    $groupController = new GroupController();
+    $groupController = new controller\api\GroupController();
     return $groupController->findGroupInDatabase();
 }
 
 function removeGoal(): void
 {
-    $goalController = new GoalController();
+    $goalController = new controller\api\GoalController();
     $goalController->removeGoal();
 }
 
 function sendMessage(): void
 {
-    $messageController = new MessageController();
+    $messageController = new controller\api\MessageController();
     $messageController->saveToDatabase();
     header("LOCATION: /index.php/map/active");
 }
 
 function sendImage(): void
 {
-    $cameraController = new CameraController();
+    $cameraController = new controller\api\CameraController();
     $cameraController->sendImage();
 }

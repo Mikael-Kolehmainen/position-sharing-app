@@ -1,4 +1,7 @@
 <?php
+
+namespace model;
+
 class Database
 {
     protected $connection = null;
@@ -6,13 +9,13 @@ class Database
     public function __construct()
     {
         try {
-            $this->connection = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE_NAME);
+            $this->connection = new \mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE_NAME);
          
             if ( mysqli_connect_errno()) {
-                throw new Exception("Could not connect to database.");   
+                throw new \Exception("Could not connect to database.");   
             }
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());   
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());   
         }           
     }
  
@@ -24,8 +27,8 @@ class Database
             $stmt->close();
  
             return $result;
-        } catch(Exception $e) {
-            throw New Exception( $e->getMessage() );
+        } catch(\Exception $e) {
+            throw New \Exception( $e->getMessage() );
         }
     }
 
@@ -36,8 +39,8 @@ class Database
             $stmt->close();
 
             return $this->connection->insert_id;
-        } catch(Exception $e) {
-            throw New Exception( $e->getMessage() );
+        } catch(\Exception $e) {
+            throw New \Exception( $e->getMessage() );
         }
     }
 
@@ -46,8 +49,8 @@ class Database
         try {
             $stmt = $this->executeStatement($query, $params);
             $stmt->close();
-        } catch(Exception $e) {
-            throw New Exception( $e->getMessage() );
+        } catch(\Exception $e) {
+            throw New \Exception( $e->getMessage() );
         }
     }
  
@@ -57,7 +60,7 @@ class Database
             $stmt = $this->connection->prepare($query);
  
             if($stmt === false) {
-                throw New Exception("Unable to do prepared statement: " . $query);
+                throw New \Exception("Unable to do prepared statement: " . $query);
             }
 
             if (!empty($params)) {
@@ -68,8 +71,8 @@ class Database
             $stmt->execute();
  
             return $stmt;
-        } catch(Exception $e) {
-            throw New Exception( $e->getMessage() );
+        } catch(\Exception $e) {
+            throw New \Exception( $e->getMessage() );
         }   
     }
 }

@@ -1,4 +1,6 @@
 <?php
+namespace manager;
+
 class SessionManager
 {
     private const GROUPCODE = "groupcode";

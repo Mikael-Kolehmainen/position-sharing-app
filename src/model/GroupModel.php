@@ -1,5 +1,8 @@
 <?php
-require_once PROJECT_ROOT_PATH . "/model/Database.php";
+
+namespace model;
+
+use misc;
  
 class GroupModel extends Database
 {
@@ -29,7 +32,7 @@ class GroupModel extends Database
 
     public function createGroupCode(): void
     {
-        $this->groupCode = RandomString::getRandomString(3);
+        $this->groupCode = misc\RandomString::getRandomString(3);
 
         if (count($this->getRowCount())) {
             $this->createGroupCode();

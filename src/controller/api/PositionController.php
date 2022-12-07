@@ -1,4 +1,10 @@
 <?php
+
+namespace controller\api;
+
+use model;
+use manager;
+
 class PositionController extends BaseController
 {
     /** @var int */
@@ -17,7 +23,7 @@ class PositionController extends BaseController
         $this->latitude = $json->lat;
         $this->longitude = $json->lng;
 
-        if (SessionManager::getUserRowId() != null && $this->checkIfRowIdExistsInDatabase()) {
+        if (manager\SessionManager::getUserRowId() != null && $this->checkIfRowIdExistsInDatabase()) {
             $this->updateInDatabase();
         } else {
             $this->saveToDatabase();
@@ -34,19 +40,19 @@ class PositionController extends BaseController
     private function insertUserToDatabase(): void
     {
         $userController = new UserController();
-        $userController->id = SessionManager::getUserRowId();
-        $userController->groupCode = SessionManager::getGroupCode();
+        $userController->id = manager\SessionManager::getUserRowId();
+        $userController->groupCode = manager\SessionManager::getGroupCode();
         $userController->positionsId = $this->id;
-        $userController->initials = SessionManager::getUserInitials();
-        $userController->color = SessionManager::getUserColor();
+        $userController->initials = manager\SessionManager::getUserInitials();
+        $userController->color = manager\SessionManager::getUserColor();
         $userController->saveToDatabase();
 
-        SessionManager::saveUserRowId($userController->id);
+        manager\SessionManager::saveUserRowId($userController->id);
     }
 
     public function saveToDatabase()
     {
-        $positionModel = new PositionModel();
+        $positionModel = new model\PositionModel();
         $positionModel->latitude = $this->latitude;
         $positionModel->longitude = $this->longitude;
         
@@ -55,7 +61,7 @@ class PositionController extends BaseController
 
     public function updateInDatabase(): void
     {
-        $positionModel = new PositionModel();
+        $positionModel = new model\PositionModel();
         $positionModel->id = $this->getRowIdOfPositionFromDatabase();;
         $positionModel->latitude = $this->latitude;
         $positionModel->longitude = $this->longitude;
@@ -70,7 +76,7 @@ class PositionController extends BaseController
 
     public function removeFromDatabase()
     {
-        $positionModel = new PositionModel();
+        $positionModel = new model\PositionModel();
         $positionModel->id = $this->id;
 
         $positionModel->removeWithId();
@@ -78,7 +84,7 @@ class PositionController extends BaseController
 
     public function getLatLngFromDatabase()
     {
-        $positionModel = new PositionModel();
+        $positionModel = new model\PositionModel();
         $positionModel->id = $this->id;
 
         $latlngs = $positionModel->get();

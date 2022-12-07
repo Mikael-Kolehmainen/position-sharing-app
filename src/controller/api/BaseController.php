@@ -1,4 +1,7 @@
 <?php
+
+namespace controller\api;
+
 class BaseController
 {
     /**

@@ -1,4 +1,6 @@
 <?php
+namespace misc;
+
 class Redirect
 {
     public static function redirect($message, $url)

@@ -1,5 +1,10 @@
 <?php
-class ActiveController extends BaseController
+
+namespace controller\api;
+
+use manager;
+
+class ActiveMapController extends BaseController
 {
     /**
      * "index.php/map/active"
@@ -10,7 +15,7 @@ class ActiveController extends BaseController
 
     public function __construct()
     {
-        $this->groupCode = SessionManager::getGroupCode();
+        $this->groupCode = manager\SessionManager::getGroupCode();
     }
 
     public function showMapPage(): void

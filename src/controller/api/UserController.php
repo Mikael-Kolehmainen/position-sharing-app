@@ -1,4 +1,10 @@
 <?php
+
+namespace controller\api;
+
+use model;
+use manager;
+
 class UserController extends BaseController
 {
     private const FIELD_POSITIONS_ID = 'positions_id';
@@ -20,7 +26,7 @@ class UserController extends BaseController
 
     public function saveToDatabase()
     {
-        $userModel = new UserModel();
+        $userModel = new model\UserModel();
         $userModel->id = $this->id;
         $userModel->positionsId = $this->positionsId;
         $userModel->initials = $this->initials;
@@ -33,36 +39,36 @@ class UserController extends BaseController
 
     public function removeUserFromDatabase()
     {
-        $userModel = new UserModel();
-        $userModel->id = SessionManager::getUserRowId();
+        $userModel = new model\UserModel();
+        $userModel->id = manager\SessionManager::getUserRowId();
         $userModel->removeWithID();
         $this->removeSessions();
     }
 
     private function removeSessions()
     {
-        SessionManager::removeGoalSession();
-        SessionManager::removeAmountOfMessages();
+        manager\SessionManager::removeGoalSession();
+        manager\SessionManager::removeAmountOfMessages();
     }
 
     public function removeUsersFromDatabase()
     {
-        $userModel = new UserModel();
-        $userModel->groupCode = SessionManager::getGroupCode();
+        $userModel = new model\UserModel();
+        $userModel->groupCode = manager\SessionManager::getGroupCode();
         $userModel->removeWithGroupCode();
     }
 
     public function getMarkersFromDatabase()
     {
-        $userModel = new UserModel();
-        $userModel->groupCode = SessionManager::getGroupCode();
+        $userModel = new model\UserModel();
+        $userModel->groupCode = manager\SessionManager::getGroupCode();
 
         return $userModel->getWithGroupCode();
     }
 
     public function getMarkerFromDatabaseWithID()
     {
-        $userModel = new UserModel();
+        $userModel = new model\UserModel();
         $userModel->id = $this->id;
 
         return $userModel->getWithId();
@@ -70,8 +76,8 @@ class UserController extends BaseController
 
     public function getIDsFromDatabase()
     {
-        $userModel = new UserModel();
-        $userModel->groupCode = SessionManager::getGroupCode();
+        $userModel = new model\UserModel();
+        $userModel->groupCode = manager\SessionManager::getGroupCode();
         $userData = $userModel->getWithGroupCode();
         $IDs = [];
 
@@ -84,8 +90,8 @@ class UserController extends BaseController
 
     public function getRowIdOfPositionFromDatabase()
     {
-        $userModel = new UserModel();
-        $userModel->id = SessionManager::getUserRowId();
+        $userModel = new model\UserModel();
+        $userModel->id = manager\SessionManager::getUserRowId();
         
         return $userModel->getWithId()[0][self::FIELD_POSITIONS_ID];
     }

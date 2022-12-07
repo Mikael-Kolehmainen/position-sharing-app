@@ -1,5 +1,8 @@
 <?php
-class HomeController extends BaseController
+
+namespace controller\basic;
+
+class HomeController
 {
     /**
      * "index.php"

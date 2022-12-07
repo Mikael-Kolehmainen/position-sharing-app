@@ -1,4 +1,10 @@
 <?php
+
+namespace controller\api;
+
+use model;
+use manager;
+
 class GroupController extends BaseController
 {
     /**
@@ -10,20 +16,20 @@ class GroupController extends BaseController
     
     public function saveToDatabase(): void
     {
-        $groupModel = new GroupModel();
+        $groupModel = new model\GroupModel();
         $groupModel->createGroupCode();
         $groupModel->save();
-        SessionManager::saveGroupCode($groupModel->groupCode);
+        manager\SessionManager::saveGroupCode($groupModel->groupCode);
     }
 
     public function findGroupInDatabase()
     {
-        $groupModel = new GroupModel();
+        $groupModel = new model\GroupModel();
         $this->groupCode = filter_input(INPUT_POST, GROUP_GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
-        $groupModel->groupCode = $this->groupCode != null ? $this->groupCode : SessionManager::getGroupCode();
+        $groupModel->groupCode = $this->groupCode != null ? $this->groupCode : manager\SessionManager::getGroupCode();
 
         if ($groupModel->getRowCount()) {
-            SessionManager::saveGroupCode(($groupModel->groupCode));
+            manager\SessionManager::saveGroupCode(($groupModel->groupCode));
             return true;
         }
 
@@ -32,8 +38,8 @@ class GroupController extends BaseController
 
     public function removeGroupFromDatabase()
     {
-        $groupModel = new GroupModel();
-        $groupModel->groupCode = SessionManager::getGroupCode();
+        $groupModel = new model\GroupModel();
+        $groupModel->groupCode = manager\SessionManager::getGroupCode();
 
         $groupModel->removeWithGroupCode();
     }

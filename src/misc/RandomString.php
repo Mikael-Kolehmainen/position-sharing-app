@@ -1,4 +1,6 @@
 <?php
+namespace misc;
+
 class RandomString
 {
     public static function getRandomString($lengthOfString): string

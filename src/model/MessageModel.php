@@ -1,5 +1,6 @@
 <?php
-require_once PROJECT_ROOT_PATH . "/model/Database.php";
+
+namespace model;
  
 class MessageModel extends Database
 {
