@@ -27,11 +27,8 @@ const GOAL_GOAL_POSITIONS_ID = "goal_positions_id";
 const GOAL_WAYPOINTS = "waypoints";
 const GOAL_ORDER_NUMBER = "goalordernumber";
 
-const MESSAGE_MESSAGE = "message";
 const MESSAGE_AMOUNT_OF_MESSAGES = "amount_of_messages";
 const MESSAGE_MESSAGE_SENT_BY_USER = "message_sent_by_user";
-const MESSAGE_WEB_IMAGE_PATH = "webimagepath";
-const MESSAGE_WEB_IMAGE_TYPE = "webimagetype";
 
 const FORM_CREATE_GROUP = "create-group";
 const FORM_SEARCH_GROUP = "search-group";

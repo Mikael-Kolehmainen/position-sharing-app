@@ -1,8 +1,6 @@
 <?php
 class UserController extends BaseController
 {
-    private const FIELD_INITIALS = 'initials';
-    private const FIELD_COLOR = 'color';
     private const FIELD_POSITIONS_ID = 'positions_id';
 
     /** @var int */

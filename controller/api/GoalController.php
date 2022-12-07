@@ -2,7 +2,6 @@
 class GoalController extends BaseController
 {
     private const FIELD_GOAL_SESSION = 'goalsession';
-    private const FIELD_GOAL_ID = 'goalordernumber';
 
     /** @var int */
     public $id;
@@ -15,9 +14,6 @@ class GoalController extends BaseController
 
     /** @var int */
     public $goalOrderNumber;
-
-    /** @var string */
-    public $groupCode;
 
     /** @var string */
     public $goalSession;
@@ -33,7 +29,7 @@ class GoalController extends BaseController
         $goalModel = new GoalModel();
         $goalModel->startPositionId = $this->startPositionId;
         $goalModel->goalPositionId = $this->goalPositionId;
-        $goalModel->groupCode = $this->groupCode;
+        $goalModel->groupCode = SessionManager::getGroupCode();
         $goalModel->userId = $this->userId;
         $goalModel->goalOrderNumber = $this->goalOrderNumber;
         $goalModel->fallbackInitials = $this->fallbackInitials;
@@ -142,7 +138,6 @@ class GoalController extends BaseController
             $this->goalPositionId = $goalPositionRowID;
             $this->goalOrderNumber = $jsonObj->goalordernumber;
             $this->userId = $rowIdsOfUsersWithGoal[$i];
-            $this->groupCode = SessionManager::getGroupCode();
             $this->fallbackInitials = $fallBackInitials;
             $goalRowID = $this->saveToDatabase();
             

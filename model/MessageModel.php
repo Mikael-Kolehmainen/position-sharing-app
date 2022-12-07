@@ -34,10 +34,10 @@ class MessageModel extends Database
     /** @var string */
     public $groupCode;
 
-    /** @var Y-m-d */
+    /** @var date(Y-m-d) */
     public $dateOfMessage;
 
-    /** @var H:i */
+    /** @var date(H:i) */
     public $timeOfMessage;
 
     public function save()

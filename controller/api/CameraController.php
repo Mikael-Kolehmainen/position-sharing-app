@@ -1,6 +1,8 @@
 <?php
 class CameraController extends BaseController
 {
+    private const WEB_IMAGE_PATH = "webimagepath";
+    private const WEB_IMAGE_TYPE = "webimagetype";
     /**
      * "index.php/map/camera"
      */
@@ -53,8 +55,8 @@ class CameraController extends BaseController
     public function sendImage(): void
     {
         $this->groupCode = SessionManager::getGroupCode();
-        $this->webImagePath = $_FILES[MESSAGE_WEB_IMAGE_PATH];
-        $this->webImageType = filter_input(INPUT_POST, MESSAGE_WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $this->webImagePath = $_FILES[self::WEB_IMAGE_PATH];
+        $this->webImageType = filter_input(INPUT_POST, self::WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
 
         $this->createImagePath();
 

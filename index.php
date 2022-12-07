@@ -75,7 +75,6 @@ switch ($uri[2]) {
             case null: default:
                 header("HTTP/1.1 404 Not Found");
                 exit();
-                break;
         }
         break;
     case "ajax":
@@ -111,14 +110,12 @@ switch ($uri[2]) {
                 case null: default:
                     header("HTTP/1.1 404 Not Found");
                     exit();
-                    break;
             }
         }
         break;
     default:
         header("HTTP/1.1 404 Not Found");
         exit();
-        break;
 }
 
 if ($uri[2] != "ajax") {

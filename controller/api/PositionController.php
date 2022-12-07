@@ -59,8 +59,6 @@ class PositionController extends BaseController
         $positionModel->id = $this->getRowIdOfPositionFromDatabase();;
         $positionModel->latitude = $this->latitude;
         $positionModel->longitude = $this->longitude;
-
-        $this->id = $positionModel->update();
     }
 
     private function getRowIdOfPositionFromDatabase()

@@ -32,7 +32,7 @@ class GroupModel extends Database
         $this->groupCode = RandomString::getRandomString(3);
 
         if (count($this->getRowCount())) {
-            $this->groupCode = createGroupCode();
+            $this->createGroupCode();
         }
     }
 }
