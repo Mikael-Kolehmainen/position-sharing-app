@@ -50,7 +50,24 @@ class CameraController extends BaseController
         ";
     }
 
-    public function createImagePath()
+    public function sendImage(): void
+    {
+        $this->groupCode = SessionManager::getGroupCode();
+        $this->webImagePath = $_FILES[MESSAGE_WEB_IMAGE_PATH];
+        $this->webImageType = filter_input(INPUT_POST, MESSAGE_WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+
+        $this->createImagePath();
+
+        if ($this->saveImageToServer()) {
+            $messageController = new MessageController();
+            $messageController->imagePath = $this->imagePath;
+            $messageController->saveToDatabase();
+        } else {
+            Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
+        }
+    }
+
+    private function createImagePath(): void
     {
         $this->imagePath = "./appearance/media/chat_images/".$this->groupCode;
         $this->createDirIfDoesNotExist();
@@ -65,7 +82,7 @@ class CameraController extends BaseController
         }
     }
 
-    public function saveImageToServer()
+    private function saveImageToServer()
     {
         return move_uploaded_file($this->webImagePath["tmp_name"], "./".$this->imagePath);
     }

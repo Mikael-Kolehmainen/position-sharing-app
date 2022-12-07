@@ -36,8 +36,15 @@ class UserController extends BaseController
     public function removeUserFromDatabase()
     {
         $userModel = new UserModel();
-        $userModel->id = $this->id;
+        $userModel->id = SessionManager::getUserRowId();
         $userModel->removeWithID();
+        $this->removeSessions();
+    }
+
+    private function removeSessions()
+    {
+        SessionManager::removeGoalSession();
+        SessionManager::removeAmountOfMessages();
     }
 
     public function removeUsersFromDatabase()

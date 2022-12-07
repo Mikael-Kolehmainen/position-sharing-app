@@ -48,8 +48,18 @@ class SessionManager
         return $_SESSION[self::AMOUNT_OF_MESSAGES];
     }
 
+    public static function removeAmountOfMessages()
+    {
+        unset($_SESSION[self::AMOUNT_OF_MESSAGES]);
+    }
+
     public static function getGoalSession()
     {
         return $_SESSION[self::GOAL_SESSION];
+    }
+
+    public static function removeGoalSession()
+    {
+        unset($_SESSION[self::GOAL_SESSION]);
     }
 }

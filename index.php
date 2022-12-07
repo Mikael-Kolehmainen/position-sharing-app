@@ -169,6 +169,7 @@ function redirectToGroupMap(): void
 {
     $userController = new UserController();
     $userController->saveMarkerStyleToSession();
+    
     header("LOCATION: /index.php/map/active");
 }
 
@@ -189,7 +190,6 @@ function Remove(): void
     removeGroup();
     removeGroupUsers();
     removeGroupMessages();
-    
     removeGoal();
 
     header("LOCATION: /index.php");
@@ -219,76 +219,10 @@ function sendPosition(): void
     $positionController->sendPositionToDatabase();
 }
 
-function getData()
+function getData(): void
 {
     $dataManager = new DataManager();
     $dataManager->encodeDataToJSON();
-}
-
-function getPositionFromDatabase($id)
-{
-    $positionController = new PositionController();
-    $positionController->id = $id;    
-
-    return $positionController->getLatLngFromDatabase();
-}
-
-function getGoalDataFromDatabase()
-{
-    $goalController = new GoalController();
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $rowIdsOfGoalPositions = $goalController->getRowIdsOfGoalPositionsFromDatabase();
-
-    $goalsData = [];
-
-    if (count($rowIdsOfGoalPositions) > 0) {
-        $orderNumbers = $goalController->getOrderNumbersOfGoalsFromDatabase();
-        $fallBackInitials = $goalController->getFallbackInitialsFromDatabase();
-        for ($i = 0; $i < count($rowIdsOfGoalPositions); $i++) {
-            $goalsData[$i][GOAL_ORDER_NUMBER] = $orderNumbers[$i][GOAL_ORDER_NUMBER];
-
-            $goalsData[$i][GOAL_START_POSITION] = getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_START_POSITIONS_ID]);
-            $goalsData[$i][GOAL_GOAL_POSITION] = getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_GOAL_POSITIONS_ID]);
-
-            $goalsData[$i][GOAL_WAYPOINTS] = getWaypointPositionsFromDatabase($i);
-
-            $goalsData[$i][USER_FALLBACK_INITIALS] = $fallBackInitials[$i][USER_FALLBACK_INITIALS];
-        }
-    } else {
-        $goalsData = DATA_EMPTY;
-    }
-
-    return $goalsData;
-}
-
-function getWaypointPositionsFromDatabase($i)
-{
-    $goalController = new GoalController();
-    $positionController = new PositionController();
-    $waypointController = new WaypointController();
-
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-
-    $waypointController->goalId = $goalController->getIdsFromDatabase()[$i]["id"];
-
-    $waypoints = [];
-
-    $waypointPositionsRowIds = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();
-
-    for ($j = 0; $j < count($waypointPositionsRowIds); $j++) {
-        $positionController->id = $waypointPositionsRowIds[$j][USER_POSITIONS_ID];
-        $waypoints[$j] = $positionController->getLatLngFromDatabase();
-    }
-
-    return $waypoints;
-}
-
-function saveSession(): void
-{
-    $goalController = new GoalController();
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-
-    $_SESSION[SESSION_GOALSESSION] = $goalController->getGoalSessionFromDatabase();
 }
 
 function removeUser(): void
@@ -296,189 +230,39 @@ function removeUser(): void
     $userController = new UserController();
     $positionController = new PositionController();
 
-    $id = $_SESSION[USER_DB_ROW_ID];
-
-    $userController->id = $id;
     $positionController->id = $userController->getRowIdOfPositionFromDatabase();
 
     $positionController->removeFromDatabase();
     $userController->removeUserFromDatabase();
-
-    unset($_SESSION[SESSION_GOALSESSION]);
-    unset($_SESSION[MESSAGE_AMOUNT_OF_MESSAGES]);
 }
 
 function sendGoal(): void
 {
     $goalController = new GoalController();
-    $userController = new UserController();
-
-    $json = json_decode(file_get_contents('php://input'));
-    
-    $userController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $userIDs = $userController->getIDsFromDatabase();
-
-    $rowIdsOfUsersWithGoal = [];
-
-    for ($i = 0; $i < count($json); $i++) {
-        $rowIdsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalordernumber];
-    }
-
-    $goalRowIds = [];
-
-    for ($i = 0; $i < count($json); $i++) {
-        $jsonObj = $json[$i];
-        
-        $startPositionRowID = insertPositionToDatabase($jsonObj->startlat, $jsonObj->startlng);
-        $goalPositionRowID = insertPositionToDatabase($jsonObj->goallat, $jsonObj->goallng);
-
-        $fallBackInitials = getUserInitialsFromDatabase($rowIdsOfUsersWithGoal[$i])[0][USER_INITIALS];
-
-        $goalRowID = insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $jsonObj->goalordernumber, $rowIdsOfUsersWithGoal[$i], $fallBackInitials);
-        $goalRowIds[$i] = $goalRowID;
-
-        $waypoints = $jsonObj->routewaypoints;
-        for ($j = 0; $j < count($waypoints); $j++) {
-            $waypointPositionRowID = insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
-
-            insertWaypointToDatabase($goalRowID, $waypointPositionRowID);
-        }
-    }
-
-    $goalController->createGoalSession();
-
-    for ($i = 0; $i < count($goalRowIds); $i++) {
-        $goalController->id = $goalRowIds[$i];
-        $goalController->updateGoalSessionInDatabase();
-    }
-}
-
-function getUserInitialsFromDatabase($id)
-{
-    $userController = new UserController();
-    $userController->id = $id;
-
-    return $userController->getMarkerFromDatabaseWithID();
-}
-
-function insertGoalToDatabase($startPositionRowID, $goalPositionRowID, $goalOrderNumber, $userID, $fallBackInitials)
-{
-    $goalController = new GoalController();
-    $goalController->startPositionId = $startPositionRowID;
-    $goalController->goalPositionId = $goalPositionRowID;
-    $goalController->goalOrderNumber = $goalOrderNumber;
-    $goalController->userId = $userID;
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $goalController->fallbackInitials = $fallBackInitials;
-    
-    return $goalController->saveToDatabase();
-}
-
-function insertWaypointToDatabase($goalRowID, $positionRowID): void
-{
-    $waypointController = new WaypointController();
-    $waypointController->goalId = $goalRowID;
-    $waypointController->positionId = $positionRowID;
-    $waypointController->saveToDatabase();
+    $goalController->sendGoalToDatabase();
 }
 
 function groupExists()
 {
     $groupController = new GroupController();
-    $groupController->groupCode = $_SESSION[GROUP_GROUPCODE];
-
     return $groupController->findGroupInDatabase();
 }
 
 function removeGoal(): void
 {
     $goalController = new GoalController();
-    $goalController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $goalsIds = $goalController->getIdsFromDatabase();
-    
-    removeGoalPositions($goalController->getRowIdsOfGoalPositionsFromDatabase(), getRowIdsOfWaypointPositions($goalsIds));
-    removeGoalWaypoints($goalsIds);
-    $goalController->removeFromDatabase();
-}
-
-function removeGoalPositions($rowIdsOfGoalPositions, $rowIdsOfWaypointPositions): void
-{
-    $positionController = new PositionController();
-
-    for ($i = 0; $i < count($rowIdsOfGoalPositions); $i++) {
-        $positionController->id = $rowIdsOfGoalPositions[$i][GOAL_START_POSITIONS_ID];
-        $positionController->removeFromDatabase();
-
-        $positionController->id = $rowIdsOfGoalPositions[$i][GOAL_GOAL_POSITIONS_ID];
-        $positionController->removeFromDatabase();
-    }
-
-    for ($i = 0; $i < count($rowIdsOfWaypointPositions); $i++) {
-        for ($j = 0; $j < count($rowIdsOfWaypointPositions[$i]); $j++) {
-            $positionController->id = $rowIdsOfWaypointPositions[$i][$j][USER_POSITIONS_ID];
-            $positionController->removeFromDatabase();
-        }
-    }
-
-    unset($_SESSION[SESSION_GOALSESSION]);
-}
-
-function getRowIdsOfWaypointPositions($goalsIds)
-{
-    $waypointController = new WaypointController();
-    $rowIdOfPositions = [];
-
-    for ($i = 0; $i < count($goalsIds); $i++) {
-        $waypointController->goalId = $goalsIds[$i]["id"];
-        $rowIdOfPositions[$i] = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();
-    }
-    
-    return $rowIdOfPositions;
-}
-
-function removeGoalWaypoints($goalsIds): void
-{
-    $waypointController = new WaypointController();
-
-    for ($i = 0; $i < count($goalsIds); $i++) {
-        $waypointController->goalId = $goalsIds[$i]["id"];
-        $waypointController->removeFromDatabase();
-    }
+    $goalController->removeGoal();
 }
 
 function sendMessage(): void
 {
     $messageController = new MessageController();
-    $messageController->message = filter_input(INPUT_POST, MESSAGE_MESSAGE, FILTER_SANITIZE_SPECIAL_CHARS);
-    $messageController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $messageController->fallbackInitials = $_SESSION[USER_INITIALS];
-    $messageController->fallbackColor = $_SESSION[USER_COLOR];
-    $messageController->userId = $_SESSION[USER_DB_ROW_ID];
-    $messageController->dateOfMessage = date("Y-m-d");
-    $messageController->timeOfMessage = date("H:i");
     $messageController->saveToDatabase();
-
     header("LOCATION: /index.php/map/active");
 }
 
 function sendImage(): void
 {
     $cameraController = new CameraController();
-    $cameraController->groupCode = $_SESSION[GROUP_GROUPCODE];
-    $cameraController->webImagePath = $_FILES[MESSAGE_WEB_IMAGE_PATH];
-    $cameraController->webImageType = filter_input(INPUT_POST, MESSAGE_WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
-
-    $cameraController->createImagePath();
-
-    if ($cameraController->saveImageToServer()) {
-        $messageController = new MessageController();
-        $messageController->groupCode = $_SESSION[GROUP_GROUPCODE];
-        $messageController->imagePath = $cameraController->imagePath;
-        $messageController->dateOfMessage = date("Y-m.d");
-        $messageController->timeOfMessage = date("H:i");
-        $messageController->userId = $_SESSION[USER_DB_ROW_ID];
-        $messageController->saveToDatabase();
-    } else {
-        Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
-    }
+    $cameraController->sendImage();
 }

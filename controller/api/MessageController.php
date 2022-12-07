@@ -40,14 +40,13 @@ class MessageController extends BaseController
     public function saveToDatabase()
     {
         $messageModel = new MessageModel();
-        $messageModel->message = $this->message;
-        $messageModel->groupCode = $this->groupCode;
-        $messageModel->userId = $this->userId;
-        $messageModel->fallbackInitials = $this->fallbackInitials;
-        $messageModel->fallbackColor = $this->fallbackColor;
-        $messageModel->groupCode = $this->groupCode;
-        $messageModel->dateOfMessage = $this->dateOfMessage;
-        $messageModel->timeOfMessage = $this->timeOfMessage;
+        $messageModel->message = filter_input(INPUT_POST, MESSAGE_MESSAGE, FILTER_SANITIZE_SPECIAL_CHARS);
+        $messageModel->groupCode = SessionManager::getGroupCode();
+        $messageModel->userId = SessionManager::getUserRowId();
+        $messageModel->fallbackInitials = SessionManager::getUserInitials();
+        $messageModel->fallbackColor = SessionManager::getUserColor();
+        $messageModel->dateOfMessage = date("Y-m-d");
+        $messageModel->timeOfMessage = date("H:i");
         $messageModel->imagePath = $this->imagePath;
         $this->id = $messageModel->save();
     }
