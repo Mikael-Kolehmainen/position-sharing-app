@@ -135,7 +135,8 @@ function Create(): void
 {
     $groupController = new controller\api\GroupController();
     $groupController->saveToDatabase();
-    
+
+    saveMarkerStyleToSession();
     redirectToGroupMap();
 }
 
@@ -144,6 +145,7 @@ function Search(): void
     $groupController = new controller\api\GroupController();
     
     if ($groupController->findGroupInDatabase()) {
+        saveMarkerStyleToSession();
         redirectToGroupMap();
     } else {
         misc\Redirect::redirect("Couldn\'t find a group with the given code.", "/index.php/search");
@@ -152,10 +154,13 @@ function Search(): void
 
 function redirectToGroupMap(): void
 {
+    header("LOCATION: /index.php/map/active");
+}
+
+function saveMarkerStyleToSession(): void
+{
     $userController = new controller\api\UserController();
     $userController->saveMarkerStyleToSession();
-    
-    header("LOCATION: /index.php/map/active");
 }
 
 function ActiveMap(): void

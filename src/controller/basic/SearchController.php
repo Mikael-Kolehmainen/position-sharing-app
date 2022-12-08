@@ -22,8 +22,8 @@ class SearchController
                     <form action='/index.php/map/search' method='POST'>
                         <input type='text' name='groupcode' placeholder='Group code (3 char)' minlength='3' maxlength='3' class='center' required>
                         <input type='text' name='initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required onkeydown='return /[a-z0-9]/i.test(event.key)'>
-                        <input type='text' name='color' placeholder='Color (HEX eg. #5BC0EB)' minlength='7' maxlength='7' class='center'>
-                        <p style='text-align: center'>Default color: #FF0000</p>
+                        <input type='text' name='color' placeholder='Color (Name or HEX)' minlength='3' maxlength='20' class='center'>
+                        <p style='text-align: center'>Default color: red / #FF0000</p>
                         <input type='submit' value='JOIN' name='search-group'>
                     </form>
                 </article>
