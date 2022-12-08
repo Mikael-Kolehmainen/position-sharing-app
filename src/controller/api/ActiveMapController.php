@@ -94,7 +94,7 @@ class ActiveMapController extends BaseController
                             </a>
                         </div>
                         <a class='btn round onclick center small-circle' id='check-map-legends-btn' style='display: inline-block;'>
-                            <i class='fa-solid fa-layer-group'></i>
+                            <i class='fa-solid fa-info'></i>
                         </a>
                     </div>
                     <div class='popup' id='delete-leave-popup' style='display: none;'>
