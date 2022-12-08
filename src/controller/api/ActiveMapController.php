@@ -24,6 +24,8 @@ class ActiveMapController extends BaseController
             <link href='/leaflet/leaflet.css' rel='stylesheet' type='text/css'/>
             <script src='/leaflet/leaflet.js'></script>
             <script src='/leaflet/leaflet.geometryutil.js'></script>
+            <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+            <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
             <script src='/leaflet/turf.min.js'></script>
             <script src='/js/active-map/global-objects.js' defer></script>
             <script src='/js/active-map/LayerManagement.js' defer></script>

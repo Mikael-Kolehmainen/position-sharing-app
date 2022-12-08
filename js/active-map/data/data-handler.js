@@ -5,6 +5,7 @@ function onLocationFound(e)
 {
     geolocationPermission = true;
 
+    LayerManagement.removeAndClearLayers([layerManagement.refreshedLayerGroup]);
     map.removeLayer(layerManagement.refreshedLayerGroup);
 
     const sendData = new Data("/index.php/ajax/send-position", {lat : e.latlng.lat, lng : e.latlng.lng});
