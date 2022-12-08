@@ -34,14 +34,14 @@ switch ($uri[2]) {
     case "map":
         switch ($uri[3]) {
             case "create":
-                if (isset($_POST[FORM_CREATE_GROUP])) {
+                if (manager\SubmissionManager::issetCreateGroup()) {
                     Create();
                 } else {
                     misc\Redirect::redirect("Please fill the group creation form.", "/index.php");
                 }
                 break;
             case "search":
-                if (isset($_POST[FORM_SEARCH_GROUP])) {
+                if (manager\SubmissionManager::issetSearchGroup()) {
                     Search();
                 } else {
                     misc\Redirect::redirect("Please fill the search group form.", "/index.php");
@@ -66,7 +66,7 @@ switch ($uri[2]) {
         }
         break;
     case "ajax":
-        if ($_SERVER["REQUEST_METHOD"] == "POST" || $_SERVER["REQUEST_METHOD"] == "GET") {
+        if (manager\SubmissionManager::isPost() || manager\SubmissionManager::isGet()) {
             header('Content-type: Application/json, charset=UTF-8');
             switch ($uri[3]) {
                 case "send-position":
