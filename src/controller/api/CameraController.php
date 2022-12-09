@@ -8,7 +8,7 @@ use misc;
 class CameraController extends BaseController
 {
     private const WEB_IMAGE_PATH = "webimagepath";
-    private const WEB_IMAGE_TYPE = "webimagetype";
+
     /**
      * "index.php/map/camera"
      */
@@ -62,7 +62,7 @@ class CameraController extends BaseController
     {
         $this->groupCode = manager\SessionManager::getGroupCode();
         $this->webImagePath = $_FILES[self::WEB_IMAGE_PATH];
-        $this->webImageType = filter_input(INPUT_POST, self::WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $this->webImageType = manager\ServerRequestManager::postWebimageType();
 
         $this->createImagePath();
 

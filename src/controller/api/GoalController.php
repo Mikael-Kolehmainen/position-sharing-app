@@ -102,7 +102,7 @@ class GoalController extends BaseController
     {
         $goalSession = misc\RandomString::getRandomString(15);
 
-        if ($goalSession == $_SESSION[SESSION_GOALSESSION]) {
+        if ($goalSession == manager\SessionManager::getGoalSession()) {
             $this->createGoalSession();
         } else {
             $this->goalSession = $goalSession;

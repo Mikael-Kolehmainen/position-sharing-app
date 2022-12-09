@@ -3,8 +3,7 @@ require __DIR__ . "/inc/bootstrap.php";
 
 session_start();
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode( '/', $uri );
+$uri = manager\ServerRequestManager::getUriParts();
 
 if ($uri[2] != "ajax") {
     echo "
@@ -34,21 +33,21 @@ switch ($uri[2]) {
     case "map":
         switch ($uri[3]) {
             case "create":
-                if (manager\SubmissionManager::issetCreateGroup()) {
+                if (manager\ServerRequestManager::issetCreateGroup()) {
                     Create();
                 } else {
                     misc\Redirect::redirect("Please fill the group creation form.", "/index.php");
                 }
                 break;
             case "search":
-                if (manager\SubmissionManager::issetSearchGroup()) {
+                if (manager\ServerRequestManager::issetSearchGroup()) {
                     Search();
                 } else {
                     misc\Redirect::redirect("Please fill the search group form.", "/index.php");
                 }
                 break;
             case "active":
-                if (isset($_SESSION[GROUP_GROUPCODE])) {
+                if (manager\SessionManager::issetGroupCode()) {
                     ActiveMap();
                 } else {
                     misc\Redirect::redirect("Your session has expired, try again.", "/index.php");
@@ -66,7 +65,7 @@ switch ($uri[2]) {
         }
         break;
     case "ajax":
-        if (manager\SubmissionManager::isPost() || manager\SubmissionManager::isGet()) {
+        if (manager\ServerRequestManager::isPost() || manager\ServerRequestManager::isGet()) {
             header('Content-type: Application/json, charset=UTF-8');
             switch ($uri[3]) {
                 case "send-position":

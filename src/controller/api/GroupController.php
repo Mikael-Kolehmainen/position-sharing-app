@@ -28,7 +28,7 @@ class GroupController extends BaseController
     {
         $this->validateMarkerColor();
         $groupModel = new model\GroupModel();
-        $this->groupCode = filter_input(INPUT_POST, GROUP_GROUPCODE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+        $this->groupCode = manager\ServerRequestManager::postGroupCode();
         $groupModel->groupCode = $this->groupCode != null ? $this->groupCode : manager\SessionManager::getGroupCode();
 
         if ($groupModel->getRowCount()) {
@@ -41,8 +41,8 @@ class GroupController extends BaseController
 
     private function validateMarkerColor(): void
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $color = strtolower(filter_input(INPUT_POST, USER_COLOR, FILTER_DEFAULT));
+        if (manager\ServerRequestManager::isPost()) {
+            $color = strtolower(manager\ServerRequestManager::postUserColor());
             $allowedColors = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure",
                                 "beige", "bisque", "black", "blanchedalmond", "blue",
                                 "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse",

@@ -98,8 +98,8 @@ class UserController extends BaseController
 
     public function saveMarkerStyleToSession()
     {
-        $this->initials = filter_input(INPUT_POST, USER_INITIALS, FILTER_DEFAULT);
-        $this->color = filter_input(INPUT_POST, USER_COLOR, FILTER_DEFAULT);
+        $this->initials = manager\ServerRequestManager::postUserInitials();
+        $this->color = manager\ServerRequestManager::postUserColor();
 
         if ($this->color == "") {
             $this->color = "#FF0000";
@@ -107,8 +107,8 @@ class UserController extends BaseController
         
         $this->initials = strtoupper($this->initials);
 
-        $_SESSION[USER_INITIALS] = $this->initials;
-        $_SESSION[USER_COLOR] = $this->color;
+        manager\SessionManager::saveUserInitials($this->initials);
+        manager\SessionManager::saveUserColor($this->color);
     }
 
     public function checkIfRowIdExistsInDatabase()
@@ -116,7 +116,7 @@ class UserController extends BaseController
         $IDs = self::getIDsFromDatabase();
 
         for ($i = 0; $i < count($IDs); $i++) {
-            if ($IDs[$i] == $_SESSION[USER_DB_ROW_ID]) {
+            if ($IDs[$i] == manager\SessionManager::getUserRowId()) {
                 return true;
             }
         }

@@ -7,8 +7,6 @@ use manager;
 
 class MessageController extends BaseController
 {
-    private const MESSAGE = "message";
-
     /** @var int */
     public $id;
 
@@ -18,7 +16,7 @@ class MessageController extends BaseController
     public function saveToDatabase()
     {
         $messageModel = new model\MessageModel();
-        $messageModel->message = filter_input(INPUT_POST, self::MESSAGE, FILTER_SANITIZE_SPECIAL_CHARS);
+        $messageModel->message = manager\ServerRequestManager::postMessage();
         $messageModel->groupCode = manager\SessionManager::getGroupCode();
         $messageModel->userId = manager\SessionManager::getUserRowId();
         $messageModel->fallbackInitials = manager\SessionManager::getUserInitials();
