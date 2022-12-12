@@ -208,7 +208,8 @@
       top: 0;
       transform: none;
       border-radius: 50%;
-      padding: 0; }
+      padding: 0;
+      cursor: pointer; }
       .active-page section article #delete-leave-popup .btn-container .btn:nth-child(1) {
         float: none; }
       .active-page section article #delete-leave-popup .btn-container .btn i {
@@ -228,7 +229,8 @@
       position: relative;
       left: 0;
       top: 0;
-      transform: none; }
+      transform: none;
+      cursor: pointer; }
       .active-page section article #map-legends-popup .btn-container .btn i {
         font-size: 26px; }
   .active-page section article #map-legends-popup .btn {

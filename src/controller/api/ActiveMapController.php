@@ -120,7 +120,7 @@ class ActiveMapController extends BaseController
                         <a class='btn onclick' id='reject-add-goal-btn'>
                             <p>No</p>
                         </a>
-                        <a class='btn onclick' id='show-draggable-goal'>
+                        <a class='btn onclick' id='show-draggable-goal-disabled'>
                             <p>Yes</p>
                         </a>
                     </div>
