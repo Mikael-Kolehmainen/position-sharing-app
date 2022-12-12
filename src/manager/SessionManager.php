@@ -70,6 +70,11 @@ class SessionManager
         unset($_SESSION[self::AMOUNT_OF_MESSAGES]);
     }
 
+    public static function saveGoalSession($goalSession)
+    {
+        $_SESSION[self::GOAL_SESSION] = $goalSession;   
+    }
+
     public static function getGoalSession()
     {
         return $_SESSION[self::GOAL_SESSION];

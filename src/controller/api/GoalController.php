@@ -43,10 +43,10 @@ class GoalController extends BaseController
         return $goalModel->save();
     }
 
-    public function updateGoalSessionInDatabase()
+    private function updateGoalSessionInDatabase()
     {
         $goalModel = new model\GoalModel();
-        $goalModel->goalSession = manager\SessionManager::getGoalSession();
+        $goalModel->goalSession = $this->goalSession;
         $goalModel->id = $this->id;
         $goalModel->update();
     }

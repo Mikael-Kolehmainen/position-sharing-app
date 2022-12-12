@@ -34,7 +34,7 @@ class DataManager
     private function saveGoalSession(): void
     {
         $goalController = new controller\api\GoalController();
-        $_SESSION[SESSION_GOALSESSION] = $goalController->getGoalSessionFromDatabase();
+        SessionManager::saveGoalSession($goalController->getGoalSessionFromDatabase());
     }
 
     private function getUsersDataFromDatabase(): void
