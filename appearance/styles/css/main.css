@@ -389,26 +389,35 @@
 #camera .top {
   margin-top: 15px; }
 
-#camera-trigger {
-  width: fit-content;
+#camera-trigger, #camera-flip {
   background-color: #5BC0EB;
   color: white;
-  font-size: 16px;
   border-radius: 50%;
   border: none;
-  padding: 15px 20px;
-  text-align: center;
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
   position: absolute;
+  transform: translate(-50%, -50%); }
+  #camera-trigger:hover, #camera-flip:hover {
+    cursor: pointer;
+    background-color: #C3423F; }
+
+#camera-flip {
+  top: 92.5%;
+  left: 72%;
+  width: 45px;
+  height: 45px; }
+  #camera-flip img {
+    width: 25px;
+    height: 25px; }
+
+#camera-trigger {
   top: 92.5%;
   left: 50%;
-  transform: translate(-50%, -50%); }
+  width: 90px;
+  height: 90px; }
   #camera-trigger img {
     height: 50px;
     width: 50px; }
-  #camera-trigger:hover {
-    cursor: pointer;
-    background-color: #C3423F; }
 
 .taken {
   z-index: 2; }

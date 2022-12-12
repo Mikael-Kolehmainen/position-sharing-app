@@ -314,6 +314,10 @@ class Goal
 
         popupStyle.styleSheetContent = popupStyleSheetContent;
         popupStyle.createStyle();
+
+        if (this.idsOfGoals.length == 0 && document.getElementById('show-draggable-goal') != null) {
+            document.getElementById('show-draggable-goal').id = 'show-draggable-goal-disabled';
+        }
     }
 
     clearPreviousPopup()

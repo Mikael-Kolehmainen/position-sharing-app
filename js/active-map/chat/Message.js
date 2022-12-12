@@ -35,6 +35,8 @@ class Message
     */
     createDateElement()
     {
+        
+
         const date = document.createElement("div");
         date.classList.add(this.#DATE_CLASS_NAME);
         const dateText = document.createElement("p");

@@ -36,10 +36,11 @@ class CameraController extends BaseController
         <body>
         <section>
             <main id='camera'>
-                <video id='camera-view' autoplay playsinline></video>
-                <canvas id='camera-sensor'></canvas>
-                <img src='' alt='' id='camera-output' style='display: none;'>
+                <video id='camera-view' class='camera-mirror' autoplay playsinline></video>
+                <canvas id='camera-sensor' class='camera-mirror'></canvas>
+                <img src='' alt='' id='camera-output' class='camera-mirror' style='display: none;'>
                 <button id='camera-trigger'><img src='/appearance/media/icons/camera-light.svg'></button>
+                <button id='camera-flip'><img src='/appearance/media/icons/camera-flip.svg'></button>
                 <div class='top'>
                     <a class='btn round onclick' id='close-camera'>
                         <i class='fa-solid fa-chevron-left'></i>

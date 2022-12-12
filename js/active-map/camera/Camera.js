@@ -1,12 +1,13 @@
 class Camera
 {
-    constructor(constraints, cameraViewElement, cameraOutputElement, cameraSensorElement, cameraTriggerElement, url)
+    constructor(constraints, cameraViewElement, cameraOutputElement, cameraSensorElement, cameraTriggerElement, cameraRotateElement, url)
     {
         this.constraints = constraints;
         this.cameraView = cameraViewElement;
         this.cameraOutput = cameraOutputElement;
         this.cameraSensor = cameraSensorElement;
         this.cameraTrigger = cameraTriggerElement;
+        this.cameraRotate = cameraRotateElement;
         this.url = url;
         this.imageBlob = "";
     }
@@ -55,5 +56,33 @@ class Camera
             console.log("Image successfully sent");
             window.location.replace('/index.php/map/active');
         });
+    }
+
+    flipCamera()
+    {
+        let mirrorCameraImage = new Style("camera-mirror-style");
+
+        if (this.constraints.video.facingMode == "environment" || this.constraints.video.facingMode.exact == "environment") {
+            this.changeConstraint("user");
+
+            mirrorCameraImage.styleSheetContent = ".camera-mirror { transform: scaleX(-1); filter: FlipH; }";
+            mirrorCameraImage.createStyle();
+        } else if (this.constraints.video.facingMode.exact == "user") {
+            this.changeConstraint("environment");
+            
+            mirrorCameraImage.removeStyle();
+        }
+
+        this.startCamera();
+    }
+
+    changeConstraint(cameraFacing) {
+        this.constraints = {
+          video: {
+            facingMode: {
+              exact: cameraFacing
+            }
+          }
+        }
     }
 }
