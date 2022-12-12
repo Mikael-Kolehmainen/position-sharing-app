@@ -390,12 +390,75 @@
                     margin: 0;
                 }
                 .leaflet-right {
-                    left: 85%;
+                    left: auto;
+                    right: 5%;
+                }
+                .leaflet-left {
+                    left: 2.5%;
                     right: auto;
                 }
                 .leaflet-top {
                     position: fixed;
                     top: 10%;
+                }
+                .leaflet-control-zoom {
+                    border: none;
+
+                    a {
+                        color: white;
+                        background-color: $primary-color;
+                        width: 35px;
+                        height: 35px;
+                        position: relative;
+                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+                        span {
+                            font-size: 28px;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                        &:first-child {
+                            border-top-left-radius: 50%;
+                            border-top-right-radius: 50%;
+                        }
+                        &:last-child {
+                            border-bottom-left-radius: 50%;
+                            border-bottom-right-radius: 50%;
+                        }
+                    }
+                }
+                .leaflet-control-layers {
+                    border: none;
+                    background-color: transparent;
+
+                    .leaflet-control-layers-toggle {
+                        border-radius: 50%;
+                        background-image: none;
+                        background-color: $primary-color;
+                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 24px;
+                            height: 24px;
+                            background: url('/appearance/media/icons/layergroup.svg') $primary-color no-repeat center;
+                        }
+                    }
+                    .leaflet-control-layers-list {
+                        background-color: $primary-color;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 14px;
+                        padding: 10px;
+                        padding-left: 15px;
+                        border-radius: 20px;
+                    }
                 }
             }
             .instructions {

@@ -14,8 +14,10 @@ class HomeController
         </head>
         <body>
             <div class='bg-image'></div>
-            <section class='index-page'>
+            <section class='home-page'>
                 <article>
+                    <h1></h1>
+                    <h2>Create or join a group</h2>
                     <a href='index.php/create' class='btn' title='Create'>
                         <i class='fa-solid fa-plus'></i>
                     </a>

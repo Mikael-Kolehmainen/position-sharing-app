@@ -2,11 +2,23 @@
   font-family: montserrat;
   src: url(../../font/Montserrat-Regular.ttf); }
 
-.index-page article {
-  text-align: center; }
-  .index-page article .btn {
+.home-page article {
+  text-align: center;
+  position: relative; }
+  .home-page article .btn {
     margin-right: 10px;
     margin-left: 10px; }
+  .home-page article h2 {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
+    color: #333333;
+    white-space: nowrap;
+    background-color: white;
+    padding: 10px;
+    border-radius: 1vmax; }
 
 .active-page section article {
   height: 100%; }
@@ -298,11 +310,60 @@
     .active-page section article #map .leaflet-control-zoom {
       margin: 0; }
     .active-page section article #map .leaflet-right {
-      left: 85%;
+      left: auto;
+      right: 5%; }
+    .active-page section article #map .leaflet-left {
+      left: 2.5%;
       right: auto; }
     .active-page section article #map .leaflet-top {
       position: fixed;
       top: 10%; }
+    .active-page section article #map .leaflet-control-zoom {
+      border: none; }
+      .active-page section article #map .leaflet-control-zoom a {
+        color: white;
+        background-color: #5BC0EB;
+        width: 35px;
+        height: 35px;
+        position: relative;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
+        .active-page section article #map .leaflet-control-zoom a span {
+          font-size: 28px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%); }
+        .active-page section article #map .leaflet-control-zoom a:first-child {
+          border-top-left-radius: 50%;
+          border-top-right-radius: 50%; }
+        .active-page section article #map .leaflet-control-zoom a:last-child {
+          border-bottom-left-radius: 50%;
+          border-bottom-right-radius: 50%; }
+    .active-page section article #map .leaflet-control-layers {
+      border: none;
+      background-color: transparent; }
+      .active-page section article #map .leaflet-control-layers .leaflet-control-layers-toggle {
+        border-radius: 50%;
+        background-image: none;
+        background-color: #5BC0EB;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
+        .active-page section article #map .leaflet-control-layers .leaflet-control-layers-toggle::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 24px;
+          height: 24px;
+          background: url("/appearance/media/icons/layergroup.svg") #5BC0EB no-repeat center; }
+      .active-page section article #map .leaflet-control-layers .leaflet-control-layers-list {
+        background-color: #5BC0EB;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px;
+        padding-left: 15px;
+        border-radius: 20px; }
   .active-page section article .instructions {
     position: absolute;
     top: 30%;
@@ -533,9 +594,12 @@ section .box {
   background-color: #000C66;
   border-radius: 20px;
   padding-top: 20px;
-  padding-bottom: 20px; }
+  padding-bottom: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
   section .box h1 {
-    text-align: center; }
+    text-align: center;
+    -webkit-text-stroke: 1px black;
+    font-size: 40px; }
   section .box input.center {
     text-align: center; }
 

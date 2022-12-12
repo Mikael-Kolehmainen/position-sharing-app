@@ -247,7 +247,7 @@ function sendMessage(): void
 {
     $messageController = new controller\api\MessageController();
     $messageController->saveToDatabase();
-    header("LOCATION: /index.php/map/active");
+    redirectToGroupMap();
 }
 
 function sendImage(): void
