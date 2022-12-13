@@ -57,7 +57,10 @@
                         overflow-y: scroll;
                         
                         .date {
-                            
+                            position: sticky;
+                            top: 10px;
+                            z-index: 99;
+
                             p {
                                 background-color: $primary-color;
                                 border-radius: 1vmax;
