@@ -471,13 +471,13 @@
                         }
                     }
                     .leaflet-control-layers-list {
-                        background-color: $primary-color;
+                        background-color: $background-color;
                         color: white;
-                        font-weight: bold;
-                        font-size: 14px;
+                        font-size: 15px;
                         padding: 10px;
                         padding-left: 15px;
                         border-radius: 20px;
+                        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                     }
                 }
             }

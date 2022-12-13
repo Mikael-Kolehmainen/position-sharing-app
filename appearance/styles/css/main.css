@@ -20,6 +20,36 @@
     padding: 10px;
     border-radius: 1vmax; }
 
+.marker-preview {
+  width: 200px;
+  height: 200px;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+  background-color: white;
+  position: relative; }
+  .marker-preview .marker {
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+    .marker-preview .marker p {
+      font-size: 52px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+  .marker-preview h2 {
+    color: #bdbdbd;
+    text-align: center;
+    padding-top: 5px;
+    font-size: 16px; }
+
 .active-page section article {
   height: 100%; }
   .active-page section article .top {
@@ -374,13 +404,13 @@
           height: 24px;
           background: url("/appearance/media/icons/layergroup.svg") #5BC0EB no-repeat center; }
       .active-page section article #map .leaflet-control-layers .leaflet-control-layers-list {
-        background-color: #5BC0EB;
+        background-color: #000C66;
         color: white;
-        font-weight: bold;
-        font-size: 14px;
+        font-size: 15px;
         padding: 10px;
         padding-left: 15px;
-        border-radius: 20px; }
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
   .active-page section article .instructions {
     position: absolute;
     top: 30%;

@@ -10,6 +10,7 @@ class HomeController
     public function showHomePage()
     {
         echo "
+            <script src='/js/home/marker-preview.js' defer></script>
             <title>Home</title>
         </head>
         <body>
