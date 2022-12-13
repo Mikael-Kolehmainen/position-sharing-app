@@ -21,6 +21,12 @@
     background: $secondary-color;
   }
 
+// OVERFLOW
+
+.create-page, .search-page {
+    overflow: auto;
+}
+
 // BASIC ELEMENTS
 
 * {

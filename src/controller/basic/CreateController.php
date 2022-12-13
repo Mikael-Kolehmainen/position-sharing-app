@@ -13,7 +13,7 @@ class CreateController
             <script src='/js/home/marker-preview.js' defer></script>
             <title>Create</title>
         </head>
-        <body class='user-page'>
+        <body class='create-page'>
             <div class='bg-image'></div>
             <section>
                 <article class='box'>

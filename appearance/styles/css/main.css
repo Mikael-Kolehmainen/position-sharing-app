@@ -28,6 +28,7 @@
   margin-right: auto;
   border-radius: 20px;
   background-color: white;
+  border: 3px solid black;
   position: relative; }
   .marker-preview .marker {
     background-color: red;
@@ -483,6 +484,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #C3423F; }
 
+.create-page, .search-page {
+  overflow: auto; }
+
 * {
   scroll-behavior: smooth;
   margin: 0;
@@ -794,3 +798,9 @@ section .box {
 #remove-draggable-goal i.fa-xmark {
   width: 55%;
   height: 55%; }
+
+@media (max-height: 685px) {
+  section .box {
+    width: 100%;
+    position: static;
+    transform: none; } }
