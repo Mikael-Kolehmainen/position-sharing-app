@@ -54,6 +54,14 @@
     .active-page section article .disclaimer:hover {
       background-color: #C3423F;
       cursor: pointer; }
+  .active-page section article .find-user {
+    position: fixed;
+    left: 5%;
+    right: auto;
+    top: 17.5%;
+    width: 44px;
+    height: 44px;
+    margin-left: 0; }
   .active-page section article .bottom .chat {
     background-color: rgba(0, 12, 102, 0.6);
     padding-top: 10px;
@@ -319,8 +327,11 @@
       left: auto;
       right: 5%; }
     .active-page section article #map .leaflet-left {
-      left: 2.5%;
+      left: 5%;
       right: auto; }
+      .active-page section article #map .leaflet-left .leaflet-control {
+        margin-left: 0;
+        margin-top: 0; }
     .active-page section article #map .leaflet-top {
       position: fixed;
       top: 10%; }
@@ -742,6 +753,11 @@ section .box {
 
 .btn i.fa-check {
   background: url("/appearance/media/icons/check.svg") no-repeat center;
+  width: 50%;
+  height: 50%; }
+
+.btn i.fa-location-crosshair {
+  background: url("/appearance/media/icons/location-crosshair.svg") no-repeat center;
   width: 50%;
   height: 50%; }
 

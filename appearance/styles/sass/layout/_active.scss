@@ -44,6 +44,15 @@
                     cursor: pointer;
                 }
             }
+            .find-user {
+                position: fixed;
+                left: 5%;
+                right: auto;
+                top: 17.5%;
+                width: 44px;
+                height: 44px;
+                margin-left: 0;
+            }
             .bottom {
                 .chat {
                     background-color: rgba($color: $background-color, $alpha: 0.6);
@@ -400,8 +409,13 @@
                     right: 5%;
                 }
                 .leaflet-left {
-                    left: 2.5%;
+                    left: 5%;
                     right: auto;
+
+                    .leaflet-control {
+                        margin-left: 0;
+                        margin-top: 0;
+                    }
                 }
                 .leaflet-top {
                     position: fixed;

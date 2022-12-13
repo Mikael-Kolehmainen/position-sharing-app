@@ -51,6 +51,9 @@ document.querySelectorAll(".onclick").forEach(element =>
                 case "close-camera":
                     closeCameraClicked();
                     break;
+                case "find-user":
+                    findUserClicked();
+                    break;
             }
         });
     });
@@ -170,4 +173,9 @@ document.querySelectorAll(".onclick").forEach(element =>
     function closeCameraClicked()
     {
         window.location.replace("/index.php/map/active");
+    }
+
+    function findUserClicked()
+    {
+        map.locate({setView: true, enableHighAccuracy: true});
     }

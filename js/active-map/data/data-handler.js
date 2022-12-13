@@ -49,6 +49,12 @@ function onLocationFound(e)
     });
 
     layerManagement.refreshedLayerGroup.addTo(map);
+
+    if (!map.getBounds().contains(e.latlng)) {
+        document.getElementById('find-user').style.display = "block";
+    } else {
+        document.getElementById('find-user').style.display = "none";
+    }
 }
 
 function saveUsersData(data)

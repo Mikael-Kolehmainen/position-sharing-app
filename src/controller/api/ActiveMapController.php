@@ -50,6 +50,9 @@ class ActiveMapController extends BaseController
                     <div class='disclaimer onclick' id='active-goal-disclaimer' style='display: none;'>
                         <p>There's an active goal</p>
                     </div>
+                    <a class='btn round onclick find-user' id='find-user' style='display: block;'>
+                        <i class='fa-solid fa-location-crosshair'></i>
+                    </a>
                     <div id='map'></div>
                     <div class='instructions'>
                         <p style='display: none;' id='instruction-text'>Instruction text</p>
