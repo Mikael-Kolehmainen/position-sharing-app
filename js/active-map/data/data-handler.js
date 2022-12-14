@@ -5,9 +5,6 @@ function onLocationFound(e)
 {
     geolocationPermission = true;
 
-    LayerManagement.removeAndClearLayers([layerManagement.refreshedLayerGroup]);
-    map.removeLayer(layerManagement.refreshedLayerGroup);
-
     const sendData = new Data("/index.php/ajax/send-position", {lat : e.latlng.lat, lng : e.latlng.lng});
     sendData.sendToPhpAsJSON(function() 
     {
@@ -41,6 +38,17 @@ function onLocationFound(e)
                     ElementDisplay.change('active-goal-disclaimer', 'block');
                     ElementDisplay.change('add-goal-btn', 'none');
                     refreshCounter = refreshCounter + 1;
+                }
+
+                if (Object.keys(layerManagement.refreshedLayerGroup._layers).length >= data.usersdata.length * 2) {
+                    let i = 1;
+                    layerManagement.refreshedLayerGroup.eachLayer(function(layer) 
+                    {
+                        if (i <= data.usersdata.length) {
+                            layerManagement.refreshedLayerGroup.removeLayer(layer)
+                        }
+                        i++;
+                    });
                 }
             } else {
                 redirectUserToIndexPage();
