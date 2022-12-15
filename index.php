@@ -1,4 +1,5 @@
 <?php
+use controller\api\UserController;
 require __DIR__ . "/inc/bootstrap.php";
 
 session_start();
@@ -29,6 +30,10 @@ switch ($uri[2]) {
         break;
     case "search":
         SearchForm();
+        break;
+    case "test":
+        $userController = new UserController();
+        print_r($userController->getMyGroupMembers());
         break;
     case "map":
         switch ($uri[3]) {

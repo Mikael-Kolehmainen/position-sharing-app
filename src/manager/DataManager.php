@@ -3,6 +3,9 @@
 namespace manager;
 
 use controller;
+use controller\api\UserController;
+use controller\api\GoalController;
+use controller\api\PositionController;
 use Exception;
 
 class DataManager
@@ -35,13 +38,13 @@ class DataManager
 
     private function saveGoalSession(): void
     {
-        $goalController = new controller\api\GoalController();
+        $goalController = new GoalController();
         SessionManager::saveGoalSession($goalController->getGoalSessionFromDatabase());
     }
 
     private function getUsersDataFromDatabase(): void
     {
-        $userController = new controller\api\UserController();
+        $userController = new UserController();
         $users = $userController->getMyGroupMembers();
 
         foreach ($users as $user) {
@@ -54,46 +57,44 @@ class DataManager
     private function getMessagesDataFromDatabase(): void
     {
         $messageController = new controller\api\MessageController();
-        $messageData = $messageController->getMessagesFromDatabase();
+        $messages = $messageController->getMyGroupMessages();
 
-        if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count($messageData)) {
-            $userController = new controller\api\UserController();
+        if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count((array)$messages)) {
+            $userController = new UserController();
 
-            for ($i = 0; $i < count($messageData); $i++) {
-                $userController->id = $messageData[$i][POSITION_USERS_ID];
+            foreach ($messages as $message) {
+                $userController->id = $message->userId;
 
                 $markerStyle = $userController->getMarkerFromDatabaseWithID();
-                $messageData[$i][USER_INITIALS] = $markerStyle->initials;
-                $messageData[$i][USER_COLOR] = $markerStyle->color;
 
-                if ($messageData[$i][USER_INITIALS] == null || $messageData[$i][USER_COLOR] == null) {
-                    $messageData[$i][USER_INITIALS] = $messageData[$i][USER_FALLBACK_INITIALS];
-                    $messageData[$i][USER_COLOR] = $messageData[$i][USER_FALLBACK_COLOR];
+                if ($markerStyle->initials != null && $markerStyle->color != null) {
+                    $message->initials = $markerStyle->initials;
+                    $message->color = $markerStyle->color;
                 }
 
-                $messageData[$i][MESSAGE_MESSAGE_SENT_BY_USER] = $messageData[$i][POSITION_USERS_ID] == $_SESSION[USER_DB_ROW_ID];
+                $message->sentByUser = $message->userId == SessionManager::getUserRowId();
 
-                unset($messageData[$i][POSITION_USERS_ID]);
+                unset($message->userId);
             }
 
-            SessionManager::saveAmountOfMessages(count($messageData));
+            SessionManager::saveAmountOfMessages(count((array)$messages));
         } else {
-            $messageData = DATA_ALREADY_SAVED;
+            $messages = DATA_ALREADY_SAVED;
         }
 
-        $this->data[self::MESSAGESDATA] = $messageData;
+        $this->data[self::MESSAGESDATA] = $messages;
     }
 
     private function goalSessionEqualsDbGoalSession()
     {
-        $goalController = new controller\api\GoalController();
+        $goalController = new GoalController();
 
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
     private function getGoalDataFromDatabase(): void
     {
-        $goalController = new controller\api\GoalController();
+        $goalController = new GoalController();
 
         $rowIdsOfGoalPositions = $goalController->getRowIdsOfGoalPositionsFromDatabase();
 
@@ -121,7 +122,7 @@ class DataManager
 
     private function getPositionFromDatabase(int $id): \model\PositionModel
     {
-        $positionController = new controller\api\PositionController();
+        $positionController = new PositionController();
         $positionController->id = $id;
 
         return $positionController->getPosition();
@@ -129,8 +130,8 @@ class DataManager
 
     private function getWaypointPositionsFromDatabase($i)
     {
-        $goalController = new controller\api\GoalController();
-        $positionController = new controller\api\PositionController();
+        $goalController = new GoalController();
+        $positionController = new PositionController();
         $waypointController = new controller\api\WaypointController();
 
         $waypointController->goalId = $goalController->getIdsFromDatabase()[$i]["id"];

@@ -13,32 +13,38 @@ class MessageController extends BaseController
     /** @var string */
     public $imagePath;
 
+    /** @var model\Database */
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = new model\Database();
+    }
+
     public function saveToDatabase()
     {
-        $messageModel = new model\MessageModel();
+        $messageModel = new model\MessageModel($this->db, manager\SessionManager::getGroupCode());
         $messageModel->message = manager\ServerRequestManager::postMessage();
-        $messageModel->groupCode = manager\SessionManager::getGroupCode();
         $messageModel->userId = manager\SessionManager::getUserRowId();
-        $messageModel->fallbackInitials = manager\SessionManager::getUserInitials();
-        $messageModel->fallbackColor = manager\SessionManager::getUserColor();
+        $messageModel->initials = manager\SessionManager::getUserInitials();
+        $messageModel->color = manager\SessionManager::getUserColor();
         $messageModel->dateOfMessage = date("Y-m-d");
         $messageModel->timeOfMessage = date("H:i");
         $messageModel->imagePath = $this->imagePath;
         $this->id = $messageModel->save();
     }
 
-    public function getMessagesFromDatabase()
+    /** @return model\MessageModel[] */
+    public function getMyGroupMessages(): array
     {
-        $messageModel = new model\MessageModel();
-        $messageModel->groupCode = manager\SessionManager::getGroupCode();
+        $group = new model\GroupModel($this->db, manager\SessionManager::getGroupCode());
 
-        return $messageModel->get();
+        return $group->getGroupMessages();
     }
 
     public function removeMessagesFromDatabase(): void
     {
-        $messageModel = new model\MessageModel();
-        $messageModel->groupCode = manager\SessionManager::getGroupCode();
+        $messageModel = new model\MessageModel($this->db, manager\SessionManager::getGroupCode());
         $messageModel->removeWithGroupCode();
     }
 }

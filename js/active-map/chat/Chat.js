@@ -21,13 +21,13 @@ class Chat
 
             message.message = this.messagesData[i].message;
             message.initials = this.messagesData[i].initials;
-            message.imagePath = this.messagesData[i].imagepath;
+            message.imagePath = this.messagesData[i].imagePath;
             message.elementClassName = messageClassName;
-            message.timeOfMessage = this.messagesData[i].timeofmessage;
-            message.sentByUser = this.messagesData[i].message_sent_by_user;
+            message.timeOfMessage = this.messagesData[i].timeOfMessage;
+            message.sentByUser = this.messagesData[i].sentByUser;
 
-            if (!datesOfMessages.includes(this.messagesData[i].dateofmessage)) {
-                let messageDateObj = new Date(this.messagesData[i].dateofmessage);
+            if (!datesOfMessages.includes(this.messagesData[i].dateOfMessage)) {
+                let messageDateObj = new Date(this.messagesData[i].dateOfMessage);
                 let day = messageDateObj.getDate();
                 let month = messageDateObj.getMonth() + 1;
                 let year = messageDateObj.getFullYear();
@@ -35,7 +35,7 @@ class Chat
 
                 message.dateOfMessage = messageDate;
                 message.createDateElement();
-                datesOfMessages.push(this.messagesData[i].dateofmessage);
+                datesOfMessages.push(this.messagesData[i].dateOfMessage);
             }
             
             message.createMessageElement();

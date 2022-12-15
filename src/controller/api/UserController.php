@@ -69,9 +69,9 @@ class UserController extends BaseController
     /** @return UserModel[] */
     public function getMyGroupMembers()
     {
-        $userModel = new UserModel($this->db, null, SessionManager::getGroupCode());
+        $groupModel = new \model\GroupModel($this->db, SessionManager::getGroupCode());
 
-        return $userModel->get();
+        return $groupModel->getGroupMembers();
     }
 
     public function getMarkerFromDatabaseWithID()

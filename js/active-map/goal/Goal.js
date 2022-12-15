@@ -232,17 +232,18 @@ class Goal
         for (let i = 0; i < this.goalsData.length; i++) {
             if (this.goalsData[i] != "user has no goal"
                 && this.goalsData != "already saved") {
-                this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position[0], this.goalsData[i].start_position[1]);
+
+                this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].start_position.latitude, this.goalsData[i].start_position.longitude);
                 
                 this.routes[i] = [];
 
                 this.routes[i].push(this.start_marker_pos[i]);
 
                 for (let j = 0; j < this.goalsData[i].waypoints.length; j++) {
-                    this.routes[i][j+1] = new L.LatLng(this.goalsData[i].waypoints[j][0], this.goalsData[i].waypoints[j][1]);
+                    this.routes[i][j+1] = new L.LatLng(this.goalsData[i].waypoints[j].latitude, this.goalsData[i].waypoints[j].longitude);
                 }
 
-                this.goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position[0], this.goalsData[i].goal_position[1]);
+                this.goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goal_position.latitude, this.goalsData[i].goal_position.longitude);
 
                 this.routes[i].push(this.goal_marker_pos[i]);
             }

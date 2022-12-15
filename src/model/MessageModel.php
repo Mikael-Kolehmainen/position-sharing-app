@@ -2,9 +2,10 @@
 
 namespace model;
 
-class MessageModel extends Database
+class MessageModel
 {
     private const TABLE_NAME = 'messages';
+    private const FIELD_ID = 'id';
     private const FIELD_MESSAGE = 'message';
     private const FIELD_IMAGE_PATH = 'imagepath';
     private const FIELD_DATE = 'dateofmessage';
@@ -27,10 +28,10 @@ class MessageModel extends Database
     public $userId;
 
     /** @var string */
-    public $fallbackInitials;
+    public $initials;
 
     /** @var string */
-    public $fallbackColor;
+    public $color;
 
     /** @var string */
     public $groupCode;
@@ -41,18 +42,39 @@ class MessageModel extends Database
     /** @var date(H:i) */
     public $timeOfMessage;
 
-    public function save()
+    /** @var bool */
+    public $sentByUser;
+
+    /** @var Database */
+    private $db;
+
+    public function __construct($database, $groupCode = null)
     {
-        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_DATE . ' ,' . self::FIELD_TIME . ', ' . self::FIELD_IMAGE_PATH . ') VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [['sissssss'], [$this->message, $this->userId, $this->fallbackInitials, $this->fallbackColor, $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]]);
+        $this->db = $database;
+        $this->groupCode = $groupCode;
     }
 
-    public function get()
+    public function save()
     {
-        return $this->select('SELECT ' . self::FIELD_MESSAGE . ', ' . self::FIELD_IMAGE_PATH . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_DATE . ', DATE_FORMAT(' . self::FIELD_TIME . ', "%H:%i") AS ' . self::FIELD_TIME . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        return $this->db->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_DATE . ' ,' . self::FIELD_TIME . ', ' . self::FIELD_IMAGE_PATH . ') VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [['sissssss'], [$this->message, $this->userId, $this->initials, $this->color, $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]]);
     }
 
     public function removeWithGroupCode(): void
     {
-        $this->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+    }
+
+    public function mapFromDbRecord($record)
+    {
+        $this->id = $record[self::FIELD_ID];
+        $this->message = $record[self::FIELD_MESSAGE];
+        $this->imagePath = $record[self::FIELD_IMAGE_PATH];
+        $this->userId = $record[self::FIELD_USERS_ID];
+        $this->dateOfMessage = $record[self::FIELD_DATE];
+        $this->timeOfMessage = $record[self::FIELD_TIME];
+        $this->color = $record[self::FIELD_FALLBACK_COLOR];
+        $this->initials = $record[self::FIELD_FALLBACK_INITIALS];
+        $this->sentByUser = null;
+        $this->groupCode = $record[self::FIELD_GROUP_CODE];
     }
 }

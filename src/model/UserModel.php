@@ -101,17 +101,6 @@ class UserModel
         $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
     }
 
-    /** @return UserModel[] */
-    public function get(): array
-    {
-        $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ? ', [['s'], [$this->groupCode]]);
-        $users = [];
-        foreach ($records as $record) {
-            $users[] = $this->mapFromDbRecord($record);
-        }
-        return $users;
-    }
-
     public function setPosition(PositionModel $position)
     {
         $position->id = $this->positionsId;
@@ -149,12 +138,11 @@ class UserModel
      */
     public function mapFromDbRecord($record)
     {
-        $userModel = new UserModel($this->db);
-        $userModel->id = $record[self::FIELD_ID];
-        $userModel->color = $record[self::FIELD_COLOR];
-        $userModel->groupCode = $record[self::FIELD_GROUP_CODE];
-        $userModel->initials = $record[self::FIELD_INITIALS];
-        $userModel->positionsId = $record[self::FIELD_POSITIONS_ID];
-        return $userModel;
+        $this->id = $record[self::FIELD_ID];
+        $this->color = $record[self::FIELD_COLOR];
+        $this->groupCode = $record[self::FIELD_GROUP_CODE];
+        $this->initials = $record[self::FIELD_INITIALS];
+        $this->positionsId = $record[self::FIELD_POSITIONS_ID];
+        return $this;
     }
 }
