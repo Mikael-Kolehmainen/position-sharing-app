@@ -31,9 +31,17 @@ class GoalController extends BaseController
     /** @var string */
     public $fallbackInitials;
 
+    /** @var model\Database */
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = new model\Database();
+    }
+
     public function saveToDatabase()
     {
-        $goalModel = new model\GoalModel();
+        $goalModel = new model\GoalModel($this->db);
         $goalModel->startPositionId = $this->startPositionId;
         $goalModel->goalPositionId = $this->goalPositionId;
         $goalModel->groupCode = manager\SessionManager::getGroupCode();
@@ -46,15 +54,23 @@ class GoalController extends BaseController
 
     private function updateGoalSessionInDatabase()
     {
-        $goalModel = new model\GoalModel();
+        $goalModel = new model\GoalModel($this->db);
         $goalModel->goalSession = $this->goalSession;
         $goalModel->id = $this->id;
         $goalModel->update();
     }
 
+    /** @return model\GoalModel[] */
+    public function getMyGroupGoals(): array
+    {
+        $group = new model\GroupModel($this->db, manager\SessionManager::getGroupCode());
+
+        return $group->getGroupGoals();
+    }
+
     public function getIdsFromDatabase()
     {
-        $goalModel = new model\GoalModel();
+        $goalModel = new model\GoalModel($this->db);
         $goalModel->groupCode = manager\SessionManager::getGroupCode();
 
         return $goalModel->getWithGroupCode();
@@ -191,7 +207,10 @@ class GoalController extends BaseController
 
     public function removeGoal(): void
     {
-        $goalsIds = $this->getIdsFromDatabase();
+        $goalsIds = [];
+        foreach ($this->getMyGroupGoals() as $goal) {
+            $goalsIds[] = $goal->id;
+        }
 
         $this->removeGoalPositions($goalsIds);
         $this->removeGoalWaypoints($goalsIds);
@@ -229,7 +248,7 @@ class GoalController extends BaseController
         $rowIdOfPositions = [];
 
         for ($i = 0; $i < count($goalsIds); $i++) {
-            $waypointController->goalId = $goalsIds[$i]["id"];
+            $waypointController->goalId = $goalsIds[$i];
             $rowIdOfPositions[$i] = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();
         }
 
@@ -241,7 +260,7 @@ class GoalController extends BaseController
         $waypointController = new WaypointController();
 
         for ($i = 0; $i < count($goalsIds); $i++) {
-            $waypointController->goalId = $goalsIds[$i]["id"];
+            $waypointController->goalId = $goalsIds[$i];
             $waypointController->removeFromDatabase();
         }
     }

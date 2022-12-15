@@ -2,6 +2,7 @@
 
 namespace manager;
 
+use model;
 use controller;
 use controller\api\UserController;
 use controller\api\GoalController;
@@ -23,13 +24,13 @@ class DataManager
 
     public function encodeDataToJSON(): void
     {
-        $this->getUsersDataFromDatabase();
-        $this->getMessagesDataFromDatabase();
+        $this->data[self::USERSDATA] = $this->getUsersFromDatabase();
+        $this->data[self::MESSAGESDATA] = $this->getMessagesFromDatabase();
 
         if (SessionManager::getGoalSession() != null && $this->goalSessionEqualsDbGoalSession()) {
             $this->data[DATA_GOALSDATA] = DATA_ALREADY_SAVED;
         } else {
-            $this->getGoalDataFromDatabase();
+            $this->getGoalsFromDatabase();
             $this->saveGoalSession();
         }
 
@@ -42,7 +43,8 @@ class DataManager
         SessionManager::saveGoalSession($goalController->getGoalSessionFromDatabase());
     }
 
-    private function getUsersDataFromDatabase(): void
+    /** @return model\UserModel[] */
+    private function getUsersFromDatabase(): array
     {
         $userController = new UserController();
         $users = $userController->getMyGroupMembers();
@@ -51,10 +53,11 @@ class DataManager
             $x = $user->loadPosition();
         }
 
-        $this->data[self::USERSDATA] = $users;
+        return $users;
     }
 
-    private function getMessagesDataFromDatabase(): void
+    /** @return model\MessageModel[] */
+    private function getMessagesFromDatabase()
     {
         $messageController = new controller\api\MessageController();
         $messages = $messageController->getMyGroupMessages();
@@ -82,7 +85,7 @@ class DataManager
             $messages = DATA_ALREADY_SAVED;
         }
 
-        $this->data[self::MESSAGESDATA] = $messages;
+        return $messages;
     }
 
     private function goalSessionEqualsDbGoalSession()
@@ -92,9 +95,18 @@ class DataManager
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
-    private function getGoalDataFromDatabase(): void
+    private function getGoalsFromDatabase(): void
     {
         $goalController = new GoalController();
+        $goals = $goalController->getMyGroupGoals();
+
+        foreach ($goals as $goal) {
+            $x = $goal->loadStartPosition();
+            $y = $goal->loadGoalPosition();
+
+
+        }
+
 
         $rowIdsOfGoalPositions = $goalController->getRowIdsOfGoalPositionsFromDatabase();
 
@@ -103,6 +115,7 @@ class DataManager
         if (count($rowIdsOfGoalPositions) > 0) {
             $orderNumbers = $goalController->getOrderNumbersOfGoalsFromDatabase();
             $fallBackInitials = $goalController->getFallbackInitialsFromDatabase();
+
             for ($i = 0; $i < count($rowIdsOfGoalPositions); $i++) {
                 $goalsData[$i][GOAL_ORDER_NUMBER] = $orderNumbers[$i][GOAL_ORDER_NUMBER];
 

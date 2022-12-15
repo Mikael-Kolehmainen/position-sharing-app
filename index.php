@@ -31,10 +31,6 @@ switch ($uri[2]) {
     case "search":
         SearchForm();
         break;
-    case "test":
-        $userController = new UserController();
-        print_r($userController->getMyGroupMembers());
-        break;
     case "map":
         switch ($uri[3]) {
             case "create":
