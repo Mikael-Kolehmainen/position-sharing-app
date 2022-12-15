@@ -1,7 +1,9 @@
 <?php
+
 namespace manager;
 
 use controller;
+use Exception;
 
 class DataManager
 {
@@ -40,22 +42,13 @@ class DataManager
     private function getUsersDataFromDatabase(): void
     {
         $userController = new controller\api\UserController();
+        $users = $userController->getMyGroupMembers();
 
-        $users = $userController->getMarkersFromDatabase();
-
-        for ($i = 0; $i < count($users); $i++) {
-            $users[$i][USER_POSITIONS] = $this->getPositionFromDatabase($users[$i][USER_POSITIONS_ID]);
+        foreach ($users as $user) {
+            $x = $user->loadPosition();
         }
 
         $this->data[self::USERSDATA] = $users;
-    }
-
-    private function getPositionFromDatabase($id)
-    {
-        $positionController = new controller\api\PositionController();
-        $positionController->id = $id;    
-
-        return $positionController->getLatLngFromDatabase();
     }
 
     private function getMessagesDataFromDatabase(): void
@@ -70,9 +63,9 @@ class DataManager
                 $userController->id = $messageData[$i][POSITION_USERS_ID];
 
                 $markerStyle = $userController->getMarkerFromDatabaseWithID();
-                $messageData[$i][USER_INITIALS] = $markerStyle[0][USER_INITIALS];
-                $messageData[$i][USER_COLOR] = $markerStyle[0][USER_COLOR];
-            
+                $messageData[$i][USER_INITIALS] = $markerStyle->initials;
+                $messageData[$i][USER_COLOR] = $markerStyle->color;
+
                 if ($messageData[$i][USER_INITIALS] == null || $messageData[$i][USER_COLOR] == null) {
                     $messageData[$i][USER_INITIALS] = $messageData[$i][USER_FALLBACK_INITIALS];
                     $messageData[$i][USER_COLOR] = $messageData[$i][USER_FALLBACK_COLOR];
@@ -94,7 +87,7 @@ class DataManager
     private function goalSessionEqualsDbGoalSession()
     {
         $goalController = new controller\api\GoalController();
-        
+
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
@@ -126,6 +119,14 @@ class DataManager
         $this->data[self::GOALSDATA] = $goalsData;
     }
 
+    private function getPositionFromDatabase(int $id): \model\PositionModel
+    {
+        $positionController = new controller\api\PositionController();
+        $positionController->id = $id;
+
+        return $positionController->getPosition();
+    }
+
     private function getWaypointPositionsFromDatabase($i)
     {
         $goalController = new controller\api\GoalController();
@@ -139,7 +140,7 @@ class DataManager
 
         for ($j = 0; $j < count($waypointPositionsRowIds); $j++) {
             $positionController->id = $waypointPositionsRowIds[$j][USER_POSITIONS_ID];
-            $waypoints[$j] = $positionController->getLatLngFromDatabase();
+            $waypoints[$j] = $positionController->getPosition();
         }
 
         return $waypoints;

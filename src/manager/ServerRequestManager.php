@@ -1,6 +1,6 @@
 <?php
-namespace manager;
 
+namespace manager;
 
 class ServerRequestManager
 {
@@ -40,7 +40,7 @@ class ServerRequestManager
     public static function getUriParts()
     {
         $uri = parse_url($_SERVER[self::REQUEST_URI], PHP_URL_PATH);
-        return explode( '/', $uri );
+        return explode('/', $uri);
     }
 
     public static function postGroupCode()
@@ -67,5 +67,4 @@ class ServerRequestManager
     {
         return filter_input(INPUT_POST, self::WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
     }
-    
 }

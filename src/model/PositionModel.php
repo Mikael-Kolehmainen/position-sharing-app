@@ -1,10 +1,13 @@
 <?php
 
 namespace model;
- 
+
+use Exception;
+
 class PositionModel extends Database
 {
     private const TABLE_NAME = 'positions';
+    private const FIELD_ID = 'id';
     private const FIELD_LATITUDE = 'lat';
     private const FIELD_LONGITUDE = 'lng';
 
@@ -17,23 +20,60 @@ class PositionModel extends Database
     /** @var float */
     public $longitude;
 
-    public function save()
+    /** @var Database */
+    private $db;
+
+    public function __construct(Database $database, int $id = null)
     {
-        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_LATITUDE . ', ' . self::FIELD_LONGITUDE . ') VALUES (?, ?)', [["dd"], [$this->latitude, $this->longitude]]);
+        $this->db = $database;
+        if (!is_null($id)) {
+            $this->id = $id;
+        }
     }
 
-    public function update(): void
+    public function set(): int
     {
-        $this->id = $this->insert('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_LATITUDE . ' = ?, ' . self::FIELD_LONGITUDE . ' = ? WHERE id = ?', [["ddi"], [$this->latitude, $this->longitude, $this->id]]);
+        if (is_null($this->id)) {
+            return $this->save();
+        } else {
+            return $this->update();
+        }
     }
 
-    public function removeWithId(): void
+    public function save(): int
     {
-        $this->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
+        $this->id = $this->db->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_LATITUDE . ', ' . self::FIELD_LONGITUDE . ') VALUES (?, ?)', [["dd"], [$this->latitude, $this->longitude]]);
+        return $this->id;
     }
 
-    public function get()
+    public function update(): int
     {
-        return $this->select('SELECT ' . self::FIELD_LATITUDE . ', ' . self::FIELD_LONGITUDE . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?', [["i"], [$this->id]]);
+        $this->id = $this->db->insert('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_LATITUDE . ' = ?, ' . self::FIELD_LONGITUDE . ' = ? WHERE id = ?', [["ddi"], [$this->latitude, $this->longitude, $this->id]]);
+        return $this->id;
+    }
+
+    public function delete(): void
+    {
+        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
+    }
+
+    /** @return $this */
+    public function load()
+    {
+        $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE id = ?', [["i"], [$this->id]]);
+        $record = array_pop($records);
+        return $this->mapFromDbRecord($record);
+    }
+
+    /**
+     * @param mixed[] $record Associative array of one db record
+     * @return $this
+     */
+    private function mapFromDbRecord($record)
+    {
+        $this->id = $record[self::FIELD_ID];
+        $this->latitude = $record[self::FIELD_LATITUDE];
+        $this->longitude = $record[self::FIELD_LONGITUDE];
+        return $this;
     }
 }

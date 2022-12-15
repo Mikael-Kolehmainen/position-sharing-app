@@ -2,7 +2,9 @@
 
 namespace controller\api;
 
+use Exception;
 use model;
+use model\PositionModel;
 use manager;
 
 class PositionController extends BaseController
@@ -16,6 +18,14 @@ class PositionController extends BaseController
     /** @var float */
     public $longitude;
 
+    /** @var model\Database */
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = new model\Database();
+    }
+
     public function sendPositionToDatabase()
     {
         $json = json_decode(file_get_contents('php://input'));
@@ -24,7 +34,7 @@ class PositionController extends BaseController
         $this->longitude = $json->lng;
 
         if (manager\SessionManager::getUserRowId() != null && $this->checkIfRowIdExistsInDatabase()) {
-            $this->updateInDatabase();
+            $this->setUserPosition();
         } else {
             $this->saveToDatabase();
             $this->insertUserToDatabase();
@@ -52,43 +62,35 @@ class PositionController extends BaseController
 
     public function saveToDatabase()
     {
-        $positionModel = new model\PositionModel();
+        $positionModel = new PositionModel($this->db);
         $positionModel->latitude = $this->latitude;
         $positionModel->longitude = $this->longitude;
-        
-        $this->id = $positionModel->save();
+
+        $this->id = $positionModel->set();
     }
 
-    public function updateInDatabase(): void
+    public function setUserPosition(): void
     {
-        $positionModel = new model\PositionModel();
-        $positionModel->id = $this->getRowIdOfPositionFromDatabase();;
-        $positionModel->latitude = $this->latitude;
-        $positionModel->longitude = $this->longitude;
-    }
+        $position = new PositionModel($this->db);
+        $position->latitude = $this->latitude;
+        $position->longitude = $this->longitude;
 
-    private function getRowIdOfPositionFromDatabase()
-    {
         $userController = new UserController();
-
-        return $userController->getRowIdOfPositionFromDatabase();
+        $user = $userController->getUser();
+        $user->setPosition($position);
     }
 
-    public function removeFromDatabase()
+    public function removeFromDatabase(): void
     {
-        $positionModel = new model\PositionModel();
-        $positionModel->id = $this->id;
-
-        $positionModel->removeWithId();
+        $position = new PositionModel($this->db, $this->id);
+        $position->delete();
     }
 
-    public function getLatLngFromDatabase()
+    /** @return PositionModel */
+    public function getPosition()
     {
-        $positionModel = new model\PositionModel();
-        $positionModel->id = $this->id;
+        $positionModel = new PositionModel($this->db, $this->id);
 
-        $latlngs = $positionModel->get();
-
-        return [$latlngs[0][POSITION_LAT], $latlngs[0][POSITION_LNG]];
+        return $positionModel->load();
     }
 }

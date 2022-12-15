@@ -78,10 +78,10 @@ class CameraController extends BaseController
 
     private function createImagePath(): void
     {
-        $this->imagePath = "./appearance/media/chat_images/".$this->groupCode;
+        $this->imagePath = "./appearance/media/chat_images/" . $this->groupCode;
         $this->createDirIfDoesNotExist();
         $fileExt = $this->webImageType;
-        $this->imagePath = substr($this->imagePath, 1)."/".misc\RandomString::getRandomString(10).".".$fileExt;
+        $this->imagePath = substr($this->imagePath, 1) . "/" . misc\RandomString::getRandomString(10) . "." . $fileExt;
     }
 
     private function createDirIfDoesNotExist(): void
@@ -93,6 +93,6 @@ class CameraController extends BaseController
 
     private function saveImageToServer()
     {
-        return move_uploaded_file($this->webImagePath["tmp_name"], "./".$this->imagePath);
+        return move_uploaded_file($this->webImagePath["tmp_name"], "./" . $this->imagePath);
     }
 }

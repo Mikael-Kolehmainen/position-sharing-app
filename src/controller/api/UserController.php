@@ -2,13 +2,14 @@
 
 namespace controller\api;
 
-use model;
-use manager;
+use Exception;
+use manager\SessionManager;
+use manager\ServerRequestManager;
+use model\Database;
+use model\UserModel;
 
 class UserController extends BaseController
 {
-    private const FIELD_POSITIONS_ID = 'positions_id';
-
     /** @var int */
     public $id;
 
@@ -24,9 +25,17 @@ class UserController extends BaseController
     /** @var string */
     public $groupCode;
 
+    /** @var Database */
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = new Database();
+    }
+
     public function saveToDatabase()
     {
-        $userModel = new model\UserModel();
+        $userModel = new UserModel($this->db);
         $userModel->id = $this->id;
         $userModel->positionsId = $this->positionsId;
         $userModel->initials = $this->initials;
@@ -39,88 +48,84 @@ class UserController extends BaseController
 
     public function removeUserFromDatabase()
     {
-        $userModel = new model\UserModel();
-        $userModel->id = manager\SessionManager::getUserRowId();
-        $userModel->removeWithID();
+        $userModel = new UserModel($this->db);
+        $userModel->id = SessionManager::getUserRowId();
+        $userModel->delete();
         $this->removeSessions();
     }
 
     private function removeSessions()
     {
-        manager\SessionManager::removeGoalSession();
-        manager\SessionManager::removeAmountOfMessages();
+        SessionManager::removeGoalSession();
+        SessionManager::removeAmountOfMessages();
     }
 
     public function removeUsersFromDatabase()
     {
-        $userModel = new model\UserModel();
-        $userModel->groupCode = manager\SessionManager::getGroupCode();
+        $userModel = new UserModel($this->db, SessionManager::getGroupCode());
         $userModel->removeWithGroupCode();
     }
 
-    public function getMarkersFromDatabase()
+    /** @return UserModel[] */
+    public function getMyGroupMembers()
     {
-        $userModel = new model\UserModel();
-        $userModel->groupCode = manager\SessionManager::getGroupCode();
+        $userModel = new UserModel($this->db, null, SessionManager::getGroupCode());
 
-        return $userModel->getWithGroupCode();
+        return $userModel->get();
     }
 
     public function getMarkerFromDatabaseWithID()
     {
-        $userModel = new model\UserModel();
-        $userModel->id = $this->id;
+        $userModel = new UserModel($this->db, $this->id);
 
-        return $userModel->getWithId();
+        return $userModel->load();
     }
 
-    public function getIDsFromDatabase()
+    public function getUserIdsForMyGroup()
     {
-        $userModel = new model\UserModel();
-        $userModel->groupCode = manager\SessionManager::getGroupCode();
-        $userData = $userModel->getWithGroupCode();
         $IDs = [];
-
-        for ($i = 0; $i < count($userData); $i++) {
-            $IDs[$i] = $userData[$i]["id"];
+        $i = 0;
+        foreach ($this->getMyGroupMembers() as $user) {
+            $IDs[$i++] = $user->id;
         }
 
         return $IDs;
     }
 
-    public function getRowIdOfPositionFromDatabase()
+    /** @return int */
+    public function getUserPositionId()
     {
-        $userModel = new model\UserModel();
-        $userModel->id = manager\SessionManager::getUserRowId();
-        
-        return $userModel->getWithId()[0][self::FIELD_POSITIONS_ID];
+        return $this->getUser()->positionsId;
+    }
+
+    public function getUser(): UserModel
+    {
+        $userModel = new UserModel($this->db, SessionManager::getUserRowId());
+        return $userModel->load();
     }
 
     public function saveMarkerStyleToSession()
     {
-        $this->initials = manager\ServerRequestManager::postUserInitials();
-        $this->color = manager\ServerRequestManager::postUserColor();
+        $this->initials = ServerRequestManager::postUserInitials();
+        $this->color = ServerRequestManager::postUserColor();
 
         if ($this->color == "") {
             $this->color = "#FF0000";
         }
-        
+
         $this->initials = strtoupper($this->initials);
 
-        manager\SessionManager::saveUserInitials($this->initials);
-        manager\SessionManager::saveUserColor($this->color);
+        SessionManager::saveUserInitials($this->initials);
+        SessionManager::saveUserColor($this->color);
     }
 
     public function checkIfRowIdExistsInDatabase()
     {
-        $IDs = self::getIDsFromDatabase();
-
-        for ($i = 0; $i < count($IDs); $i++) {
-            if ($IDs[$i] == manager\SessionManager::getUserRowId()) {
+        foreach ($this->getMyGroupMembers() as $user) {
+            if ($user->id == SessionManager::getUserRowId()) {
                 return true;
             }
         }
-
         return false;
     }
 }

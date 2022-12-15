@@ -22,7 +22,7 @@ class User
         let marker, markerClassName;
         this.markerStyleSheetContent = "";
         for (let i = 0; i < this.usersData.length; i++) {
-            marker = L.marker(L.latLng(this.usersData[i].positions), {icon: this.userIcon});
+            marker = L.marker(L.latLng(this.usersData[i].position.latitude, this.usersData[i].position.longitude), {icon: this.userIcon});
             layerManagement.refreshedLayerGroup.addLayer(marker);
             this.user_markers.push(marker);
 

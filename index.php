@@ -143,6 +143,7 @@ function Search(): void
 {
     $groupController = new controller\api\GroupController();
     
+
     if ($groupController->findGroupInDatabase()) {
         saveMarkerStyleToSession();
         redirectToGroupMap();
@@ -219,7 +220,7 @@ function removeUser(): void
     $userController = new controller\api\UserController();
     $positionController = new controller\api\PositionController();
 
-    $positionController->id = $userController->getRowIdOfPositionFromDatabase();
+    $positionController->id = $userController->getUserPositionId();
 
     $positionController->removeFromDatabase();
     $userController->removeUserFromDatabase();

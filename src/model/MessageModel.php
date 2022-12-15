@@ -1,7 +1,7 @@
 <?php
 
 namespace model;
- 
+
 class MessageModel extends Database
 {
     private const TABLE_NAME = 'messages';
@@ -43,7 +43,7 @@ class MessageModel extends Database
 
     public function save()
     {
-        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR .  ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_DATE . ' ,' . self::FIELD_TIME . ', ' . self::FIELD_IMAGE_PATH . ') VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [['sissssss'], [$this->message, $this->userId, $this->fallbackInitials, $this->fallbackColor, $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]]);
+        return $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_DATE . ' ,' . self::FIELD_TIME . ', ' . self::FIELD_IMAGE_PATH . ') VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [['sissssss'], [$this->message, $this->userId, $this->fallbackInitials, $this->fallbackColor, $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]]);
     }
 
     public function get()

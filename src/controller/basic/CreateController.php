@@ -5,7 +5,7 @@ namespace controller\basic;
 class CreateController
 {
     /**
-     * "index.php/create" 
+     * "index.php/create"
      */
     public function showCreatePage()
     {
@@ -23,7 +23,7 @@ class CreateController
                     <h1>Create your marker</h1>
                     <form action='/index.php/map/create' method='POST'>";
         $this->showMarkerCreation();
-        echo "            
+        echo "
                         <input type='submit' value='CREATE' name='create-group'>
                     </form>
                 </article>

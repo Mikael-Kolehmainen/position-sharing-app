@@ -1,7 +1,7 @@
 <?php
 
 namespace model;
- 
+
 class WaypointModel extends Database
 {
     private const TABLE_NAME = 'waypoints';

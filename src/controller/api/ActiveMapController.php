@@ -69,6 +69,7 @@ class ActiveMapController extends BaseController
                             </div>
                             <div class='messages' id='messages'>
                                 
+                            
                             </div>
                             <form method='POST' action='/index.php/ajax/send-message' class='textbox'>
                                 <input type='text' name='message' placeholder='Please be kind' maxlength='255' required>

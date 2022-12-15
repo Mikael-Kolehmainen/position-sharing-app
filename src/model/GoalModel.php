@@ -1,7 +1,7 @@
 <?php
 
 namespace model;
- 
+
 class GoalModel extends Database
 {
     private const TABLE_NAME = 'goals';

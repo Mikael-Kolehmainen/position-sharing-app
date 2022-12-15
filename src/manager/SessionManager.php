@@ -19,7 +19,7 @@ class SessionManager
     {
         return $_SESSION[self::GROUPCODE];
     }
-    
+
     public static function issetGroupCode()
     {
         return isset($_SESSION[self::GROUPCODE]);
@@ -72,7 +72,7 @@ class SessionManager
 
     public static function saveGoalSession($goalSession)
     {
-        $_SESSION[self::GOAL_SESSION] = $goalSession;   
+        $_SESSION[self::GOAL_SESSION] = $goalSession;
     }
 
     public static function getGoalSession()

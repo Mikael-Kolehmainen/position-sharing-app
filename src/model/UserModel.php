@@ -1,14 +1,18 @@
 <?php
 
 namespace model;
- 
-class UserModel extends Database
+
+use __PHP_Incomplete_Class;
+use Exception;
+
+class UserModel
 {
     private const TABLE_NAME = 'users';
+    private const FIELD_ID = 'id';
     private const FIELD_POSITIONS_ID = 'positions_id';
     private const FIELD_INITIALS = 'initials';
     private const FIELD_COLOR = 'color';
-    private const FIELD_GROUPCODE = 'groups_groupcode';
+    private const FIELD_GROUP_CODE = 'groups_groupcode';
 
     /** @var int */
     public $id;
@@ -25,6 +29,24 @@ class UserModel extends Database
     /** @var string */
     public $groupCode;
 
+    /** @var PositionModel */
+    public $position;
+
+    /** @var Database */
+    private $db;
+    
+    public function __construct(Database $database, int $id = null, string $groupCode = null)
+    {
+        $this->db = $database;
+        if (!is_null($id)) {
+            $this->id = $id;
+        }
+
+        if (!is_null($groupCode)) {
+            $this->groupCode = $groupCode;
+        }
+    }
+
     public function save(): void
     {
         if (empty($this->id)) {
@@ -34,33 +56,105 @@ class UserModel extends Database
         }
     }
 
-    public function saveWithAutoID(): void
+    private function saveWithAutoID(): void
     {
-        $this->id = $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?)', [["isss"], [$this->positionsId, $this->initials, $this->color, $this->groupCode]]);
+        $this->id = $this->db->insert(
+            'INSERT INTO ' . self::TABLE_NAME .
+                ' (' .
+                self::FIELD_POSITIONS_ID . ', ' .
+                self::FIELD_INITIALS . ', ' .
+                self::FIELD_COLOR . ', ' .
+                self::FIELD_GROUP_CODE .
+                ') VALUES (?, ?, ?, ?)',
+            [
+                ["isss"],
+                [$this->positionsId, $this->initials, $this->color, $this->groupCode]
+            ]
+        );
     }
 
-    public function saveWithID(): void
+    private function saveWithID(): void
     {
-        $this->id = $this->insert('INSERT INTO ' . self::TABLE_NAME . ' (id, ' . self::FIELD_POSITIONS_ID . ', ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_GROUPCODE . ') VALUES (?, ?, ?, ?, ?)', [["iisss"], [$this->id, $this->positionsId, $this->initials, $this->color, $this->groupCode]]);
+        $this->id = $this->db->insert(
+            'INSERT INTO ' . self::TABLE_NAME .
+                ' (' .
+                self::FIELD_ID . ', ' .
+                self::FIELD_POSITIONS_ID . ', ' .
+                self::FIELD_INITIALS . ', ' .
+                self::FIELD_COLOR . ', ' .
+                self::FIELD_GROUP_CODE .
+                ') VALUES (?, ?, ?, ?, ?)',
+            [
+                ["iisss"],
+                [$this->id, $this->positionsId, $this->initials, $this->color, $this->groupCode]
+            ]
+        );
     }
 
-    public function removeWithID(): void
+    public function delete(): void
     {
-        $this->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
+        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
     }
 
     public function removeWithGroupCode(): void
     {
-        $this->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
     }
 
-    public function getWithGroupCode()
+    /** @return UserModel[] */
+    public function get(): array
     {
-        return $this->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUPCODE . ' = ? ', [['s'], [$this->groupCode]]);
+        $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ? ', [['s'], [$this->groupCode]]);
+        $users = [];
+        foreach ($records as $record) {
+            $users[] = $this->mapFromDbRecord($record);
+        }
+        return $users;
     }
 
-    public function getWithId()
+    public function setPosition(PositionModel $position)
     {
-        return $this->select('SELECT ' . self::FIELD_INITIALS . ', ' . self::FIELD_COLOR . ', ' . self::FIELD_POSITIONS_ID . ' FROM ' . self::TABLE_NAME . ' WHERE id = ?', [["i"], [$this->id]]);
+        $position->id = $this->positionsId;
+        $position->set();
+    }
+
+    /** @return $this */
+    public function loadWithPosition()
+    {
+        return $this->load()->loadPosition();
+    }
+
+    /** @return $this */
+    public function loadPosition()
+    {
+        $this->position = new PositionModel($this->db, $this->positionsId);
+        $this->position->load();
+        return $this;
+    }
+
+    /** @return $this */
+    public function load()
+    {
+        $records = $this->db->select(
+            'SELECT * FROM ' . self::TABLE_NAME . ' WHERE id = ?',
+            [["i"], [$this->id]]
+        );
+        $record = array_pop($records);
+        return $this->mapFromDbRecord($record);
+    }
+
+    /**
+     * @param mixed[] $record Associative array of one db record
+     * @return $userModel
+     */
+    public function mapFromDbRecord($record)
+    {
+        $userModel = new UserModel($this->db);
+        $userModel->id = $record[self::FIELD_ID];
+        $userModel->color = $record[self::FIELD_COLOR];
+        $userModel->groupCode = $record[self::FIELD_GROUP_CODE];
+        $userModel->initials = $record[self::FIELD_INITIALS];
+        $userModel->positionsId = $record[self::FIELD_POSITIONS_ID];
+        return $userModel;
     }
 }

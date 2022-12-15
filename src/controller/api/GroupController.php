@@ -3,7 +3,11 @@
 namespace controller\api;
 
 use misc\Redirect;
-use model;
+use misc\RandomString;
+use model\Database;
+use model\GroupModel;
+use manager\ServerRequestManager;
+use manager\SessionManager;
 use manager;
 
 class GroupController extends BaseController
@@ -14,25 +18,44 @@ class GroupController extends BaseController
 
     /** @var string */
     public $groupCode;
-    
+
+    /** @var Database */
+    private $db;
+
+    public function __construct()
+    {
+        $this->db = new Database();
+    }
+
     public function saveToDatabase(): void
     {
         $this->validateMarkerColor();
-        $groupModel = new model\GroupModel();
-        $groupModel->createGroupCode();
+        $groupModel = new GroupModel($this->db, $this->createGroupCode());
         $groupModel->save();
-        manager\SessionManager::saveGroupCode($groupModel->groupCode);
+        SessionManager::saveGroupCode($groupModel->groupCode);
+    }
+
+    private function createGroupCode(): string
+    {
+        $groupModel = new GroupModel($this->db, RandomString::getRandomString(3));
+
+        if (count($groupModel->getRowCount())) {
+            return $this->createGroupCode();
+        }
+
+        return $groupModel->groupCode;
     }
 
     public function findGroupInDatabase()
     {
         $this->validateMarkerColor();
-        $groupModel = new model\GroupModel();
-        $this->groupCode = manager\ServerRequestManager::postGroupCode();
-        $groupModel->groupCode = $this->groupCode != null ? $this->groupCode : manager\SessionManager::getGroupCode();
+        
+        $groupCode = ServerRequestManager::postGroupCode() == null ? SessionManager::getGroupCode() : ServerRequestManager::postGroupCode();
+
+        $groupModel = new GroupModel($this->db, $groupCode);
 
         if ($groupModel->getRowCount()) {
-            manager\SessionManager::saveGroupCode(($groupModel->groupCode));
+            SessionManager::saveGroupCode(($groupModel->groupCode));
             return true;
         }
 
@@ -41,8 +64,8 @@ class GroupController extends BaseController
 
     private function validateMarkerColor(): void
     {
-        if (manager\ServerRequestManager::isPost()) {
-            $color = strtolower(manager\ServerRequestManager::postUserColor());
+        if (ServerRequestManager::isPost()) {
+            $color = strtolower(ServerRequestManager::postUserColor());
             $allowedColors = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure",
                                 "beige", "bisque", "black", "blanchedalmond", "blue",
                                 "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse",
@@ -57,7 +80,7 @@ class GroupController extends BaseController
                                 "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen",
                                 "lemonchiffon", "lightblue", "lightcoral", "lightcyan", "lightgoldenrodyellow",
                                 "lightgray", "lightgrey", "lightgreen", "lightpink", "lightsalmon", "lightseagreen",
-                                "lightskyblue", "lightslategray", "lightslategrey", "lightsteelblue", 
+                                "lightskyblue", "lightslategray", "lightslategrey", "lightsteelblue",
                                 "lightyellow", "lime", "limegreen", "linen", "magneta", "maroon", "mediumaquamarine",
                                 "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue",
                                 "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue",
@@ -79,8 +102,7 @@ class GroupController extends BaseController
 
     public function removeGroupFromDatabase()
     {
-        $groupModel = new model\GroupModel();
-        $groupModel->groupCode = manager\SessionManager::getGroupCode();
+        $groupModel = new GroupModel($this->db, SessionManager::getGroupCode());
 
         $groupModel->removeWithGroupCode();
     }

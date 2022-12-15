@@ -40,6 +40,7 @@ class GoalController extends BaseController
         $goalModel->userId = $this->userId;
         $goalModel->goalOrderNumber = $this->goalOrderNumber;
         $goalModel->fallbackInitials = $this->fallbackInitials;
+        
         return $goalModel->save();
     }
 
@@ -86,7 +87,7 @@ class GoalController extends BaseController
     {
         $goalModel = new model\GoalModel();
         $goalModel->groupCode = manager\SessionManager::getGroupCode();
-        
+
         return $goalModel->getWithGroupCode();
     }
 
@@ -122,8 +123,8 @@ class GoalController extends BaseController
         $userController = new UserController();
 
         $json = json_decode(file_get_contents('php://input'));
-        
-        $userIDs = $userController->getIDsFromDatabase();
+
+        $userIDs = $userController->getUserIdsForMyGroup();
 
         $rowIdsOfUsersWithGoal = [];
 
@@ -135,19 +136,19 @@ class GoalController extends BaseController
 
         for ($i = 0; $i < count($json); $i++) {
             $jsonObj = $json[$i];
-            
+
             $startPositionRowID = $this->insertPositionToDatabase($jsonObj->startlat, $jsonObj->startlng);
             $goalPositionRowID = $this->insertPositionToDatabase($jsonObj->goallat, $jsonObj->goallng);
 
-            $fallBackInitials = $this->getUserInitialsFromDatabase($rowIdsOfUsersWithGoal[$i])[0][USER_INITIALS];
-            
+            $fallBackInitials = $this->getUserInitialsFromDatabase($rowIdsOfUsersWithGoal[$i])->initials;
+
             $this->startPositionId = $startPositionRowID;
             $this->goalPositionId = $goalPositionRowID;
             $this->goalOrderNumber = $jsonObj->goalordernumber;
             $this->userId = $rowIdsOfUsersWithGoal[$i];
             $this->fallbackInitials = $fallBackInitials;
             $goalRowID = $this->saveToDatabase();
-            
+
             $goalRowIds[$i] = $goalRowID;
 
             $waypoints = $jsonObj->routewaypoints;
@@ -191,7 +192,7 @@ class GoalController extends BaseController
     public function removeGoal(): void
     {
         $goalsIds = $this->getIdsFromDatabase();
-    
+
         $this->removeGoalPositions($goalsIds);
         $this->removeGoalWaypoints($goalsIds);
         $this->removeFromDatabase();
@@ -231,7 +232,7 @@ class GoalController extends BaseController
             $waypointController->goalId = $goalsIds[$i]["id"];
             $rowIdOfPositions[$i] = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();
         }
-        
+
         return $rowIdOfPositions;
     }
 
