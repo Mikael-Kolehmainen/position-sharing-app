@@ -28,9 +28,9 @@ class DataManager
         $this->data[self::MESSAGESDATA] = $this->getMessagesFromDatabase();
 
         if (SessionManager::getGoalSession() != null && $this->goalSessionEqualsDbGoalSession()) {
-            $this->data[DATA_GOALSDATA] = DATA_ALREADY_SAVED;
+            $this->data[self::GOALSDATA] = DATA_ALREADY_SAVED;
         } else {
-            $this->getGoalsFromDatabase();
+            $this->data[self::GOALSDATA] = $this->getGoalsFromDatabase();
             $this->saveGoalSession();
         }
 
@@ -40,7 +40,7 @@ class DataManager
     private function saveGoalSession(): void
     {
         $goalController = new GoalController();
-        SessionManager::saveGoalSession($goalController->getGoalSessionFromDatabase());
+        SessionManager::saveGoalSession($goalController->getGoal()->goalSession);
     }
 
     /** @return model\UserModel[] */
@@ -67,8 +67,7 @@ class DataManager
 
             foreach ($messages as $message) {
                 $userController->id = $message->userId;
-
-                $markerStyle = $userController->getMarkerFromDatabaseWithID();
+                $markerStyle = $userController->getUser();
 
                 if ($markerStyle->initials != null && $markerStyle->color != null) {
                     $message->initials = $markerStyle->initials;
@@ -76,8 +75,6 @@ class DataManager
                 }
 
                 $message->sentByUser = $message->userId == SessionManager::getUserRowId();
-
-                unset($message->userId);
             }
 
             SessionManager::saveAmountOfMessages(count((array)$messages));
@@ -95,68 +92,20 @@ class DataManager
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
-    private function getGoalsFromDatabase(): void
+    private function getGoalsFromDatabase()
     {
         $goalController = new GoalController();
         $goals = $goalController->getMyGroupGoals();
 
         foreach ($goals as $goal) {
-            $x = $goal->loadStartPosition();
-            $y = $goal->loadGoalPosition();
-
-
+            $x = $goal->loadPositions();
+            $y = $goal->getMyWaypoints();
         }
 
-
-        $rowIdsOfGoalPositions = $goalController->getRowIdsOfGoalPositionsFromDatabase();
-
-        $goalsData = [];
-
-        if (count($rowIdsOfGoalPositions) > 0) {
-            $orderNumbers = $goalController->getOrderNumbersOfGoalsFromDatabase();
-            $fallBackInitials = $goalController->getFallbackInitialsFromDatabase();
-
-            for ($i = 0; $i < count($rowIdsOfGoalPositions); $i++) {
-                $goalsData[$i][GOAL_ORDER_NUMBER] = $orderNumbers[$i][GOAL_ORDER_NUMBER];
-
-                $goalsData[$i][GOAL_START_POSITION] = $this->getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_START_POSITIONS_ID]);
-                $goalsData[$i][GOAL_GOAL_POSITION] = $this->getPositionFromDatabase($rowIdsOfGoalPositions[$i][GOAL_GOAL_POSITIONS_ID]);
-
-                $goalsData[$i][GOAL_WAYPOINTS] = $this->getWaypointPositionsFromDatabase($i);
-
-                $goalsData[$i][USER_FALLBACK_INITIALS] = $fallBackInitials[$i][USER_FALLBACK_INITIALS];
-            }
-        } else {
-            $goalsData = DATA_EMPTY;
+        if (count($goals) == 0) {
+            $goals = DATA_EMPTY;
         }
 
-        $this->data[self::GOALSDATA] = $goalsData;
-    }
-
-    private function getPositionFromDatabase(int $id): \model\PositionModel
-    {
-        $positionController = new PositionController();
-        $positionController->id = $id;
-
-        return $positionController->getPosition();
-    }
-
-    private function getWaypointPositionsFromDatabase($i)
-    {
-        $goalController = new GoalController();
-        $positionController = new PositionController();
-        $waypointController = new controller\api\WaypointController();
-
-        $waypointController->goalId = $goalController->getIdsFromDatabase()[$i]["id"];
-        $waypointPositionsRowIds = $waypointController->getRowIdsOfWaypointPositionsFromDatabase();
-
-        $waypoints = [];
-
-        for ($j = 0; $j < count($waypointPositionsRowIds); $j++) {
-            $positionController->id = $waypointPositionsRowIds[$j][USER_POSITIONS_ID];
-            $waypoints[$j] = $positionController->getPosition();
-        }
-
-        return $waypoints;
+        return $goals;
     }
 }

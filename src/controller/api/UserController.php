@@ -74,13 +74,6 @@ class UserController extends BaseController
         return $groupModel->getGroupMembers();
     }
 
-    public function getMarkerFromDatabaseWithID()
-    {
-        $userModel = new UserModel($this->db, $this->id);
-
-        return $userModel->load();
-    }
-
     public function getUserIdsForMyGroup()
     {
         $IDs = [];
@@ -92,15 +85,10 @@ class UserController extends BaseController
         return $IDs;
     }
 
-    /** @return int */
-    public function getUserPositionId()
-    {
-        return $this->getUser()->positionsId;
-    }
-
+    /** @return UserModel */
     public function getUser(): UserModel
     {
-        $userModel = new UserModel($this->db, SessionManager::getUserRowId());
+        $userModel = new UserModel($this->db, $this->id);
         return $userModel->load();
     }
 

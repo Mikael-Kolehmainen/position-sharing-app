@@ -1,4 +1,6 @@
 <?php
+use controller\api\GoalController;
+use controller\api\PositionController;
 use controller\api\UserController;
 require __DIR__ . "/inc/bootstrap.php";
 
@@ -221,7 +223,8 @@ function removeUser(): void
     $userController = new controller\api\UserController();
     $positionController = new controller\api\PositionController();
 
-    $positionController->id = $userController->getUserPositionId();
+    $userController->id = manager\SessionManager::getUserRowId();
+    $positionController->id = $userController->getUser()->positionsId;
 
     $positionController->removeFromDatabase();
     $userController->removeUserFromDatabase();

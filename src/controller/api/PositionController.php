@@ -76,6 +76,7 @@ class PositionController extends BaseController
         $position->longitude = $this->longitude;
 
         $userController = new UserController();
+        $userController->id = manager\SessionManager::getUserRowId();
         $user = $userController->getUser();
         $user->setPosition($position);
     }
