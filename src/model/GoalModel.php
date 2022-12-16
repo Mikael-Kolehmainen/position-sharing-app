@@ -77,7 +77,7 @@ class GoalModel
                 $this->userId, $this->groupCode, $this->fallbackInitials]]);
     }
 
-    public function update()
+    public function update(): void
     {
         $this->id = $this->db->insert(
             'UPDATE ' . self::TABLE_NAME . 
@@ -89,7 +89,7 @@ class GoalModel
             ]);
     }
 
-    public function removeWithGroupCode()
+    public function removeWithGroupCode(): void
     {
         $this->db->remove(
             'DELETE FROM ' . self::TABLE_NAME . 

@@ -86,7 +86,7 @@ class MessageModel
             ]);
     }
 
-    public function mapFromDbRecord($record)
+    public function mapFromDbRecord($record): void
     {
         $this->id = $record[self::FIELD_ID];
         $this->message = $record[self::FIELD_MESSAGE];

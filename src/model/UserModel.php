@@ -107,8 +107,8 @@ class UserModel
         $position->set();
     }
 
-    /** @return $this */
-    public function loadPosition()
+    /** @return UserModel */
+    public function loadPosition(): UserModel
     {
         $this->position = new PositionModel($this->db, $this->positionsId);
         $this->position->load();

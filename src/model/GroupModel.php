@@ -53,7 +53,7 @@ class GroupModel
     }
 
     /** @return GroupModel[] */
-    public function get()
+    public function get(): array
     {
         $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
         $groups = [];

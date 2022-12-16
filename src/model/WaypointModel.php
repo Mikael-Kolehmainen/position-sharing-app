@@ -27,7 +27,7 @@ class WaypointModel
         $this->goalId = $idOfGoal;
     }
 
-    public function save()
+    public function save(): void
     {
         $this->id = $this->db->insert(
             'INSERT INTO ' . self::TABLE_NAME . 
@@ -41,7 +41,7 @@ class WaypointModel
             ]);
     }
 
-    public function removeWithId()
+    public function removeWithId(): void
     {
         $this->db->remove(
             'DELETE FROM ' . self::TABLE_NAME . 
@@ -51,7 +51,7 @@ class WaypointModel
             ]);
     }
 
-    /** @return $this[] */
+    /** @return WaypointModel[] */
     public function getGoalWaypoints(): array
     {
         $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GOALS_ID . ' = ?', [['i'], [$this->goalId]]);
@@ -64,6 +64,10 @@ class WaypointModel
         return $waypoints;
     }
 
+    /**
+     * @param mixed[] $record Associative array of one db record
+     * @return $this
+     */
     public function mapFromDbRecord($record)
     {
         $this->id = $record[self::FIELD_ID];
