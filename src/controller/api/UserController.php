@@ -36,21 +36,16 @@ class UserController extends BaseController
 
     public function saveToDatabase()
     {
-        $userModel = new UserModel($this->db);
-        $userModel->id = $this->id;
+        $userModel = new UserModel($this->db, $this->id, $this->groupCode);
         $userModel->positionsId = $this->positionsId;
         $userModel->initials = $this->initials;
         $userModel->color = $this->color;
-        $userModel->groupCode = $this->groupCode;
         $userModel->save();
-
-        $this->id = $userModel->id;
     }
 
     public function removeUserFromDatabase()
     {
-        $userModel = new UserModel($this->db);
-        $userModel->id = SessionManager::getUserRowId();
+        $userModel = new UserModel($this->db, SessionManager::getUserRowId());
         $userModel->delete();
         $this->removeSessions();
     }
@@ -63,7 +58,7 @@ class UserController extends BaseController
 
     public function removeUsersFromDatabase()
     {
-        $userModel = new UserModel($this->db, SessionManager::getGroupCode());
+        $userModel = new UserModel($this->db, null, SessionManager::getGroupCode());
         $userModel->removeWithGroupCode();
     }
 

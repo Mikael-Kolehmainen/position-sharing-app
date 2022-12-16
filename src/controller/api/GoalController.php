@@ -7,6 +7,7 @@ use model\GoalModel;
 use model\Database;
 use manager\SessionManager;
 use misc\RandomString;
+use model\UserModel;
 
 class GoalController extends BaseController
 {
@@ -39,12 +40,11 @@ class GoalController extends BaseController
         $this->db = new Database();
     }
 
-    public function saveToDatabase()
+    private function saveToDatabase()
     {
-        $goalModel = new GoalModel($this->db);
+        $goalModel = new GoalModel($this->db, SessionManager::getGroupCode());
         $goalModel->startPositionId = $this->startPositionId;
         $goalModel->goalPositionId = $this->goalPositionId;
-        $goalModel->groupCode = SessionManager::getGroupCode();
         $goalModel->userId = $this->userId;
         $goalModel->goalOrderNumber = $this->goalOrderNumber;
         $goalModel->fallbackInitials = $this->fallbackInitials;
@@ -72,6 +72,7 @@ class GoalController extends BaseController
     public function getGoal(): GoalModel
     {
         $goalModel = new GoalModel($this->db, SessionManager::getGroupCode());
+
         return $goalModel->load();
     }
 
@@ -80,17 +81,6 @@ class GoalController extends BaseController
         $goalSession = $this->getGoal()->goalSession;
 
         return $goalSession == SessionManager::getGoalSession();
-    }
-
-    public function createGoalSession()
-    {
-        $goalSession = RandomString::getRandomString(15);
-
-        if ($goalSession == SessionManager::getGoalSession()) {
-            $this->createGoalSession();
-        } else {
-            $this->goalSession = $goalSession;
-        }
     }
 
     public function sendGoalToDatabase()
@@ -156,12 +146,24 @@ class GoalController extends BaseController
         return $positionController->id;
     }
 
-    private function getUser($id)
+    /** @return UserModel */
+    private function getUser($id): UserModel
     {
         $userController = new UserController();
         $userController->id = $id;
 
         return $userController->getUser();
+    }
+
+    private function createGoalSession(): void
+    {
+        $goalSession = RandomString::getRandomString(15);
+
+        if ($goalSession == SessionManager::getGoalSession()) {
+            $this->createGoalSession();
+        } else {
+            $this->goalSession = $goalSession;
+        }
     }
 
     public function removeGoal(): void

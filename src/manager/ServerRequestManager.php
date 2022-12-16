@@ -16,6 +16,7 @@ class ServerRequestManager
     private const INITIALS = "initials";
     private const MESSAGE = "message";
     private const WEB_IMAGE_TYPE = "webimagetype";
+    private const WEB_IMAGE_PATH = "webimagepath";
 
     public static function isPost()
     {
@@ -66,5 +67,10 @@ class ServerRequestManager
     public static function postWebimageType()
     {
         return filter_input(INPUT_POST, self::WEB_IMAGE_TYPE, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_STRIP_LOW);
+    }
+
+    public static function filesWebimagePath()
+    {
+        return $_FILES[self::WEB_IMAGE_PATH];
     }
 }

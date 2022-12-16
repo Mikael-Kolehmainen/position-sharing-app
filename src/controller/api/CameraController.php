@@ -2,13 +2,13 @@
 
 namespace controller\api;
 
-use manager;
-use misc;
+use manager\SessionManager;
+use manager\ServerRequestManager;
+use misc\Redirect;
+use misc\RandomString;
 
 class CameraController extends BaseController
 {
-    private const WEB_IMAGE_PATH = "webimagepath";
-
     /**
      * "index.php/map/camera"
      */
@@ -61,9 +61,9 @@ class CameraController extends BaseController
 
     public function sendImage(): void
     {
-        $this->groupCode = manager\SessionManager::getGroupCode();
-        $this->webImagePath = $_FILES[self::WEB_IMAGE_PATH];
-        $this->webImageType = manager\ServerRequestManager::postWebimageType();
+        $this->groupCode = SessionManager::getGroupCode();
+        $this->webImagePath = ServerRequestManager::filesWebimagePath();
+        $this->webImageType = ServerRequestManager::postWebimageType();
 
         $this->createImagePath();
 
@@ -72,7 +72,7 @@ class CameraController extends BaseController
             $messageController->imagePath = $this->imagePath;
             $messageController->saveToDatabase();
         } else {
-            misc\Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
+            Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
         }
     }
 
@@ -81,7 +81,7 @@ class CameraController extends BaseController
         $this->imagePath = "./appearance/media/chat_images/" . $this->groupCode;
         $this->createDirIfDoesNotExist();
         $fileExt = $this->webImageType;
-        $this->imagePath = substr($this->imagePath, 1) . "/" . misc\RandomString::getRandomString(10) . "." . $fileExt;
+        $this->imagePath = substr($this->imagePath, 1) . "/" . RandomString::getRandomString(10) . "." . $fileExt;
     }
 
     private function createDirIfDoesNotExist(): void
