@@ -8,16 +8,13 @@ use model\Database;
 use model\GroupModel;
 use manager\ServerRequestManager;
 use manager\SessionManager;
-use manager;
+
 
 class GroupController extends BaseController
 {
     /**
      * "index.php/map/create"
      */
-
-    /** @var string */
-    public $groupCode;
 
     /** @var Database */
     private $db;
@@ -39,7 +36,7 @@ class GroupController extends BaseController
     {
         $groupModel = new GroupModel($this->db, RandomString::getRandomString(3));
 
-        if (count($groupModel->getRowCount())) {
+        if (count($groupModel->get())) {
             return $this->createGroupCode();
         }
 
@@ -54,12 +51,19 @@ class GroupController extends BaseController
 
         $groupModel = new GroupModel($this->db, $groupCode);
 
-        if ($groupModel->getRowCount()) {
+        if (count($groupModel->get())) {
             SessionManager::saveGroupCode(($groupModel->groupCode));
             return true;
         }
 
         return false;
+    }
+
+    public function removeGroupFromDatabase()
+    {
+        $groupModel = new GroupModel($this->db, SessionManager::getGroupCode());
+
+        $groupModel->removeWithGroupCode();
     }
 
     private function validateMarkerColor(): void
@@ -98,12 +102,5 @@ class GroupController extends BaseController
                 exit();
             }
         }
-    }
-
-    public function removeGroupFromDatabase()
-    {
-        $groupModel = new GroupModel($this->db, SessionManager::getGroupCode());
-
-        $groupModel->removeWithGroupCode();
     }
 }

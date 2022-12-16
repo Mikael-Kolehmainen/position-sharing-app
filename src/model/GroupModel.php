@@ -2,7 +2,6 @@
 
 namespace model;
 
-use misc;
 
 class GroupModel
 {
@@ -32,17 +31,38 @@ class GroupModel
 
     public function save(): void
     {
-        $this->db->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_GROUP_CODE . ') VALUES (?)', [['s'], [$this->groupCode]]);
-    }
-
-    public function getRowCount()
-    {
-        return $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->insert(
+            'INSERT INTO ' . self::TABLE_NAME . 
+                ' (' . 
+                self::FIELD_GROUP_CODE . 
+                ') VALUES (?)', 
+            [
+                ['s'], 
+                [$this->groupCode]
+            ]);
     }
 
     public function removeWithGroupCode(): void
     {
-        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->remove(
+            'DELETE FROM ' . self::TABLE_NAME . 
+            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', 
+            [
+                ['s'], [$this->groupCode]
+            ]);
+    }
+
+    /** @return GroupModel[] */
+    public function get()
+    {
+        $records = $this->db->select('SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $groups = [];
+        foreach ($records as $record) {
+            $group = new GroupModel($this->db, $this->groupCode);
+            $group->mapFromDbRecord($record);
+            $groups[] = $group;
+        }
+        return $groups;
     }
 
     /** @return UserModel[] */
@@ -82,17 +102,6 @@ class GroupModel
             $goals[] = $goal;
         }
         return $goals;
-    }
-
-    /** @return $this */
-    public function load()
-    {
-        $records = $this->db->select(
-            'SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?',
-            [["i"], [$this->groupCode]]
-        );
-        $record = array_pop($records);
-        return $this->mapFromDbRecord($record);
     }
 
     /**

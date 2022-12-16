@@ -61,17 +61,42 @@ class GoalModel
 
     public function save()
     {
-        return $this->db->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_ORDER_NUMBER . ', ' . self::FIELD_USER_ID . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_FALLBACK_INITIALS . ') VALUES (?, ?, ?, ?, ?, ?)', [['iiiiss'], [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber, $this->userId, $this->groupCode, $this->fallbackInitials]]);
+        return $this->db->insert(
+            'INSERT INTO ' . self::TABLE_NAME . 
+                ' (' . 
+                self::FIELD_START_POSITIONS_ID . ', ' . 
+                self::FIELD_GOAL_POSITIONS_ID . ', ' . 
+                self::FIELD_GOAL_ORDER_NUMBER . ', ' . 
+                self::FIELD_USER_ID . ', ' . 
+                self::FIELD_GROUP_CODE . ', ' . 
+                self::FIELD_FALLBACK_INITIALS . 
+                ') VALUES (?, ?, ?, ?, ?, ?)', 
+            [
+                ['iiiiss'], 
+                [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber, 
+                $this->userId, $this->groupCode, $this->fallbackInitials]]);
     }
 
     public function update()
     {
-        $this->id = $this->db->insert('UPDATE ' . self::TABLE_NAME . ' SET ' . self::FIELD_GOAL_SESSION . ' = ? WHERE id = ?', [['si'], [$this->goalSession, $this->id]]);
+        $this->id = $this->db->insert(
+            'UPDATE ' . self::TABLE_NAME . 
+            ' SET ' . self::FIELD_GOAL_SESSION . ' = ? 
+            WHERE id = ?', 
+            [
+                ['si'], 
+                [$this->goalSession, $this->id]
+            ]);
     }
 
     public function removeWithGroupCode()
     {
-        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->remove(
+            'DELETE FROM ' . self::TABLE_NAME . 
+            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', 
+            [
+                ['s'], [$this->groupCode]
+            ]);
     }
 
     /** @return $this */
@@ -83,11 +108,6 @@ class GoalModel
         );
         $record = array_pop($records);
         return $this->mapFromDbRecord($record);
-    }
-
-    public function getWithGroupCode()
-    {
-        return $this->db->select('SELECT id, ' . self::FIELD_GOAL_ORDER_NUMBER . ', ' . self::FIELD_START_POSITIONS_ID . ', ' . self::FIELD_GOAL_POSITIONS_ID . ', ' . self::FIELD_GOAL_SESSION . ', ' . self::FIELD_FALLBACK_INITIALS . ' FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [["s"], [$this->groupCode]]);
     }
 
     /** @return $this */

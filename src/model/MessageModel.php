@@ -56,12 +56,34 @@ class MessageModel
 
     public function save()
     {
-        return $this->db->insert('INSERT INTO ' . self::TABLE_NAME . ' (' . self::FIELD_MESSAGE . ', ' . self::FIELD_USERS_ID . ', ' . self::FIELD_FALLBACK_INITIALS . ', ' . self::FIELD_FALLBACK_COLOR . ', ' . self::FIELD_GROUP_CODE . ', ' . self::FIELD_DATE . ' ,' . self::FIELD_TIME . ', ' . self::FIELD_IMAGE_PATH . ') VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [['sissssss'], [$this->message, $this->userId, $this->initials, $this->color, $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]]);
+        return $this->db->insert(
+            'INSERT INTO ' . self::TABLE_NAME . 
+                ' (' . 
+                self::FIELD_MESSAGE . ', ' . 
+                self::FIELD_USERS_ID . ', ' . 
+                self::FIELD_FALLBACK_INITIALS . ', ' . 
+                self::FIELD_FALLBACK_COLOR . ', ' . 
+                self::FIELD_GROUP_CODE . ', ' . 
+                self::FIELD_DATE . ' ,' . 
+                self::FIELD_TIME . ', ' . 
+                self::FIELD_IMAGE_PATH . ') 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+                [
+                    ["sissssss"], 
+                    [$this->message, $this->userId, $this->initials, $this->color, 
+                    $this->groupCode, $this->dateOfMessage, $this->timeOfMessage, $this->imagePath]
+                ]);
     }
 
     public function removeWithGroupCode(): void
     {
-        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
+        $this->db->remove(
+            'DELETE FROM ' . self::TABLE_NAME . 
+            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', 
+            [
+                ['s'], 
+                [$this->groupCode]
+            ]);
     }
 
     public function mapFromDbRecord($record)

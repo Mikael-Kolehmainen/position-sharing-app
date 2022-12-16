@@ -2,11 +2,11 @@
 
 namespace manager;
 
-use model;
-use controller;
+use model\MessageModel;
+use model\UserModel;
 use controller\api\UserController;
 use controller\api\GoalController;
-use controller\api\PositionController;
+use controller\api\MessageController;
 use Exception;
 
 class DataManager
@@ -43,7 +43,7 @@ class DataManager
         SessionManager::saveGoalSession($goalController->getGoal()->goalSession);
     }
 
-    /** @return model\UserModel[] */
+    /** @return UserModel[] */
     private function getUsersFromDatabase(): array
     {
         $userController = new UserController();
@@ -56,10 +56,10 @@ class DataManager
         return $users;
     }
 
-    /** @return model\MessageModel[] */
+    /** @return MessageModel[] */
     private function getMessagesFromDatabase()
     {
-        $messageController = new controller\api\MessageController();
+        $messageController = new MessageController();
         $messages = $messageController->getMyGroupMessages();
 
         if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count((array)$messages)) {

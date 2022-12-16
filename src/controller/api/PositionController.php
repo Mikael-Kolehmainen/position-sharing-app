@@ -5,7 +5,8 @@ namespace controller\api;
 use Exception;
 use model;
 use model\PositionModel;
-use manager;
+use model\Database;
+use manager\SessionManager;
 
 class PositionController extends BaseController
 {
@@ -18,22 +19,22 @@ class PositionController extends BaseController
     /** @var float */
     public $longitude;
 
-    /** @var model\Database */
+    /** @var Database */
     private $db;
 
     public function __construct()
     {
-        $this->db = new model\Database();
+        $this->db = new Database();
     }
 
-    public function sendPositionToDatabase()
+    public function sendPositionToDatabase(): void
     {
         $json = json_decode(file_get_contents('php://input'));
 
         $this->latitude = $json->lat;
         $this->longitude = $json->lng;
 
-        if (manager\SessionManager::getUserRowId() != null && $this->checkIfRowIdExistsInDatabase()) {
+        if (SessionManager::getUserRowId() != null && $this->checkIfRowIdExistsInDatabase()) {
             $this->setUserPosition();
         } else {
             $this->saveToDatabase();
@@ -41,7 +42,7 @@ class PositionController extends BaseController
         }
     }
 
-    private function checkIfRowIdExistsInDatabase()
+    private function checkIfRowIdExistsInDatabase(): bool
     {
         $userController = new UserController();
         return $userController->checkIfRowIdExistsInDatabase();
@@ -50,17 +51,17 @@ class PositionController extends BaseController
     private function insertUserToDatabase(): void
     {
         $userController = new UserController();
-        $userController->id = manager\SessionManager::getUserRowId();
-        $userController->groupCode = manager\SessionManager::getGroupCode();
+        $userController->id = SessionManager::getUserRowId();
+        $userController->groupCode = SessionManager::getGroupCode();
         $userController->positionsId = $this->id;
-        $userController->initials = manager\SessionManager::getUserInitials();
-        $userController->color = manager\SessionManager::getUserColor();
+        $userController->initials = SessionManager::getUserInitials();
+        $userController->color = SessionManager::getUserColor();
         $userController->saveToDatabase();
 
-        manager\SessionManager::saveUserRowId($userController->id);
+        SessionManager::saveUserRowId($userController->id);
     }
 
-    public function saveToDatabase()
+    public function saveToDatabase(): void
     {
         $positionModel = new PositionModel($this->db);
         $positionModel->latitude = $this->latitude;
@@ -76,7 +77,7 @@ class PositionController extends BaseController
         $position->longitude = $this->longitude;
 
         $userController = new UserController();
-        $userController->id = manager\SessionManager::getUserRowId();
+        $userController->id = SessionManager::getUserRowId();
         $user = $userController->getUser();
         $user->setPosition($position);
     }
@@ -85,13 +86,5 @@ class PositionController extends BaseController
     {
         $position = new PositionModel($this->db, $this->id);
         $position->delete();
-    }
-
-    /** @return PositionModel */
-    public function getPosition()
-    {
-        $positionModel = new PositionModel($this->db, $this->id);
-
-        return $positionModel->load();
     }
 }

@@ -101,16 +101,10 @@ class UserModel
         $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
     }
 
-    public function setPosition(PositionModel $position)
+    public function setPosition(PositionModel $position): void
     {
         $position->id = $this->positionsId;
         $position->set();
-    }
-
-    /** @return $this */
-    public function loadWithPosition()
-    {
-        return $this->load()->loadPosition();
     }
 
     /** @return $this */
@@ -134,7 +128,7 @@ class UserModel
 
     /**
      * @param mixed[] $record Associative array of one db record
-     * @return $userModel
+     * @return $this
      */
     public function mapFromDbRecord($record)
     {

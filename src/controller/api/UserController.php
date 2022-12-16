@@ -7,6 +7,7 @@ use manager\SessionManager;
 use manager\ServerRequestManager;
 use model\Database;
 use model\UserModel;
+use model\GroupModel;
 
 class UserController extends BaseController
 {
@@ -69,7 +70,7 @@ class UserController extends BaseController
     /** @return UserModel[] */
     public function getMyGroupMembers()
     {
-        $groupModel = new \model\GroupModel($this->db, SessionManager::getGroupCode());
+        $groupModel = new GroupModel($this->db, SessionManager::getGroupCode());
 
         return $groupModel->getGroupMembers();
     }
@@ -107,7 +108,7 @@ class UserController extends BaseController
         SessionManager::saveUserColor($this->color);
     }
 
-    public function checkIfRowIdExistsInDatabase()
+    public function checkIfRowIdExistsInDatabase(): bool
     {
         foreach ($this->getMyGroupMembers() as $user) {
             if ($user->id == SessionManager::getUserRowId()) {
