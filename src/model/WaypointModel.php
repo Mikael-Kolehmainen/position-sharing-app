@@ -30,22 +30,22 @@ class WaypointModel
     public function save(): void
     {
         $this->id = $this->db->insert(
-            'INSERT INTO ' . self::TABLE_NAME . 
-                ' (' . 
-                self::FIELD_GOALS_ID . ', ' . 
-                self::FIELD_POSITIONS_ID . 
-                ') VALUES (?, ?)', 
+            'INSERT INTO ' . self::TABLE_NAME .
+                ' (' .
+                self::FIELD_GOALS_ID . ', ' .
+                self::FIELD_POSITIONS_ID .
+                ') VALUES (?, ?)',
             [
-                ['ii'], 
+                ['ii'],
                 [$this->goalId, $this->positionId]
             ]);
     }
 
-    public function removeWithId(): void
+    public function deleteWithId(): void
     {
         $this->db->remove(
-            'DELETE FROM ' . self::TABLE_NAME . 
-            ' WHERE ' . self::FIELD_GOALS_ID . ' = ?', 
+            'DELETE FROM ' . self::TABLE_NAME .
+            ' WHERE ' . self::FIELD_GOALS_ID . ' = ?',
             [
                 ['i'], [$this->goalId]
             ]);

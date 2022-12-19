@@ -25,6 +25,13 @@ class CameraController extends BaseController
     /** @var string */
     public $webImageType;
 
+    public function __construct()
+    {
+        $this->groupCode = SessionManager::getGroupCode();
+        $this->webImagePath = ServerRequestManager::filesWebimagePath();
+        $this->webImageType = ServerRequestManager::postWebimageType();
+    }
+
     public function showCamera()
     {
         echo "
@@ -61,16 +68,10 @@ class CameraController extends BaseController
 
     public function sendImage(): void
     {
-        $this->groupCode = SessionManager::getGroupCode();
-        $this->webImagePath = ServerRequestManager::filesWebimagePath();
-        $this->webImageType = ServerRequestManager::postWebimageType();
-
         $this->createImagePath();
 
         if ($this->saveImageToServer()) {
-            $messageController = new MessageController();
-            $messageController->imagePath = $this->imagePath;
-            $messageController->saveToDatabase();
+            $this->sendImageAsMessage();
         } else {
             Redirect::redirect("Something went wrong with saving the image to the server.", "/index.php/map/camera");
         }
@@ -91,8 +92,15 @@ class CameraController extends BaseController
         }
     }
 
-    private function saveImageToServer()
+    private function saveImageToServer(): bool
     {
         return move_uploaded_file($this->webImagePath["tmp_name"], "./" . $this->imagePath);
+    }
+
+    private function sendImageAsMessage(): void
+    {
+        $messageController = new MessageController();
+        $messageController->imagePath = $this->imagePath;
+        $messageController->saveToDatabase();
     }
 }

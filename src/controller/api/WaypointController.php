@@ -29,10 +29,10 @@ class WaypointController extends BaseController
         $waypointModel->save();
     }
 
-    public function removeFromDatabase(): void
+    public function deleteFromDatabase(): void
     {
         $waypointModel = new WaypointModel($this->db, $this->goalId);
-        
-        $waypointModel->removeWithId();
+
+        $waypointModel->deleteWithId();
     }
 }

@@ -120,8 +120,6 @@ class Goal
 
         this.goalStyleSheetContent += this.#createMarkerStyleSheetContent(i);
 
-        this.#bindPopupToUsers(i);
-
         startGoalStyle.styleSheetContent = this.goalStyleSheetContent;
         startGoalStyle.createStyle();
     }
@@ -132,7 +130,7 @@ class Goal
             this.start_marker_arr[i] = new L.Marker(this.start_marker_pos[i], {icon: this.startGoalIcon});
             layerManagement.draggableRouteLayerGroup.addLayer(this.start_marker_arr[i]);
         }
-    
+
         if (typeof this.goal_marker_pos[i] != "undefined") {
             this.goal_marker_arr[i] = new L.Marker(this.goal_marker_pos[i], {icon: this.startGoalIcon});
             layerManagement.draggableRouteLayerGroup.addLayer(this.goal_marker_arr[i]);
@@ -173,33 +171,6 @@ class Goal
         return styleSheetContent;
     }
 
-    #bindPopupToUsers(i)
-    {
-    /*    if (this.userPopupContent.length > 0) {
-            user.user_markers[goal.idsOfGoals[i]].bindPopup('<h3>'+this.userPopupContent[i]+'</h3>', {closeOnClick: false, autoClose: false, autoPan: false}).openPopup();
-        } */
-    }
-
-    updatePercentagePopups()
-    {
-    /*    for (let i = 0; i < goal.start_marker_arr.length; i++) {
-            if (goal.goal_marker_arr.length != 0) {
-                let distanceFromUserToGoal = user.user_markers[i].getLatLng().distanceTo(goal.goal_marker_arr[i].getLatLng());
-                let percentageOfGoalAchieved = Math.round((1 - distanceFromUserToGoal / this.routesDistances[i]) * 100);
-
-                this.userPopupContent[i] = percentageOfGoalAchieved + "%";
-                this.#bindPopupToUsers(i);
-            }
-        } */
-    }
-
-    removePercentagePopups()
-    {
-    /*    for (let i = 0; i < this.start_marker_arr.length; i++) {
-            user.user_markers[i].bindPopup("");
-        } */
-    }
-
     sendDataToPHP()
     {
         let goalData = [];
@@ -234,7 +205,7 @@ class Goal
                 && this.goalsData != "already saved") {
 
                 this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].startPosition.latitude, this.goalsData[i].startPosition.longitude);
-                
+
                 this.routes[i] = [];
 
                 this.routes[i].push(this.start_marker_pos[i]);
@@ -290,12 +261,12 @@ class Goal
             const userRow = document.createElement("tr");
             const userCell_1 = document.createElement("td");
             const userCell_2 = document.createElement("td");
-            
+
             const userProfile = document.createElement("div");
             const initialsText = document.createElement("p");
             initialsText.innerHTML = this.usersData[i].initials;
             userProfile.classList.add('profile');
-            
+
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.id = "userindex-" + i;
@@ -338,8 +309,8 @@ class Goal
 
         if (this.idsOfGoals.length == 1) {
             document.getElementById('show-draggable-goal-disabled').id = 'show-draggable-goal';
-        } 
-        
+        }
+
         if (this.idsOfGoals.length == 0) {
             document.getElementById('show-draggable-goal').id = 'show-draggable-goal-disabled';
         }
@@ -414,7 +385,7 @@ class Goal
             for (let j = 0; j < this.routes[i].length - 1; j++) {
                 routeDistance += this.routes[i][j].distanceTo(this.routes[i][j+1]);
             }
-            
+
             this.routesDistances.push(routeDistance);
             routeDistance = 0;
         }
@@ -440,7 +411,7 @@ class Goal
             this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
         } else {
             this.outerRouteWaypoints[0].push(this.start_marker_arr[0].getLatLng());
-            this.outerRouteWaypoints[1].push(this.start_marker_arr[this.start_marker_arr.length - 1].getLatLng());   
+            this.outerRouteWaypoints[1].push(this.start_marker_arr[this.start_marker_arr.length - 1].getLatLng());
         }
 
         map.addLayer(layerManagement.draggableRouteLayerGroup);
@@ -545,6 +516,6 @@ function getIdOfCheckbox(checkbox)
     let idOfCheckbox = checkbox.id;
     const idSplitted = idOfCheckbox.split('-');
     idOfCheckbox = idSplitted[1];
-    
+
     goal.updateIdsOfGoals(idOfCheckbox);
 }

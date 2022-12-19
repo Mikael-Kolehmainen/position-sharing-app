@@ -82,7 +82,7 @@ class PositionController extends BaseController
         $user->setPosition($position);
     }
 
-    public function removeFromDatabase(): void
+    public function deleteFromDatabase(): void
     {
         $position = new PositionModel($this->db, $this->id);
         $position->delete();

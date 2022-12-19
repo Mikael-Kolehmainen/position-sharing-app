@@ -65,7 +65,7 @@ class GroupModel
         return $groups;
     }
 
-    public function deleteAllGroupMembers()
+    public function deleteAllGroupMembers(): void
     {
         foreach($this->getGroupMembers() as $member) {
             $member->delete();
@@ -83,6 +83,13 @@ class GroupModel
             $users[] = $user;
         }
         return $users;
+    }
+
+    public function deleteAllMessages(): void
+    {
+        foreach($this->getGroupMessages() as $message) {
+            $message->delete();
+        }
     }
 
     /** @return MessageModel[] */

@@ -62,38 +62,38 @@ class GoalModel
     public function save()
     {
         return $this->db->insert(
-            'INSERT INTO ' . self::TABLE_NAME . 
-                ' (' . 
-                self::FIELD_START_POSITIONS_ID . ', ' . 
-                self::FIELD_GOAL_POSITIONS_ID . ', ' . 
-                self::FIELD_GOAL_ORDER_NUMBER . ', ' . 
-                self::FIELD_USER_ID . ', ' . 
-                self::FIELD_GROUP_CODE . ', ' . 
-                self::FIELD_FALLBACK_INITIALS . 
-                ') VALUES (?, ?, ?, ?, ?, ?)', 
+            'INSERT INTO ' . self::TABLE_NAME .
+                ' (' .
+                self::FIELD_START_POSITIONS_ID . ', ' .
+                self::FIELD_GOAL_POSITIONS_ID . ', ' .
+                self::FIELD_GOAL_ORDER_NUMBER . ', ' .
+                self::FIELD_USER_ID . ', ' .
+                self::FIELD_GROUP_CODE . ', ' .
+                self::FIELD_FALLBACK_INITIALS .
+                ') VALUES (?, ?, ?, ?, ?, ?)',
             [
-                ['iiiiss'], 
-                [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber, 
+                ['iiiiss'],
+                [$this->startPositionId, $this->goalPositionId, $this->goalOrderNumber,
                 $this->userId, $this->groupCode, $this->fallbackInitials]]);
     }
 
     public function update(): void
     {
         $this->id = $this->db->insert(
-            'UPDATE ' . self::TABLE_NAME . 
-            ' SET ' . self::FIELD_GOAL_SESSION . ' = ? 
-            WHERE id = ?', 
+            'UPDATE ' . self::TABLE_NAME .
+            ' SET ' . self::FIELD_GOAL_SESSION . ' = ?
+            WHERE id = ?',
             [
-                ['si'], 
+                ['si'],
                 [$this->goalSession, $this->id]
             ]);
     }
 
-    public function removeWithGroupCode(): void
+    public function deleteWithGroupCode(): void
     {
         $this->db->remove(
-            'DELETE FROM ' . self::TABLE_NAME . 
-            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', 
+            'DELETE FROM ' . self::TABLE_NAME .
+            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?',
             [
                 ['s'], [$this->groupCode]
             ]);

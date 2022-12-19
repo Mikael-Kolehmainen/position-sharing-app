@@ -1,12 +1,24 @@
 <?php
+use controller\basic\HomeController;
+use controller\basic\CreateController;
+use controller\basic\SearchController;
+use controller\api\ActiveMapController;
 use controller\api\GoalController;
 use controller\api\PositionController;
 use controller\api\UserController;
+use controller\api\MessageController;
+use controller\api\GroupController;
+use controller\api\CameraController;
+use manager\SessionManager;
+use manager\DataManager;
+use manager\ServerRequestManager;
+use misc\Redirect;
+
 require __DIR__ . "/inc/bootstrap.php";
 
 session_start();
 
-$uri = manager\ServerRequestManager::getUriParts();
+$uri = ServerRequestManager::getUriParts();
 
 if ($uri[2] != "ajax") {
     echo "
@@ -36,31 +48,31 @@ switch ($uri[2]) {
     case "map":
         switch ($uri[3]) {
             case "create":
-                if (manager\ServerRequestManager::issetCreateGroup()) {
+                if (ServerRequestManager::issetCreateGroup()) {
                     Create();
                 } else {
-                    misc\Redirect::redirect("Please fill the group creation form.", "/index.php");
+                    Redirect::redirect("Please fill the group creation form.", "/index.php");
                 }
                 break;
             case "search":
-                if (manager\ServerRequestManager::issetSearchGroup()) {
+                if (ServerRequestManager::issetSearchGroup()) {
                     Search();
                 } else {
-                    misc\Redirect::redirect("Please fill the search group form.", "/index.php");
+                    Redirect::redirect("Please fill the search group form.", "/index.php");
                 }
                 break;
             case "active":
-                if (manager\SessionManager::issetGroupCode()) {
+                if (SessionManager::issetGroupCode()) {
                     ActiveMap();
                 } else {
-                    misc\Redirect::redirect("Your session has expired, try again.", "/index.php");
+                    Redirect::redirect("Your session has expired, try again.", "/index.php");
                 }
                 break;
             case "camera":
                 Camera();
                 break;
             case "remove-group":
-                Remove();
+                Delete();
                 break;
             case null: default:
                 header("HTTP/1.1 404 Not Found");
@@ -68,7 +80,7 @@ switch ($uri[2]) {
         }
         break;
     case "ajax":
-        if (manager\ServerRequestManager::isPost() || manager\ServerRequestManager::isGet()) {
+        if (ServerRequestManager::isPost() || ServerRequestManager::isGet()) {
             header('Content-type: Application/json, charset=UTF-8');
             switch ($uri[3]) {
                 case "send-position":
@@ -86,10 +98,10 @@ switch ($uri[2]) {
                     }
                     break;
                 case "remove-user":
-                    removeUser();
+                    deleteUser();
                     break;
                 case "remove-goal":
-                    removeGoal();
+                    deleteGoal();
                     break;
                 case "send-message":
                     sendMessage();
@@ -117,25 +129,25 @@ if ($uri[2] != "ajax") {
 
 function Home(): void
 {
-    $homeController = new controller\basic\HomeController();
+    $homeController = new HomeController();
     $homeController->showHomePage();
 }
 
 function CreateForm(): void
 {
-    $createController = new controller\basic\CreateController();
+    $createController = new CreateController();
     $createController->showCreatePage();
 }
 
 function SearchForm(): void
 {
-    $searchController = new controller\basic\SearchController();
+    $searchController = new SearchController();
     $searchController->showSearchPage();
 }
 
 function Create(): void
 {
-    $groupController = new controller\api\GroupController();
+    $groupController = new GroupController();
     $groupController->saveToDatabase();
 
     saveMarkerStyleToSession();
@@ -144,7 +156,7 @@ function Create(): void
 
 function Search(): void
 {
-    $groupController = new controller\api\GroupController();
+    $groupController = new GroupController();
 
 
     if ($groupController->findGroupInDatabase()) {
@@ -162,108 +174,108 @@ function redirectToGroupMap(): void
 
 function saveMarkerStyleToSession(): void
 {
-    $userController = new controller\api\UserController();
+    $userController = new UserController();
     $userController->saveMarkerStyleToSession();
 }
 
 function ActiveMap(): void
 {
-    $activeController = new controller\api\ActiveMapController();
+    $activeController = new ActiveMapController();
     $activeController->showMapPage();
 }
 
 function Camera(): void
 {
-    $cameraController = new controller\api\CameraController();
+    $cameraController = new CameraController();
     $cameraController->showCamera();
 }
 
-function Remove(): void
+function Delete(): void
 {
-    removeGroup();
-    removeGroupUsers();
-    removeGroupMessages();
-    removeGoal();
+    deleteGroup();
+    deleteGroupUsers();
+    deleteGroupMessages();
+    deleteGoal();
 
     header("LOCATION: /index.php");
 }
 
-function removeGroup(): void
+function deleteGroup(): void
 {
-    $groupController = new controller\api\GroupController();
+    $groupController = new GroupController();
     $groupController->removeGroupFromDatabase();
 }
 
-function removeGroupUsers(): void
+function deleteGroupUsers(): void
 {
-    $userController = new controller\api\UserController();
-    $positionController = new controller\api\PositionController();
+    $userController = new UserController();
+    $positionController = new PositionController();
 
     foreach ($userController->getPositionIdsForMyGroup() as $positionId) {
         $positionController->id = $positionId;
-        $positionController->removeFromDatabase();
+        $positionController->deleteFromDatabase();
     }
 
-    $userController->removeUsersFromDatabase();
+    $userController->deleteUsersFromDatabase();
 }
 
-function removeGroupMessages(): void
+function deleteGroupMessages(): void
 {
-    $messageController = new controller\api\MessageController();
-    $messageController->removeMessagesFromDatabase();
+    $messageController = new MessageController();
+    $messageController->deleteMessagesFromDatabase();
 }
 
 function sendPosition(): void
 {
-    $positionController = new controller\api\PositionController();
+    $positionController = new PositionController();
     $positionController->sendPositionToDatabase();
 }
 
 function getData(): void
 {
-    $dataManager = new manager\DataManager();
+    $dataManager = new DataManager();
     $dataManager->encodeDataToJSON();
 }
 
-function removeUser(): void
+function deleteUser(): void
 {
-    $userController = new controller\api\UserController();
-    $positionController = new controller\api\PositionController();
+    $userController = new UserController();
+    $positionController = new PositionController();
 
-    $userController->id = manager\SessionManager::getUserRowId();
+    $userController->id = SessionManager::getUserRowId();
     $positionController->id = $userController->getUser()->positionsId;
 
-    $positionController->removeFromDatabase();
-    $userController->removeUserFromDatabase();
+    $positionController->deleteFromDatabase();
+    $userController->deleteUserFromDatabase();
 }
 
 function sendGoal(): void
 {
-    $goalController = new controller\api\GoalController();
+    $goalController = new GoalController();
     $goalController->sendGoalToDatabase();
 }
 
 function groupExists()
 {
-    $groupController = new controller\api\GroupController();
+    $groupController = new GroupController();
     return $groupController->findGroupInDatabase();
 }
 
-function removeGoal(): void
+function deleteGoal(): void
 {
-    $goalController = new controller\api\GoalController();
-    $goalController->removeGoal();
+    $goalController = new GoalController();
+    $goalController->deleteGoal();
 }
 
 function sendMessage(): void
 {
-    $messageController = new controller\api\MessageController();
+    $messageController = new MessageController();
     $messageController->saveToDatabase();
     redirectToGroupMap();
 }
 
 function sendImage(): void
 {
-    $cameraController = new controller\api\CameraController();
+    $cameraController = new CameraController();
     $cameraController->sendImage();
 }

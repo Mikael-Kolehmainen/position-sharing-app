@@ -43,7 +43,7 @@ class UserController extends BaseController
         $userModel->save();
     }
 
-    public function removeUserFromDatabase()
+    public function deleteUserFromDatabase()
     {
         $userModel = new UserModel($this->db, SessionManager::getUserRowId());
         $userModel->delete();
@@ -56,7 +56,7 @@ class UserController extends BaseController
         SessionManager::removeAmountOfMessages();
     }
 
-    public function removeUsersFromDatabase()
+    public function deleteUsersFromDatabase()
     {
         $group = new GroupModel($this->db, SessionManager::getGroupCode());
         $group->deleteAllGroupMembers();

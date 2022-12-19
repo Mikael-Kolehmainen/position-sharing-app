@@ -2,8 +2,11 @@
 
 namespace controller\api;
 
-use model;
-use manager;
+use manager\SessionManager;
+use manager\ServerRequestManager;
+use model\Database;
+use model\GroupModel;
+use model\MessageModel;
 
 class MessageController extends BaseController
 {
@@ -13,38 +16,38 @@ class MessageController extends BaseController
     /** @var string */
     public $imagePath;
 
-    /** @var model\Database */
+    /** @var Database */
     private $db;
 
     public function __construct()
     {
-        $this->db = new model\Database();
+        $this->db = new Database();
     }
 
     public function saveToDatabase()
     {
-        $messageModel = new model\MessageModel($this->db, manager\SessionManager::getGroupCode());
-        $messageModel->message = manager\ServerRequestManager::postMessage();
-        $messageModel->userId = manager\SessionManager::getUserRowId();
-        $messageModel->initials = manager\SessionManager::getUserInitials();
-        $messageModel->color = manager\SessionManager::getUserColor();
+        $messageModel = new MessageModel($this->db, SessionManager::getGroupCode());
+        $messageModel->message = ServerRequestManager::postMessage();
+        $messageModel->userId = SessionManager::getUserRowId();
+        $messageModel->initials = SessionManager::getUserInitials();
+        $messageModel->color = SessionManager::getUserColor();
         $messageModel->dateOfMessage = date("Y-m-d");
         $messageModel->timeOfMessage = date("H:i");
         $messageModel->imagePath = $this->imagePath;
         $this->id = $messageModel->save();
     }
 
-    /** @return model\MessageModel[] */
+    /** @return MessageModel[] */
     public function getMyGroupMessages(): array
     {
-        $group = new model\GroupModel($this->db, manager\SessionManager::getGroupCode());
+        $group = new GroupModel($this->db, SessionManager::getGroupCode());
 
         return $group->getGroupMessages();
     }
 
-    public function removeMessagesFromDatabase(): void
+    public function deleteMessagesFromDatabase(): void
     {
-        $messageModel = new model\MessageModel($this->db, manager\SessionManager::getGroupCode());
-        $messageModel->removeWithGroupCode();
+        $groupModel = new GroupModel($this->db, SessionManager::getGroupCode());
+        $groupModel->deleteAllMessages();
     }
 }

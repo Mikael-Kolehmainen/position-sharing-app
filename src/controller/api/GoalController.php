@@ -48,16 +48,8 @@ class GoalController extends BaseController
         $goalModel->userId = $this->userId;
         $goalModel->goalOrderNumber = $this->goalOrderNumber;
         $goalModel->fallbackInitials = $this->fallbackInitials;
-        
-        return $goalModel->save();
-    }
 
-    private function updateGoalSessionInDatabase()
-    {
-        $goalModel = new GoalModel($this->db);
-        $goalModel->goalSession = $this->goalSession;
-        $goalModel->id = $this->id;
-        $goalModel->update();
+        return $goalModel->save();
     }
 
     /** @return GoalModel[] */
@@ -83,59 +75,56 @@ class GoalController extends BaseController
         return $goalSession == SessionManager::getGoalSession();
     }
 
-    public function sendGoalToDatabase()
+    public function sendGoalToDatabase(): void
     {
-        $userController = new UserController();
-
         $json = json_decode(file_get_contents('php://input'));
 
-        $userIDs = $userController->getUserIdsForMyGroup();
+        $rowIdsOfUsersWithGoal = $this->getOrderOfUsersWithGoal();
 
-        $rowIdsOfUsersWithGoal = [];
+        $IDs = [];
+        $i = 0;
+        foreach ($json as $goal) {
+            $this->id = $this->insertGoal($goal, $rowIdsOfUsersWithGoal, $i);
+            $this->insertWaypoints($goal->routewaypoints);
 
-        for ($i = 0; $i < count($json); $i++) {
-            $rowIdsOfUsersWithGoal[$i] = $userIDs[$json[$i]->goalordernumber];
-        }
+            $IDs[$i] = $this->id;
 
-        $goalRowIds = [];
-
-        for ($i = 0; $i < count($json); $i++) {
-            $jsonObj = $json[$i];
-
-            $startPositionRowID = $this->insertPositionToDatabase($jsonObj->startlat, $jsonObj->startlng);
-            $goalPositionRowID = $this->insertPositionToDatabase($jsonObj->goallat, $jsonObj->goallng);
-
-            $fallBackInitials = $this->getUser($rowIdsOfUsersWithGoal[$i])->initials;
-
-            $this->startPositionId = $startPositionRowID;
-            $this->goalPositionId = $goalPositionRowID;
-            $this->goalOrderNumber = $jsonObj->goalordernumber;
-            $this->userId = $rowIdsOfUsersWithGoal[$i];
-            $this->fallbackInitials = $fallBackInitials;
-            $goalRowID = $this->saveToDatabase();
-
-            $goalRowIds[$i] = $goalRowID;
-
-            $waypoints = $jsonObj->routewaypoints;
-            for ($j = 0; $j < count($waypoints); $j++) {
-                $waypointPositionRowID = $this->insertPositionToDatabase($waypoints[$j]->lat, $waypoints[$j]->lng);
-
-                $waypointController = new WaypointController();
-                $waypointController->goalId = $goalRowID;
-                $waypointController->positionId = $waypointPositionRowID;
-                $waypointController->saveToDatabase();
-            }
+            $i++;
         }
 
         $this->createGoalSession();
-
-        for ($i = 0; $i < count($goalRowIds); $i++) {
-            $this->id = $goalRowIds[$i];
-            $this->updateGoalSessionInDatabase();
-        }
+        $this->updateGoalSessionsInDatabase($IDs);
     }
 
-    private function insertPositionToDatabase($lat, $lng)
+    /** @return int[] */
+    private function getOrderOfUsersWithGoal()
+    {
+        $json = json_decode(file_get_contents('php://input'));
+
+        $userController = new UserController();
+        $userIDs = $userController->getUserIdsForMyGroup();
+
+        $rowIdsOfUsersWithGoal = [];
+        $i = 0;
+        foreach ($json as $item) {
+            $rowIdsOfUsersWithGoal[$i++] = $userIDs[$item->goalordernumber];
+        }
+
+        return $rowIdsOfUsersWithGoal;
+    }
+
+    private function insertGoal($goal, $rowIdsOfUsersWithGoal, $i): int
+    {
+        $this->startPositionId = $this->insertPositionToDatabase($goal->startlat, $goal->startlng);
+        $this->goalPositionId = $this->insertPositionToDatabase($goal->goallat, $goal->goallng);
+        $this->goalOrderNumber = $goal->goalordernumber;
+        $this->userId = $rowIdsOfUsersWithGoal[$i];
+        $this->fallbackInitials = $this->getUser($rowIdsOfUsersWithGoal[$i])->initials;
+
+        return $this->saveToDatabase();
+    }
+
+    private function insertPositionToDatabase($lat, $lng): int
     {
         $positionController = new PositionController();
         $positionController->latitude = $lat;
@@ -155,6 +144,16 @@ class GoalController extends BaseController
         return $userController->getUser();
     }
 
+    private function insertWaypoints($waypoints): void
+    {
+        foreach ($waypoints as $waypoint) {
+            $waypointController = new WaypointController();
+            $waypointController->goalId = $this->id;
+            $waypointController->positionId = $this->insertPositionToDatabase($waypoint->lat, $waypoint->lng);;
+            $waypointController->saveToDatabase();
+        }
+    }
+
     private function createGoalSession(): void
     {
         $goalSession = RandomString::getRandomString(15);
@@ -166,48 +165,59 @@ class GoalController extends BaseController
         }
     }
 
-    public function removeGoal(): void
+    private function updateGoalSessionsInDatabase($IDs): void
     {
-        $this->removeGoalPositions();
-        $this->removeGoalWaypoints();
-        $this->removeFromDatabase();
+        foreach ($IDs as $ID) {
+            $goalModel = new GoalModel($this->db);
+            $goalModel->goalSession = $this->goalSession;
+            $goalModel->id = $ID;
+            $goalModel->update();
+        }
     }
 
-    private function removeGoalPositions(): void
+    public function deleteGoal(): void
     {
-        $positionController = new PositionController();
+        $this->deleteGoalPositions();
+        $this->deleteGoalWaypoints();
+        $this->deleteFromDatabase();
+    }
 
+    private function deleteGoalPositions(): void
+    {
         foreach ($this->getMyGroupGoals() as $goal) {
-            $positionController->id = $goal->startPositionId;
-            $positionController->removeFromDatabase();
-
-            $positionController->id = $goal->goalPositionId;
-            $positionController->removeFromDatabase();
+            $this->deletePosition($goal->startPositionId);
+            $this->deletePosition($goal->goalPositionId);
 
             foreach ($goal->getMyWaypoints()->waypointPositions as $waypoint) {
-                $positionController->id = $waypoint->id;
-                $positionController->removeFromDatabase();
+                $this->deletePosition($waypoint->id);
             }
         }
 
         SessionManager::removeGoalSession();
     }
 
-    private function removeGoalWaypoints(): void
+    private function deletePosition($id): void
+    {
+        $positionController = new PositionController();
+        $positionController->id = $id;
+        $positionController->deleteFromDatabase();
+    }
+
+    private function deleteGoalWaypoints(): void
     {
         $waypointController = new WaypointController();
 
         foreach ($this->getMyGroupGoals() as $goal) {
             $waypointController->goalId = $goal->id;
-            $waypointController->removeFromDatabase();
+            $waypointController->deleteFromDatabase();
         }
     }
 
-    private function removeFromDatabase(): void
+    private function deleteFromDatabase(): void
     {
         $goalModel = new GoalModel($this->db);
         $goalModel->groupCode = SessionManager::getGroupCode();
 
-        $goalModel->removeWithGroupCode();
+        $goalModel->deleteWithGroupCode();
     }
 }

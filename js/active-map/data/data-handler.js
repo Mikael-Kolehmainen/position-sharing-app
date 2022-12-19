@@ -1,12 +1,12 @@
 let refreshCounter = 0;
 let geolocationPermission = false;
 
-function onLocationFound(e) 
+function onLocationFound(e)
 {
     geolocationPermission = true;
 
     const sendData = new Data("/index.php/ajax/send-position", {lat : e.latlng.lat, lng : e.latlng.lng});
-    sendData.sendToPhpAsJSON(function() 
+    sendData.sendToPhpAsJSON(function()
     {
         const getData = new Data("/index.php/ajax/get-data");
         getData.getFromPhp(function(data) {
@@ -18,12 +18,11 @@ function onLocationFound(e)
                 if (data.messagesdata != "already saved") {
                     saveChatData(data);
                 }
-            
+
                 if (data.goalsdata == "empty" && !goal.goalIsBeingPlanned) {
                     LayerManagement.removeAndClearLayers([layerManagement.goalLayerGroup, layerManagement.draggableRouteLayerGroup]);
                     ElementDisplay.change('active-goal-disclaimer', 'none');
                 } else if (data.goalsdata == "already saved" && !goal.goalIsBeingPlanned && refreshCounter != 0) {
-                    goal.updatePercentagePopups();
                     ElementDisplay.change('active-goal-disclaimer', 'block');
                     ElementDisplay.change('add-goal-btn', 'none');
                     refreshCounter = refreshCounter + 1;
@@ -34,7 +33,6 @@ function onLocationFound(e)
                     }
                     goal.drawAllRoutes();
                     goal.calculateTheDistancesOfRoutes();
-                    goal.updatePercentagePopups();
                     ElementDisplay.change('active-goal-disclaimer', 'block');
                     ElementDisplay.change('add-goal-btn', 'none');
                     refreshCounter = refreshCounter + 1;
@@ -42,7 +40,7 @@ function onLocationFound(e)
 
                 if (Object.keys(layerManagement.refreshedLayerGroup._layers).length >= data.usersdata.length * 2) {
                     let i = 1;
-                    layerManagement.refreshedLayerGroup.eachLayer(function(layer) 
+                    layerManagement.refreshedLayerGroup.eachLayer(function(layer)
                     {
                         if (i <= data.usersdata.length) {
                             layerManagement.refreshedLayerGroup.removeLayer(layer)
@@ -91,7 +89,7 @@ function redirectUserToIndexPage()
     window.location.replace('/index.php');
 }
 
-function onLocationError(e) 
+function onLocationError(e)
 {
     geolocationPermission = false;
     alert(e.message);
