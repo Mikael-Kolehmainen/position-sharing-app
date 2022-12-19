@@ -64,8 +64,7 @@ document.querySelectorAll(".onclick").forEach(element =>
         goal.enableOuterRouteDrawing();
         openMenu("goal-options", "goal-route-options", "block");
 
-        instructions.instructionText = "Draw the outer routes, by adding waypoints";
-        instructions.replace();
+        instructions.replace("Draw the outer routes, by adding waypoints");
     }
 
     function confirmRouteClicked()
@@ -103,8 +102,7 @@ document.querySelectorAll(".onclick").forEach(element =>
         goal.userCanChooseStartGoalMarkerPositions();
         openMenu("goal-popup", "goal-options", "block");
 
-        instructions.instructionText = "Add outer start marker #1";
-        instructions.replace();
+        instructions.replace("Add outer start marker #1");
         instructions.show();
     }
 

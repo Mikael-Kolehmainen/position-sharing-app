@@ -9,8 +9,6 @@ class Goal
         this.usersData = usersData;
         this.current_position = current_position;
 
-        this.percentages = [];
-        this.userPopupContent = [];
         this.idsOfGoals = [];
         this.startGoalIcon = L.divIcon ({
             iconSize: [25, 25],
@@ -30,9 +28,8 @@ class Goal
         this.routeLoopIndex = 0;
 
         this.routes = [];
-        this.routesDistances = [];
 
-        this.howManyMarkersHasUserAddedToMap = 0;
+        this.markersOnMap = 0;
         this.goalStyleSheetContent = "";
     }
 
@@ -43,42 +40,36 @@ class Goal
 
     #addMarker(mouseEvent)
     {
-        goal.howManyMarkersHasUserAddedToMap = goal.howManyMarkersHasUserAddedToMap + 1;
+        goal.markersOnMap = goal.markersOnMap + 1;
 
-        switch (goal.howManyMarkersHasUserAddedToMap) {
+        switch (goal.markersOnMap) {
             case 1:
                 goal.start_marker_pos[0] = mouseEvent.latlng;
                 if (goal.idsOfGoals.length == 1) {
-                    instructions.instructionText = "Add outer goal marker #1";
-                    instructions.replace();
+                    instructions.replace("Add outer goal marker #1");
                 } else {
-                    instructions.instructionText = "Add outer start marker #2";
-                    instructions.replace();
+                    instructions.replace("Add outer start marker #2");
                 }
                 break;
             case 2:
                 if (goal.idsOfGoals.length == 1) {
                     goal.goal_marker_pos[0] = mouseEvent.latlng;
                     map.off('click', goal.#addMarker);
-                    instructions.instructionText = "Confirm positions";
-                    instructions.replace();
+                    instructions.replace("Confirm positions");
                 } else {
                     goal.start_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
-                    instructions.instructionText = "Add outer goal marker #1";
-                    instructions.replace();
+                    instructions.replace("Add outer goal marker #1");
                 }
                 break;
             case 3:
                 goal.goal_marker_pos[0] = mouseEvent.latlng;
-                instructions.instructionText = "Add outer goal marker #2";
-                instructions.replace();
+                instructions.replace("Add outer goal marker #2");
                 break;
             case 4:
                 goal.goal_marker_pos[goal.idsOfGoals.length - 1] = mouseEvent.latlng;
                 map.off('click', goal.#addMarker);
                 goal.createTheInnerStartGoalMarkers();
-                instructions.instructionText = "Confirm positions";
-                instructions.replace();
+                instructions.replace("Confirm positions");
                 break;
             default:
                 console.log("Something went wrong with adding the marker");
@@ -174,22 +165,19 @@ class Goal
     sendDataToPHP()
     {
         let goalData = [];
-        let goallat, goallng, startlat, startlng, route, goalordernumber;
 
         for (let i = 0; i < this.goal_marker_pos.length; i++) {
-            if (typeof this.start_marker_pos[i] != "undefined") {
-                goallat = this.goal_marker_pos[i].lat;
-                goallng = this.goal_marker_pos[i].lng;
-
-                startlat = this.start_marker_pos[i].lat;
-                startlng = this.start_marker_pos[i].lng;
-
-                goalordernumber = this.idsOfGoals[i];
-
-                route = this.routes[i];
-
-                goalData.push({id : i, goallat : goallat, goallng : goallng, startlat : startlat, startlng : startlng, routewaypoints : route, goalordernumber : goalordernumber});
-            }
+            goalData.push(
+                {
+                    id : i,
+                    goallat : this.goal_marker_pos[i].lat,
+                    goallng : this.goal_marker_pos[i].lng,
+                    startlat : this.start_marker_pos[i].lat,
+                    startlng : this.start_marker_pos[i].lng,
+                    routewaypoints : this.routes[i],
+                    goalordernumber : this.idsOfGoals[i]
+                }
+            );
         }
 
         const sendGoal = new Data("/index.php/ajax/send-goal", goalData);
@@ -200,25 +188,24 @@ class Goal
 
     saveDataFromPHPToVariables()
     {
-        for (let i = 0; i < this.goalsData.length; i++) {
-            if (this.goalsData[i] != "user has no goal"
-                && this.goalsData != "already saved") {
+        let i = 0;
+        this.goalsData.forEach(goal => {
+            this.start_marker_pos.push(new L.LatLng(goal.startPosition.latitude, goal.startPosition.longitude));
 
-                this.start_marker_pos[i] = new L.LatLng(this.goalsData[i].startPosition.latitude, this.goalsData[i].startPosition.longitude);
+            this.routes[i] = [];
 
-                this.routes[i] = [];
+            this.routes[i].push(this.start_marker_pos[i]);
 
-                this.routes[i].push(this.start_marker_pos[i]);
+            goal.waypointPositions.forEach(waypoint => {
+                this.routes[i].push(new L.LatLng(waypoint.latitude, waypoint.longitude));
+            });
 
-                for (let j = 0; j < this.goalsData[i].waypointPositions.length; j++) {
-                    this.routes[i][j+1] = new L.LatLng(this.goalsData[i].waypointPositions[j].latitude, this.goalsData[i].waypointPositions[j].longitude);
-                }
+            this.goal_marker_pos.push(new L.LatLng(goal.goalPosition.latitude, goal.goalPosition.longitude));
 
-                this.goal_marker_pos[i] = new L.LatLng(this.goalsData[i].goalPosition.latitude, this.goalsData[i].goalPosition.longitude);
+            this.routes[i].push(this.goal_marker_pos[i]);
 
-                this.routes[i].push(this.goal_marker_pos[i]);
-            }
-        }
+            i++;
+        });
     }
 
     createPopup()
@@ -318,7 +305,7 @@ class Goal
 
     saveOuterRouteSegments()
     {
-        for (let i = 0; i < 1; i = i + 0.01) {
+        for (let i = 0; i < 1; i += 0.01) {
             for (let j = 0; j < this.outerRouteWaypoints.length; j++) {
                 this.outerRouteSegments[j].push(L.GeometryUtil.interpolateOnLine(map, this.outerRouteWaypoints[j], i).latLng);
             }
@@ -330,7 +317,7 @@ class Goal
         for (let i = 1; i <= this.goal_marker_arr.length - 2; i++) {
             this.innerRouteSegments.push([]);
             for (let j = 0; j < this.outerRouteSegments[0].length; j++) {
-                let ratio = this.#defineRatioOfInterpolation(i);
+                let ratio = 1 / (this.goal_marker_arr.length - 1) * i;
                 this.innerRouteSegments[i-1].push(L.GeometryUtil.interpolateOnLine(map, new L.Polyline([this.outerRouteSegments[0][j], this.outerRouteSegments[1][j]]), ratio).latLng);
             }
         }
@@ -339,23 +326,18 @@ class Goal
     saveSegmentsAsRoutes()
     {
         for (let i = 0; i < this.goal_marker_arr.length; i++) {
-            if (i == 0) {
-                this.routes[i] = this.outerRouteSegments[0];
-            } else if (i == this.goal_marker_arr.length - 1) {
-                this.routes[i] = this.outerRouteSegments[1];
-            } else {
-                this.routes[i] = this.innerRouteSegments[i-1];
+            switch (i) {
+                case 0:
+                    this.routes[i] = this.outerRouteSegments[0];
+                    break;
+                case this.goal_marker_arr.length - 1:
+                    this.routes[i] = this.outerRouteSegments[1];
+                    break;
+                default:
+                    this.routes[i] = this.innerRouteSegments[i-1];
+                    break;
             }
         }
-    }
-
-    #defineRatioOfInterpolation(i)
-    {
-        let increment;
-
-        increment = 1 / (this.goal_marker_arr.length - 1);
-
-        return increment * i;
     }
 
     drawAllRoutes()
@@ -375,20 +357,6 @@ class Goal
     {
         this.start_marker_arr[i].parentLine = parentLine;
         this.goal_marker_arr[i].parentLine = parentLine;
-    }
-
-    calculateTheDistancesOfRoutes()
-    {
-        let routeDistance = 0;
-
-        for (let i = 0; i < this.routes.length; i++) {
-            for (let j = 0; j < this.routes[i].length - 1; j++) {
-                routeDistance += this.routes[i][j].distanceTo(this.routes[i][j+1]);
-            }
-
-            this.routesDistances.push(routeDistance);
-            routeDistance = 0;
-        }
     }
 
     removeUserDrawnRoutes()
@@ -479,8 +447,7 @@ class Goal
             const activeGoalStyle = new Style(goal.ACTIVE_GOAL_STYLE_CLASS_NAME);
             activeGoalStyle.removeStyle();
 
-            instructions.instructionText = "Confirm outer routes";
-            instructions.replace();
+            instructions.replace("Confirm outer routes");
         }
     }
 
@@ -491,7 +458,6 @@ class Goal
             console.log("Successfully removed data.");
         });
 
-        this.userPopupContent = [];
         this.start_marker_arr = [];
         this.start_marker_pos = [];
         this.goal_marker_arr = [];
@@ -502,7 +468,7 @@ class Goal
         this.routeLoopIndex = 0;
         this.goalsData = [];
         this.routes = [];
-        this.howManyMarkersHasUserAddedToMap = 0;
+        this.markersOnMap = 0;
         this.goalStyleSheetContent = "";
         map.off('click', goal.#addMarker);
         map.off('click', goal.#addOuterRouteWaypoint);

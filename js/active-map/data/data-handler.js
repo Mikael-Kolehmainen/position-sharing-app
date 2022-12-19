@@ -32,7 +32,6 @@ function onLocationFound(e)
                         goal.addStartGoalMarkersToMap(i);
                     }
                     goal.drawAllRoutes();
-                    goal.calculateTheDistancesOfRoutes();
                     ElementDisplay.change('active-goal-disclaimer', 'block');
                     ElementDisplay.change('add-goal-btn', 'none');
                     refreshCounter = refreshCounter + 1;

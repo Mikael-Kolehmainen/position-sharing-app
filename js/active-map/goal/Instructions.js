@@ -21,8 +21,8 @@ class Instructions
         this.instructionTextElement.innerText += this.instructionText;
     }
 
-    replace()
+    replace(text)
     {
-        this.instructionTextElement.innerText = this.instructionText;
+        this.instructionTextElement.innerText = text;
     }
 }
