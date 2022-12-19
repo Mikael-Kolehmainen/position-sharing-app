@@ -99,8 +99,8 @@ class GoalModel
             ]);
     }
 
-    /** @return $this */
-    public function load()
+    /** @return GoalModel */
+    public function load(): GoalModel
     {
         $records = $this->db->select(
             'SELECT * FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?',
@@ -110,8 +110,8 @@ class GoalModel
         return $this->mapFromDbRecord($record);
     }
 
-    /** @return $this */
-    public function getMyWaypoints()
+    /** @return GoalModel */
+    public function getMyWaypoints(): GoalModel
     {
         $waypointModel = new WaypointModel($this->db, $this->id);
 
@@ -123,8 +123,8 @@ class GoalModel
         return $this;
     }
 
-    /** @return $this */
-    public function loadPositions()
+    /** @return GoalModel */
+    public function loadPositions(): GoalModel
     {
         $this->startPosition = new PositionModel($this->db, $this->startPositionId);
         $this->startPosition->load();

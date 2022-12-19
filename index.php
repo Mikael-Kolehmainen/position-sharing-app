@@ -145,7 +145,7 @@ function Create(): void
 function Search(): void
 {
     $groupController = new controller\api\GroupController();
-    
+
 
     if ($groupController->findGroupInDatabase()) {
         saveMarkerStyleToSession();
@@ -197,6 +197,13 @@ function removeGroup(): void
 function removeGroupUsers(): void
 {
     $userController = new controller\api\UserController();
+    $positionController = new controller\api\PositionController();
+
+    foreach ($userController->getPositionIdsForMyGroup() as $positionId) {
+        $positionController->id = $positionId;
+        $positionController->removeFromDatabase();
+    }
+
     $userController->removeUsersFromDatabase();
 }
 

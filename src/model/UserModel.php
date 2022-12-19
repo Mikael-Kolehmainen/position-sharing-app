@@ -96,11 +96,6 @@ class UserModel
         $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE id = ?', [['i'], [$this->id]]);
     }
 
-    public function removeWithGroupCode(): void
-    {
-        $this->db->remove('DELETE FROM ' . self::TABLE_NAME . ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', [['s'], [$this->groupCode]]);
-    }
-
     public function setPosition(PositionModel $position): void
     {
         $position->id = $this->positionsId;

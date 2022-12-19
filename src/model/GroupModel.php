@@ -32,12 +32,12 @@ class GroupModel
     public function save(): void
     {
         $this->db->insert(
-            'INSERT INTO ' . self::TABLE_NAME . 
-                ' (' . 
-                self::FIELD_GROUP_CODE . 
-                ') VALUES (?)', 
+            'INSERT INTO ' . self::TABLE_NAME .
+                ' (' .
+                self::FIELD_GROUP_CODE .
+                ') VALUES (?)',
             [
-                ['s'], 
+                ['s'],
                 [$this->groupCode]
             ]);
     }
@@ -45,8 +45,8 @@ class GroupModel
     public function removeWithGroupCode(): void
     {
         $this->db->remove(
-            'DELETE FROM ' . self::TABLE_NAME . 
-            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?', 
+            'DELETE FROM ' . self::TABLE_NAME .
+            ' WHERE ' . self::FIELD_GROUP_CODE . ' = ?',
             [
                 ['s'], [$this->groupCode]
             ]);
@@ -63,6 +63,13 @@ class GroupModel
             $groups[] = $group;
         }
         return $groups;
+    }
+
+    public function deleteAllGroupMembers()
+    {
+        foreach($this->getGroupMembers() as $member) {
+            $member->delete();
+        }
     }
 
     /** @return UserModel[] */

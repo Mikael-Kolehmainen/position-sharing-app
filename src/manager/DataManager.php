@@ -4,6 +4,7 @@ namespace manager;
 
 use model\MessageModel;
 use model\UserModel;
+use model\GoalModel;
 use controller\api\UserController;
 use controller\api\GoalController;
 use controller\api\MessageController;
@@ -62,7 +63,7 @@ class DataManager
         $messageController = new MessageController();
         $messages = $messageController->getMyGroupMessages();
 
-        if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count((array)$messages)) {
+        if (SessionManager::getAmountOfMessages() == null || SessionManager::getAmountOfMessages() != count($messages)) {
             $userController = new UserController();
 
             foreach ($messages as $message) {
@@ -85,13 +86,14 @@ class DataManager
         return $messages;
     }
 
-    private function goalSessionEqualsDbGoalSession()
+    private function goalSessionEqualsDbGoalSession(): bool
     {
         $goalController = new GoalController();
 
         return $goalController->goalSessionEqualsDbGoalSession();
     }
 
+    /** @return GoalModel[] */
     private function getGoalsFromDatabase()
     {
         $goalController = new GoalController();

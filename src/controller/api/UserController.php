@@ -58,8 +58,8 @@ class UserController extends BaseController
 
     public function removeUsersFromDatabase()
     {
-        $userModel = new UserModel($this->db, null, SessionManager::getGroupCode());
-        $userModel->removeWithGroupCode();
+        $group = new GroupModel($this->db, SessionManager::getGroupCode());
+        $group->deleteAllGroupMembers();
     }
 
     /** @return UserModel[] */
@@ -70,12 +70,25 @@ class UserController extends BaseController
         return $groupModel->getGroupMembers();
     }
 
+    /** @return int[] */
     public function getUserIdsForMyGroup()
     {
         $IDs = [];
         $i = 0;
         foreach ($this->getMyGroupMembers() as $user) {
             $IDs[$i++] = $user->id;
+        }
+
+        return $IDs;
+    }
+
+    /** @return int[] */
+    public function getPositionIdsForMyGroup()
+    {
+        $IDs = [];
+        $i = 0;
+        foreach ($this->getMyGroupMembers() as $user) {
+            $IDs[$i++] = $user->positionsId;
         }
 
         return $IDs;
