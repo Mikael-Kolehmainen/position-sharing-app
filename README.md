@@ -2,7 +2,7 @@
 <hr>
 <h2>About</h2>
 <hr>
-<p style='font-size: 16px; text-align: justify; text-justify: inter-word;'>
+<font size='3'>
     This is an app where you can share your position to others on a map in a group.<br>
     A group can be joined or created with a 3 character long group code, where your<br>
     and other's positions will be shown by custom made markers.<br>
@@ -12,7 +12,7 @@
     <br><br>
     The map itself can be viewed with different layers and offers 8 different layer<br>
     types from Mapbox, including satellite imagery.<br>
-</p>
+</font>
 <h2>Project Languages</h2>
 <hr>
 <ul style='font-size: 16px;'>
