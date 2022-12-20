@@ -2,7 +2,7 @@
 <hr>
 <h2>About</h2>
 <hr>
-<font size='3'>
+<font size="3">
     This is an app where you can share your position to others on a map in a group.<br>
     A group can be joined or created with a 3 character long group code, where your<br>
     and other's positions will be shown by custom made markers.<br>
