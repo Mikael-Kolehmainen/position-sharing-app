@@ -56,9 +56,8 @@ class PositionController extends BaseController
         $userController->positionsId = $this->id;
         $userController->initials = SessionManager::getUserInitials();
         $userController->color = SessionManager::getUserColor();
-        $userController->saveToDatabase();
 
-        SessionManager::saveUserRowId($userController->id);
+        SessionManager::saveUserRowId($userController->saveToDatabase());
     }
 
     public function saveToDatabase(): void

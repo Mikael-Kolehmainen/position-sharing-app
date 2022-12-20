@@ -34,7 +34,7 @@ class UserModel
 
     /** @var Database */
     private $db;
-    
+
     public function __construct(Database $database, int $id = null, string $groupCode = null)
     {
         $this->db = $database;

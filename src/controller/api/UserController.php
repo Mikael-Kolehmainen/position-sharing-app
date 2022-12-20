@@ -34,13 +34,15 @@ class UserController extends BaseController
         $this->db = new Database();
     }
 
-    public function saveToDatabase()
+    public function saveToDatabase(): int
     {
         $userModel = new UserModel($this->db, $this->id, $this->groupCode);
         $userModel->positionsId = $this->positionsId;
         $userModel->initials = $this->initials;
         $userModel->color = $this->color;
         $userModel->save();
+
+        return $userModel->id;
     }
 
     public function deleteUserFromDatabase()
