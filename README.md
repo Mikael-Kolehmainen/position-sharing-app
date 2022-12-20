@@ -2,7 +2,7 @@
 <hr>
 <h2>About</h2>
 <hr>
-<p style='font-size: 14px;'>
+<p style='font-size: 16px; text-align: justify; text-justify: inter-word;'>
     This is an app where you can share your position to others on a map in a group.<br>
     A group can be joined or created with a 3 character long group code, where your<br>
     and other's positions will be shown by custom made markers.<br>
@@ -15,14 +15,14 @@
 </p>
 <h2>Project Languages</h2>
 <hr>
-<ul style='font-size: 14px;'>
+<ul style='font-size: 16px;'>
     <li>PHP 8.2.0</li>
     <li>JavaScript ES6</li>
     <li>Sass 8.0.0</li>
 </ul>
 <h2>Project Libraries</h2>
 <hr>
-<ul style='font-size: 14px;'>
+<ul style='font-size: 16px;'>
     <li>Leaflet 1.8.0</li>
     <li>Turf.js 6.5.0</li>
 </ul>
