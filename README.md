@@ -1,1 +1,1 @@
-<h1 align='center'>position-sharing-app</h1>
+<h1 align="center">position-sharing-app</h1>
