@@ -3,7 +3,6 @@
 namespace controller\api;
 
 use Exception;
-use model;
 use model\PositionModel;
 use model\Database;
 use manager\SessionManager;
