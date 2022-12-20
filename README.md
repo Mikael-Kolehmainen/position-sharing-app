@@ -5,7 +5,7 @@
 <p style='font-size: 16px; text-align: justify; text-justify: inter-word;'>
     This is an app where you can share your position to others on a map in a group.<br>
     A group can be joined or created with a 3 character long group code, where your<br>
-    and other's positions will be shown by custom made markers.<br>
+    and other's positions will be shown by user made markers.<br>
     <br><br>
     A group has a built-in chat with a camera feature. A group member can also start<br>
     a position goal for the group members by placing goal positions on the map.<br>
