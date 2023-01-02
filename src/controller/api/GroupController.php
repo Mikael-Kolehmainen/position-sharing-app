@@ -19,6 +19,9 @@ class GroupController extends BaseController
     /** @var Database */
     private $db;
 
+    /** @var string */
+    private $markerColor;
+
     public function __construct()
     {
         $this->db = new Database();
@@ -46,7 +49,7 @@ class GroupController extends BaseController
     public function findGroupInDatabase()
     {
         $this->validateMarkerColor();
-        
+
         $groupCode = ServerRequestManager::postGroupCode() == null ? SessionManager::getGroupCode() : ServerRequestManager::postGroupCode();
 
         $groupModel = new GroupModel($this->db, $groupCode);
@@ -69,8 +72,18 @@ class GroupController extends BaseController
     private function validateMarkerColor(): void
     {
         if (ServerRequestManager::isPost()) {
-            $color = strtolower(ServerRequestManager::postUserColor());
-            $allowedColors = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure",
+            $this->markerColor = strtolower(ServerRequestManager::postUserColor());
+
+            if ($this->notAllowedColor() && $this->notHexColor()) {
+                Redirect::redirect("The color isn\'t valid.", "/index.php");
+                exit();
+            }
+        }
+    }
+
+    private function notAllowedColor()
+    {
+        $allowedColors = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure",
                                 "beige", "bisque", "black", "blanchedalmond", "blue",
                                 "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse",
                                 "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson",
@@ -97,10 +110,13 @@ class GroupController extends BaseController
                                 "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white",
                                 "whitesmoke", "yellow", "yellowgreen"];
 
-            if (!str_starts_with($color, '#') && !in_array($color, $allowedColors)) {
-                Redirect::redirect("The color isn\'t allowed.", "/index.php");
-                exit();
-            }
-        }
+        return !in_array($this->markerColor, $allowedColors);
+    }
+
+    private function notHexColor()
+    {
+        return !str_starts_with($this->markerColor, '#') ||
+                !(substr_count($this->markerColor, '#') == 1) ||
+                !(strlen($this->markerColor) == 7 || strlen($this->markerColor) == 4);
     }
 }

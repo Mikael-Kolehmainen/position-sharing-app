@@ -35,7 +35,7 @@ class CreateController
     {
         echo "
             <input type='text' name='initials' id='marker-initials' placeholder='Initials (2 char)' minlength='2' maxlength='2' class='center' required onkeydown='return /[a-z0-9]/i.test(event.key)'>
-            <input type='text' name='color' id='marker-color' placeholder='Color (Name or HEX)' minlength='3' maxlength='20' class='center'>
+            <input type='text' name='color' id='marker-color' placeholder='Color (Name or HEX)' minlength='3' maxlength='20' class='center' onkeydown='return /[a-zA-Z0-9#]/i.test(event.key)'>
             <p style='text-align: center'>Default color: red / #FF0000</p>
             <div class='marker-preview'>
                 <h2>Preview:</h2>
